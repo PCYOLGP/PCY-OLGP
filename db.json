@@ -1,0 +1,101 @@
+{
+    "users": [
+        {
+            "id": 0,
+            "username": "OLGP_PCY",
+            "password": "admin123",
+            "bio": "Official Admin of OLGP Parish Commission on Youth",
+            "email": "pcyolgp@gmail.com",
+            "image": ""
+        },
+        {
+            "id": 1,
+            "username": "user",
+            "password": "user123",
+            "bio": "Youth Member of OLGP",
+            "fname": "user",
+            "mname": "",
+            "lname": "user",
+            "email": "",
+            "image": ""
+        },
+        {
+            "id": 2,
+            "username": "wencyjezrel23",
+            "password": "wency23",
+            "bio": "Youth Member of OLGP",
+            "fname": "Wency Jezrel",
+            "mname": "",
+            "lname": "Opiso",
+            "email": "wency.jez@gmail.com",
+            "image": ""
+        }
+    ],
+    "posts": [
+        {
+            "id": 1,
+            "username": "OLGP_PCY",
+            "image": "pcy-wall/panuluyan.jpg",
+            "caption": "Panunuluyan 2023, Maria at Jose ❤️. #OLGPParishCommisionOnYouth",
+            "timestamp": "2023-12-24T00:00:00.000Z"
+        },
+        {
+            "id": 2,
+            "username": "OLGP_PCY",
+            "image": "pcy-wall/PULSO.jpg",
+            "caption": "PULSO EVENT 2024 #OLGPParishCommisionOnYouth\n#Vicariate of San Jose",
+            "timestamp": "2024-01-15T00:00:00.000Z"
+        },
+        {
+            "id": 3,
+            "username": "user",
+            "image": "pcy-wall/1768790125704-189299951-609014194_1206020054359558_2327794403447399362_n.jpg",
+            "caption": "san ako now",
+            "timestamp": "2026-01-19T02:35:25.712Z"
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "post_id": 1,
+            "username": "",
+            "comment": "",
+            "timestamp": ""
+        },
+        {
+            "id": 2,
+            "post_id": 2,
+            "username": "wencyjezrel23",
+            "comment": "hahaha",
+            "timestamp": "2026-01-19T02:31:11.340Z"
+        },
+        {
+            "id": 3,
+            "post_id": 3,
+            "username": "wencyjezrel23",
+            "comment": "cute mu",
+            "timestamp": "2026-01-19T03:15:22.737Z"
+        }
+    ],
+    "likes": [
+        {
+            "id": 1,
+            "post_id": 1,
+            "user_id": 1,
+            "timestamp": "2026-01-19T02:31:11.340Z"
+        },
+        {
+            "id": 4,
+            "post_id": 2,
+            "user_id": 2,
+            "timestamp": "2026-01-19T03:04:46.498Z"
+        },
+        {
+            "id": 5,
+            "post_id": 4,
+            "user_id": 2,
+            "timestamp": "2026-01-19T06:25:59.023Z"
+        }
+    ]
+}

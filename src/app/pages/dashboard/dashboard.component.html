@@ -1,0 +1,565 @@
+<div class="dashboard-page overflow-hidden">
+    <!-- Main Header -->
+    <header class="dashboard-header">
+        <div class="header-brand">
+            <img src="assets/PCY.png" alt="PCY Logo">
+            <h1 class="brand-title">OLGP | PCY WALL <span class="desktop-only-inline"></span></h1>
+        </div>
+
+        <div class="header-actions">
+            <div class="user-profile" (click)="viewOwnProfile()">
+                <img *ngIf="getUserImage(authService.currentUser())" [src]="getUserImage(authService.currentUser())"
+                    alt="Profile" class="avatar">
+                <div *ngIf="!getUserImage(authService.currentUser())" class="avatar">{{
+                    (authService.currentUser()?.username || 'U')[0].toUpperCase() }}</div>
+                <span class="desktop-only-inline">{{ authService.currentUser()?.username || 'User' }}</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-body">
+        <!-- Sidebar Navigation (Desktop) -->
+        <aside class="sidebar desktop-only">
+            <nav class="sidebar-nav">
+                <a (click)="view.set('home')" [class.active]="view() === 'home'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="nav-icon">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    <span class="nav-label">Home</span>
+                </a>
+                <a (click)="viewOwnProfile()" [class.active]="view() === 'profile' && isViewingSelf()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="nav-icon">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <span class="nav-label">Profile</span>
+                </a>
+                <button (click)="openCreateModal()" class="nav-btn" [class.active]="showCreateModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="nav-icon">
+                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                        <line x1="12" x2="12" y1="8" y2="16" />
+                        <line x1="8" x2="16" y1="12" y2="12" />
+                    </svg>
+                    <span class="nav-label">Create</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button (click)="logout()" class="logout-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="nav-icon">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2 2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" x2="9" y1="12" y2="12" />
+                    </svg>
+                    <span class="nav-label">Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-area" (click)="closeAllMenus()">
+            <router-outlet></router-outlet>
+
+            <div class="home-content" *ngIf="isDashboardHome() && view() === 'home'">
+                <div class="welcome-section mb-12">
+                    <div class="glass-card welcome-card">
+                        <div class="welcome-text mb-8">
+                            <h2>Welcome back, {{ authService.currentUser()?.username }}! 👋</h2>
+                            <p>Check the latest GSFF entries and updates from the youth community.</p>
+                        </div>
+
+                        <!-- GSFF Videos Section -->
+                        <div class="video-carousel-wrapper">
+                            <div class="video-carousel" (scroll)="onVideoScroll($event)">
+                                <div *ngFor="let video of safeVideos()" class="video-item">
+                                    <div class="video-iframe">
+                                        <iframe [src]="video.url" frameborder="0" allowfullscreen></iframe>
+                                    </div>
+                                    <div class="video-info">
+                                        <h3>{{ video.title }}</h3>
+                                        <p>{{ video.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pagination Dots -->
+                            <div class="carousel-dots">
+                                <div *ngFor="let video of safeVideos(); let i = index" class="dot"
+                                    [class.active]="currentVideoIndex() === i" (click)="scrollToVideo(i)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="posts-feed animate-slide-up">
+                    <div class="feed-header">
+                        <h3>Latest PCY Wall Posts</h3>
+                    </div>
+
+                    <div *ngFor="let post of posts(); trackBy: trackById" class="post-card glass-card">
+                        <div class="post-header">
+                            <div class="post-user" (click)="viewProfile(post.username)">
+                                <img *ngIf="post.userImage" [src]="post.userImage" class="avatar small object-cover"
+                                    alt="User">
+                                <img *ngIf="!post.userImage && post.username === 'OLGP_PCY'" src="assets/PCY.png"
+                                    class="avatar small" alt="Admin">
+                                <div *ngIf="!post.userImage && post.username !== 'OLGP_PCY'" class="avatar small">{{
+                                    post.username[0].toUpperCase() }}</div>
+                                <div class="user-info">
+                                    <span class="username">{{ post.username }}</span>
+                                    <span class="timestamp">{{ post.timestamp | date:'MMM d, y, h:mm a' }}</span>
+                                </div>
+                            </div>
+                            <div class="menu-container" *ngIf="isPostOwner(post)">
+                                <button class="more-btn" (click)="togglePostMenu($event, post.id)">•••</button>
+                                <!-- Action Dropdown -->
+                                <div class="action-dropdown glass-card" *ngIf="activeMenuId() === post.id"
+                                    (click)="$event.stopPropagation()">
+                                    <button class="menu-item delete" (click)="handleDeletePost(post.id)">Delete</button>
+                                    <button class="menu-item" (click)="openEditModal(post)">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="post-image" (click)="openPostModal(post)">
+                            <img [src]="post.image" [alt]="post.caption">
+                        </div>
+
+                        <div class="post-footer">
+                            <div class="post-actions">
+                                <button class="action-btn like-btn" [class.liked]="isPostLiked(post)"
+                                    (click)="toggleLike(post)">
+                                    {{ isPostLiked(post) ? '❤️' : '🤍' }}
+                                </button>
+                                <button class="action-btn" (click)="openPostModal(post)">💬</button>
+                                <button class="action-btn">🔗</button>
+                            </div>
+                            <div class="post-caption">
+                                <p><span class="username" (click)="viewProfile(post.username)">{{ post.username
+                                        }}</span> {{ post.caption }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-content" *ngIf="view() === 'profile'">
+                <div class="profile-header-info glass-card mb-8">
+                    <div class="profile-main">
+                        <img *ngIf="getUserImage(viewedUserProfile() || authService.currentUser())"
+                            [src]="getUserImage(viewedUserProfile() || authService.currentUser())" alt="Profile"
+                            class="profile-avatar-large object-cover">
+                        <div *ngIf="!getUserImage(viewedUserProfile() || authService.currentUser())"
+                            class="profile-avatar-large">{{
+                            (selectedProfileUsername() || authService.currentUser()?.username || 'U')[0].toUpperCase()
+                            }}</div>
+                        <div class="profile-details">
+                            <div class="profile-username-row">
+                                <h2>{{ selectedProfileUsername() || authService.currentUser()?.username }}</h2>
+                            </div>
+                            <div class="profile-stats">
+                                <span><strong>{{ userPosts().length }}</strong> posts</span>
+                                <span><strong>{{ totalUserLikes() }}</strong> likes</span>
+                            </div>
+                            <div class="profile-bio">
+                                <p>{{ viewedUserProfile()?.bio || ( (selectedProfileUsername() ||
+                                    authService.currentUser()?.username) === 'OLGP_PCY' ? 'Official Admin of OLGP Parish
+                                    Commission on Youth' : 'Youth Member of OLGP' ) }}</p>
+                            </div>
+                            <!-- Unified Edit Button -->
+                            <div class="profile-edit-btn-container" *ngIf="isViewingSelf()">
+                                <button (click)="openEditProfileModal()" class="edit-profile-btn-primary">
+                                    Edit Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Posts Grid (5 Columns) -->
+                <div class="profile-grid">
+                    @for (post of userPosts(); track post.id) {
+                    <div class="grid-item-container"
+                        (click)="isViewingSelf() ? openEditModal(post) : openPostModal(post)">
+                        <img [src]="post.image" [alt]="post.caption" class="grid-image">
+                        <div class="grid-item-overlay">
+                            <div class="overlay-stats">
+                                <span>❤️ {{ post.likes?.length || 0 }}</span>
+                                <span>💬 0</span>
+                            </div>
+                        </div>
+                    </div>
+                    } @empty {
+                    <div class="no-posts">
+                        <div class="no-posts-icon">📸</div>
+                        <h3>No Posts Yet</h3>
+                        <p>When you share photos, they will appear on your profile.</p>
+                        <button (click)="openCreateModal()">Share your first photo</button>
+                    </div>
+                    }
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <nav class="bottom-nav mobile-only">
+        <button (click)="view.set('home')" class="bottom-nav-item" [class.active]="view() === 'home'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+        </button>
+        <button (click)="viewOwnProfile()" class="bottom-nav-item"
+            [class.active]="view() === 'profile' && isViewingSelf()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+            </svg>
+        </button>
+        <button (click)="openCreateModal()" class="bottom-nav-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14M5 12h14" />
+            </svg>
+        </button>
+        <button (click)="logout()" class="bottom-nav-item logout-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" x2="9" y1="12" y2="12" />
+            </svg>
+        </button>
+    </nav>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal-overlay logout-modal" *ngIf="showLogoutConfirm()" (click)="showLogoutConfirm.set(false)">
+    <div class="modal-content glass-card confirmation-card" (click)="$event.stopPropagation()">
+        <div class="confirmation-body">
+            <div class="logout-icon-large mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2 2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" x2="9" y1="12" y2="12" />
+                </svg>
+            </div>
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to log out of your session?</p>
+
+            <div class="confirmation-actions">
+                <button class="confirm-btn-logout" (click)="confirmLogout()">Yes, Logout</button>
+                <button class="cancel-btn-logout" (click)="showLogoutConfirm.set(false)">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create/Edit Modal -->
+<div class="modal-overlay" *ngIf="showCreateModal() || isEditing()" (click)="closeCreateModal()">
+    <div class="modal-content glass-card big-post-modal" (click)="$event.stopPropagation()">
+        <button class="modal-close-outer" (click)="closeCreateModal()">✕</button>
+        <div class="modal-body p-0">
+            <!-- Step 1: Select File (Create Only) -->
+            <div class="upload-area" *ngIf="!selectedFilePreview() && !isEditing()">
+                <div class="upload-icon">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                        <circle cx="9" cy="9" r="2" />
+                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                    </svg>
+                </div>
+                <p>Select photos and videos to share</p>
+                <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden>
+                <button class="select-btn" (click)="fileInput.click()">Select From Computer</button>
+            </div>
+
+            <!-- Step 2: Instagram Style Layout -->
+            <div class="post-creation-area" *ngIf="selectedFilePreview() || isEditing()">
+                <div class="preview-container">
+                    <img [src]="isEditing() ? editingPost()?.image : selectedFilePreview()" class="image-preview-full">
+                </div>
+                <div class="sidebar-area">
+                    <!-- Sidebar Header (User Info) -->
+                    <div class="sidebar-header-user">
+                        <div class="user-meta-left">
+                            <img *ngIf="authService.currentUser()?.username === 'OLGP_PCY'" src="assets/PCY.png"
+                                class="avatar small" alt="Admin">
+                            <div *ngIf="authService.currentUser()?.username !== 'OLGP_PCY'" class="avatar small">{{
+                                (authService.currentUser()?.username || 'U')[0].toUpperCase() }}</div>
+                            <div class="user-info-text" (click)="viewProfile(authService.currentUser()?.username!)">
+                                <span class="username">{{ authService.currentUser()?.username }}</span>
+                                <span class="location" *ngIf="isEditing()">OLGP Parish</span>
+                            </div>
+                        </div>
+                        <button class="more-options">•••</button>
+                    </div>
+
+                    <!-- Sidebar Content (Caption & Scrollable area) -->
+                    <div class="sidebar-main-content">
+                        <div class="user-caption-row">
+                            <img *ngIf="authService.currentUser()?.username === 'OLGP_PCY'" src="assets/PCY.png"
+                                class="avatar small" alt="Admin">
+                            <div *ngIf="authService.currentUser()?.username !== 'OLGP_PCY'" class="avatar small">{{
+                                (authService.currentUser()?.username || 'U')[0].toUpperCase() }}</div>
+                            <div class="caption-text-block">
+                                <span class="username" (click)="viewProfile(authService.currentUser()?.username!)">{{
+                                    authService.currentUser()?.username }}</span>
+                                <textarea [(ngModel)]="postCaption" placeholder="Write a caption..."
+                                    class="caption-input-alt" rows="8"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Footer (Actions & Save) -->
+                    <div class="sidebar-footer-actions">
+                        <div class="engagement-icons">
+                            <div class="icons-left">
+                                <button class="icon-btn like-btn" [class.liked]="isPostLiked(editingPost())"
+                                    (click)="toggleLike(editingPost())">
+                                    {{ isPostLiked(editingPost()) ? '❤️' : '🤍' }}
+                                </button>
+                                <button class="icon-btn">💬</button>
+                                <button class="icon-btn">🔗</button>
+                            </div>
+                            <button class="icon-btn">🔖</button>
+                        </div>
+                        <div class="likes-info">
+                            <span><strong>{{ (showPostModal() ? selectedPostForView()?.likes?.length : (isEditing() ?
+                                    editingPost()?.likes?.length : 0)) || 0 }}</strong> likes</span>
+                        </div>
+                        <div class="post-date">
+                            {{ (isEditing() ? editingPost()?.timestamp : currentTimestamp) | date:'MMMM d, y' }}
+                        </div>
+
+                        <div class="modal-action-buttons">
+                            <button class="main-action-btn" [disabled]="isUploading()"
+                                (click)="isEditing() ? handleUpdatePost() : handleCreatePost()">
+                                {{ isUploading() ? 'Saving...' : (isEditing() ? 'Done' : 'Share') }}
+                            </button>
+                            <button class="alt-action-btn" (click)="closeCreateModal()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- View Post Modal -->
+<div class="modal-overlay" *ngIf="showPostModal()" (click)="closePostModal()">
+    <div class="modal-content glass-card big-post-modal" (click)="$event.stopPropagation()">
+        <button class="modal-close-outer" (click)="closePostModal()">✕</button>
+        <div class="modal-body p-0">
+            <div class="post-creation-area">
+                <div class="preview-container">
+                    <img [src]="selectedPostForView()?.image" class="image-preview-full">
+                </div>
+                <div class="sidebar-area">
+                    <!-- Sidebar Header -->
+                    <div class="sidebar-header-user">
+                        <div class="user-meta-left">
+                            <img *ngIf="selectedPostForView()?.userImage" [src]="selectedPostForView()?.userImage"
+                                class="avatar small object-cover" alt="User">
+                            <img *ngIf="!selectedPostForView()?.userImage && selectedPostForView()?.username === 'OLGP_PCY'"
+                                src="assets/PCY.png" class="avatar small" alt="Admin">
+                            <div *ngIf="!selectedPostForView()?.userImage && selectedPostForView()?.username !== 'OLGP_PCY'"
+                                class="avatar small">{{
+                                (selectedPostForView()?.username || 'U')[0].toUpperCase() }}</div>
+                            <div class="user-info-text" (click)="viewProfile(selectedPostForView()?.username!)">
+                                <span class="username">{{ selectedPostForView()?.username }}</span>
+                                <span class="location">OLGP Parish</span>
+                            </div>
+                        </div>
+                        <div class="menu-container"
+                            *ngIf="selectedPostForView() && isPostOwner(selectedPostForView()!)">
+                            <button class="more-btn"
+                                (click)="togglePostMenu($event, selectedPostForView()!.id)">•••</button>
+                            <div class="action-dropdown glass-card" *ngIf="activeMenuId() === selectedPostForView()?.id"
+                                (click)="$event.stopPropagation()">
+                                <button class="menu-item delete"
+                                    (click)="handleDeletePost(selectedPostForView()!.id); closePostModal()">Delete</button>
+                                <button class="menu-item"
+                                    (click)="openEditModal(selectedPostForView()!); closePostModal()">Edit</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Content: Caption & Comments -->
+                    <div class="sidebar-main-content comments-container">
+                        <div class="user-caption-row mb-6">
+                            <img *ngIf="selectedPostForView()?.userImage" [src]="selectedPostForView()?.userImage"
+                                class="avatar small object-cover" alt="User">
+                            <img *ngIf="!selectedPostForView()?.userImage && selectedPostForView()?.username === 'OLGP_PCY'"
+                                src="assets/PCY.png" class="avatar small" alt="Admin">
+                            <div *ngIf="!selectedPostForView()?.userImage && selectedPostForView()?.username !== 'OLGP_PCY'"
+                                class="avatar small">{{
+                                (selectedPostForView()?.username || 'U')[0].toUpperCase() }}</div>
+                            <div class="caption-text-block">
+                                <p><span class="username" (click)="viewProfile(selectedPostForView()?.username!)">{{
+                                        selectedPostForView()?.username }}</span> {{
+                                    selectedPostForView()?.caption }}</p>
+                                <span class="post-date">{{ selectedPostForView()?.timestamp | date:'MMMM d, y' }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Comments List -->
+                        <div class="comments-list">
+                            <ng-container *ngFor="let comment of postComments()">
+                                <div class="comment-item mb-4" *ngIf="comment.username && comment.comment">
+                                    <img *ngIf="comment.userImage" [src]="comment.userImage"
+                                        class="avatar small object-cover" alt="User">
+                                    <img *ngIf="!comment.userImage && comment.username === 'OLGP_PCY'"
+                                        src="assets/PCY.png" class="avatar small" alt="Admin">
+                                    <div *ngIf="!comment.userImage && comment.username !== 'OLGP_PCY'"
+                                        class="avatar small">{{
+                                        (comment.username || 'U')[0].toUpperCase() }}</div>
+                                    <div class="comment-content">
+                                        <p><span class="username" (click)="viewProfile(comment.username)">{{
+                                                comment.username }}</span> {{ comment.comment }}
+                                        </p>
+                                        <span class="comment-date" *ngIf="comment.timestamp">{{ comment.timestamp |
+                                            date:'MMM d' }}</span>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <div *ngIf="postComments().length === 0" class="no-comments-yet">
+                                <p>No comments yet. Be the first to comment!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Footer -->
+                    <div class="sidebar-footer-actions">
+                        <div class="engagement-icons">
+                            <div class="icons-left">
+                                <button class="icon-btn like-btn" [class.liked]="isPostLiked(selectedPostForView()!)"
+                                    (click)="toggleLike(selectedPostForView()!)">
+                                    {{ isPostLiked(selectedPostForView()!) ? '❤️' : '🤍' }}
+                                </button>
+                                <button class="icon-btn" (click)="loadComments(selectedPostForView()!.id)">💬</button>
+                                <button class="icon-btn">🔗</button>
+                            </div>
+                            <button class="icon-btn">🔖</button>
+                        </div>
+                        <div class="likes-info">
+                            <span><strong>{{ selectedPostForView()?.likes?.length || 0 }}</strong> likes</span>
+                        </div>
+
+                        <div class="modal-comment-input" *ngIf="authService.currentUser()">
+                            <input type="text" [(ngModel)]="newComment" placeholder="Add a comment..."
+                                (keyup.enter)="handlePostComment(selectedPostForView()!.id, newComment)">
+                            <button class="post-btn" [disabled]="!newComment.trim()"
+                                (click)="handlePostComment(selectedPostForView()!.id, newComment)">Post</button>
+                        </div>
+                        <!-- Login Reminder -->
+                        <div class="login-prompt" *ngIf="!authService.currentUser()">
+                            <p>Please <a routerLink="/login" class="text-green-600 font-bold">login</a> to join the
+                                conversation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" *ngIf="showEditProfileModal()" (click)="closeEditProfileModal()">
+    <div class="modal-content glass-card big-post-modal" (click)="$event.stopPropagation()">
+        <button class="modal-close-outer" (click)="closeEditProfileModal()">✕</button>
+        <div class="modal-header-simple p-6 border-b border-white/20">
+            <h2 class="text-2xl font-bold">Edit Profile</h2>
+        </div>
+        <div class="modal-body p-8 relative">
+            <!-- Success Message Overlay -->
+            <div *ngIf="showUpdateSuccess()"
+                class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm animate-fade-in text-center p-6">
+                <div
+                    class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4 text-3xl animate-bounce">
+                    ✓
+                </div>
+                <h3 class="text-xl font-bold text-gray-800">Profile Updated!</h3>
+                <p class="text-gray-600">Your changes have been saved successfully.</p>
+            </div>
+
+            <div class="edit-profile-form space-y-6">
+                <!-- Profile Image Selection -->
+                <div class="profile-image-upload-section flex flex-col items-center gap-4 mb-6">
+                    <div class="profile-image-preview-container relative group cursor-pointer"
+                        (click)="profileFileInput.click()">
+                        <img *ngIf="profileImagePreview()" [src]="profileImagePreview()"
+                            class="profile-avatar-large object-cover border-4 border-white shadow-lg">
+                        <div *ngIf="!profileImagePreview()"
+                            class="profile-avatar-large flex items-center justify-center bg-green-600 text-white text-4xl font-bold border-4 border-white shadow-lg">
+                            {{ editUsername()[0]?.toUpperCase() || 'U' }}
+                        </div>
+                        <div
+                            class="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" x2="12" y1="3" y2="15" />
+                            </svg>
+                        </div>
+                    </div>
+                    <input type="file" #profileFileInput (change)="onProfileImageSelected($event)" accept="image/*"
+                        hidden>
+                    <div class="flex gap-4">
+                        <button type="button" class="text-sm font-semibold text-green-700 hover:text-green-800"
+                            (click)="profileFileInput.click()">Change Profile Photo</button>
+                        <button *ngIf="profileImagePreview()" type="button"
+                            class="text-sm font-semibold text-red-500 hover:text-red-600"
+                            (click)="removeProfileImage()">Remove Photo</button>
+                    </div>
+                </div>
+
+                <div class="form-group flex flex-col gap-2">
+                    <label class="font-bold text-gray-700 font-sans">Username</label>
+                    <input type="text" [ngModel]="editUsername()" (ngModelChange)="editUsername.set($event)"
+                        class="caption-input-alt !h-12 !py-2" placeholder="Your username"
+                        style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 0 15px;">
+                </div>
+
+                <div class="form-group flex flex-col gap-2">
+                    <label class="font-bold text-gray-700 font-sans">Bio</label>
+                    <textarea [ngModel]="editBio()" (ngModelChange)="editBio.set($event)" class="caption-input-alt"
+                        rows="4" placeholder="Tell us something about yourself..."
+                        style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 10px 15px;"></textarea>
+                </div>
+
+                <div class="form-group flex flex-col gap-2">
+                    <label class="font-bold text-gray-700 font-sans">New Password (leave blank to keep current)</label>
+                    <input type="password" [ngModel]="editPassword()" (ngModelChange)="editPassword.set($event)"
+                        class="caption-input-alt !h-12 !py-2" placeholder="••••••••"
+                        style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 0 15px;">
+                </div>
+
+                <div class="modal-action-buttons pt-4 flex gap-4">
+                    <button class="main-action-btn flex-1 !rounded-xl"
+                        [disabled]="isUpdatingProfile() || !hasProfileChanges()" (click)="handleUpdateProfile()"
+                        [style.background]="hasProfileChanges() ? '#2e7d32' : '#94a3b8'" style="color: white;">
+                        {{ isUpdatingProfile() ? 'Updating...' : 'Save Changes' }}
+                    </button>
+                    <button class="alt-action-btn flex-1 !rounded-xl" (click)="closeEditProfileModal()"
+                        style="border: 1px solid rgba(0,0,0,0.1);">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

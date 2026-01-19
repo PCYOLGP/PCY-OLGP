@@ -1,0 +1,251 @@
+<div class="wall-page">
+    <section class="hero-mini">
+        <div class="container text-center">
+            <span class="label">Community Wall</span>
+            <h1 class="animate-fade-in">PCY Wall</h1>
+            <p class="animate-fade-in" style="animation-delay: 0.1s">Sharing our journey and moments together.</p>
+        </div>
+    </section>
+
+    <section class="feed-section" *ngIf="view() === 'feed'">
+        <div class="container-small animate-slide-up">
+            @if (loading()) {
+            <div class="loading-state glass-card">
+                <div class="spinner"></div>
+                <p>Fetching memories...</p>
+            </div>
+            } @else if (error()) {
+            <div class="error-state glass-card">
+                <div class="error-icon">⚠️</div>
+                <h3>Oops! Something went wrong</h3>
+                <p>{{ error() }}</p>
+                <button (click)="loadPosts()" class="retry-btn">Try Again</button>
+            </div>
+            } @else {
+            @for (post of posts(); track post.id) {
+            <div class="post-card glass-card">
+                <div class="post-header">
+                    <div class="post-user" (click)="viewProfile(post.username)">
+                        <img *ngIf="post.username === 'OLGP_PCY'" src="assets/PCY.png" alt="Profile"
+                            class="user-avatar">
+                        <div *ngIf="post.username !== 'OLGP_PCY'" class="avatar small">{{ post.username[0].toUpperCase()
+                            }}</div>
+                        <div class="user-info">
+                            <span class="username">{{ post.username }}</span>
+                            <span class="timestamp">{{ post.timestamp | date:'MMM d, y, h:mm a' }}</span>
+                        </div>
+                    </div>
+                    <button class="more-btn">•••</button>
+                </div>
+
+                <div class="post-image" (click)="openPostModal(post)">
+                    <img [src]="post.image" [alt]="post.caption" (error)="handleImageError($event)">
+                </div>
+
+                <div class="post-footer">
+                    <div class="post-actions">
+                        <button class="action-btn like-btn" [class.liked]="isPostLiked(post)"
+                            (click)="toggleLike(post)">
+                            {{ isPostLiked(post) ? '❤️' : '🤍' }}
+                        </button>
+                        <button class="action-btn" (click)="openPostModal(post)">💬</button>
+                        <button class="action-btn">🔗</button>
+                    </div>
+
+                    <div class="post-caption">
+                        <p><span class="username" (click)="viewProfile(post.username)">{{ post.username }}</span> {{
+                            post.caption }}</p>
+                    </div>
+                </div>
+            </div>
+            } @empty {
+            <div class="empty-state glass-card animate-fade-in">
+                <div class="empty-icon">📸</div>
+                <h3>No posts yet</h3>
+                <p>Be the first to share something from our community!</p>
+            </div>
+            }
+            }
+        </div>
+    </section>
+
+    <!-- Profile View Section -->
+    <section class="profile-section py-12" *ngIf="view() === 'profile'">
+        <div class="container animate-slide-up">
+            <button (click)="backToFeed()"
+                class="mb-8 flex items-center gap-2 text-green-600 font-bold hover:underline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+                Back to Feed
+            </button>
+
+            <div
+                class="profile-header-info glass-card mb-8 p-8 rounded-[30px] shadow-xl border border-white/50 bg-white/10 backdrop-blur-md">
+                <div class="profile-main flex flex-col md:flex-row items-center gap-8">
+                    <img *ngIf="selectedProfileUsername() === 'OLGP_PCY'" src="assets/PCY.png" alt="Profile"
+                        class="profile-avatar-large w-32 h-32 md:w-40 md:h-40 rounded-full shadow-2xl border-4 border-white object-cover">
+                    <div *ngIf="selectedProfileUsername() !== 'OLGP_PCY'"
+                        class="profile-avatar-large w-32 h-32 md:w-40 md:h-40 rounded-full shadow-2xl border-4 border-white bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-5xl font-bold text-white uppercase">
+                        {{ selectedProfileUsername()![0] }}
+                    </div>
+
+                    <div class="profile-details text-center md:text-left flex-1">
+                        <div class="profile-username-row flex flex-col md:flex-row items-center gap-4 mb-4">
+                            <h2 class="text-3xl font-bold text-gray-800">{{ selectedProfileUsername() }}</h2>
+                            <button
+                                class="follow-btn px-8 py-2 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg shadow-green-600/20">Follow</button>
+                        </div>
+                        <div class="profile-stats flex justify-center md:justify-start gap-8 mb-6">
+                            <span><strong class="text-xl">{{ userPosts().length }}</strong> posts</span>
+                            <span><strong class="text-xl">{{ totalUserLikes() }}</strong> likes</span>
+                        </div>
+                        <div class="profile-bio max-w-lg">
+                            <p class="text-gray-600">
+                                {{ viewedUserProfile()?.bio || (selectedProfileUsername() === 'OLGP_PCY' ? 'Official
+                                Admin of OLGP Parish Commission on Youth. Leading the youth towards dynamic witness of
+                                God\'s love.' : 'Dedicated member of Our Lady of Guadalupe Parish Commission on Youth.')
+                                }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Posts Grid -->
+            <div class="profile-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
+                @for (post of userPosts(); track post.id) {
+                <div class="grid-item-container relative aspect-square rounded-2xl overflow-hidden cursor-pointer group shadow-lg"
+                    (click)="openPostModal(post)">
+                    <img [src]="post.image" [alt]="post.caption"
+                        class="grid-image w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div
+                        class="grid-item-overlay absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-6 text-white font-bold">
+                        <div class="overlay-stats">
+                            <span>❤️ {{ post.likes?.length || 0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                } @empty {
+                <div class="no-posts col-span-full py-20 text-center glass-card rounded-[30px]">
+                    <div class="no-posts-icon text-6xl mb-4">📸</div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">No Posts Yet</h3>
+                    <p class="text-gray-500">This user hasn't shared any memories on the wall yet.</p>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <!-- View Post Modal -->
+    <div class="modal-overlay" *ngIf="showPostModal()" (click)="closePostModal()">
+        <div class="modal-content glass-card big-post-modal" (click)="$event.stopPropagation()">
+            <button class="modal-close-outer" (click)="closePostModal()">✕</button>
+            <div class="modal-body p-0">
+                <div class="post-creation-area">
+                    <div class="preview-container">
+                        <img [src]="selectedPostForView()?.image" class="image-preview-full">
+                    </div>
+                    <div class="sidebar-area">
+                        <!-- Sidebar Header -->
+                        <div class="sidebar-header-user">
+                            <div class="user-meta-left">
+                                <img *ngIf="selectedPostForView()?.username === 'OLGP_PCY'" src="assets/PCY.png"
+                                    class="avatar small" alt="Admin">
+                                <div *ngIf="selectedPostForView()?.username !== 'OLGP_PCY'" class="avatar small"
+                                    (click)="viewProfile(selectedPostForView()?.username!)">{{
+                                    (selectedPostForView()?.username || 'U')[0].toUpperCase() }}</div>
+                                <div class="user-info-text cursor-pointer"
+                                    (click)="viewProfile(selectedPostForView()?.username!)">
+                                    <span class="username">{{ selectedPostForView()?.username }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Content: Caption & Comments -->
+                        <div class="sidebar-main-content comments-container">
+                            <div class="user-caption-row mb-6">
+                                <img *ngIf="selectedPostForView()?.username === 'OLGP_PCY'" src="assets/PCY.png"
+                                    class="avatar small cursor-pointer" alt="Admin"
+                                    (click)="viewProfile(selectedPostForView()?.username!)">
+                                <div *ngIf="selectedPostForView()?.username !== 'OLGP_PCY'"
+                                    class="avatar small cursor-pointer"
+                                    (click)="viewProfile(selectedPostForView()?.username!)">{{
+                                    (selectedPostForView()?.username || 'U')[0].toUpperCase() }}</div>
+                                <div class="caption-text-block">
+                                    <p><span class="username cursor-pointer font-bold"
+                                            (click)="viewProfile(selectedPostForView()?.username!)">{{
+                                            selectedPostForView()?.username }}</span> {{
+                                        selectedPostForView()?.caption }}</p>
+                                    <span class="post-date text-xs text-gray-400">{{ selectedPostForView()?.timestamp |
+                                        date:'MMMM d, y' }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Comments List -->
+                            <div class="comments-list">
+                                <ng-container *ngFor="let comment of postComments()">
+                                    <div class="comment-item mb-4" *ngIf="comment.username && comment.comment">
+                                        <img *ngIf="comment.username === 'OLGP_PCY'" src="assets/PCY.png"
+                                            class="avatar small cursor-pointer" alt="Admin"
+                                            (click)="viewProfile(comment.username)">
+                                        <div *ngIf="comment.username !== 'OLGP_PCY'" class="avatar small cursor-pointer"
+                                            (click)="viewProfile(comment.username)">{{
+                                            (comment.username || 'U')[0].toUpperCase() }}</div>
+                                        <div class="comment-content">
+                                            <p><span class="username font-bold mr-2 cursor-pointer"
+                                                    (click)="viewProfile(comment.username)">{{ comment.username
+                                                    }}</span> {{
+                                                comment.comment }}</p>
+                                            <span class="comment-date text-xs text-gray-400">{{ comment.timestamp |
+                                                date:'MMM d' }}</span>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div *ngIf="postComments().length === 0"
+                                    class="no-comments-yet text-center py-8 text-gray-400">
+                                    <p>No comments yet.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Footer -->
+                        <div class="sidebar-footer-actions border-t border-gray-100 p-4">
+                            <div class="engagement-icons flex justify-between mb-4">
+                                <div class="icons-left flex gap-4">
+                                    <button class="icon-btn text-xl like-btn"
+                                        [class.liked]="isPostLiked(selectedPostForView()!)"
+                                        (click)="toggleLike(selectedPostForView()!)">
+                                        {{ isPostLiked(selectedPostForView()!) ? '❤️' : '🤍' }}
+                                    </button>
+                                    <button class="icon-btn text-xl"
+                                        (click)="loadComments(selectedPostForView()!.id)">💬</button>
+                                    <button class="icon-btn text-xl">🔗</button>
+                                </div>
+                            </div>
+                            <div class="likes-info text-sm mb-2">
+                                <span><strong>{{ selectedPostForView()?.likes?.length || 0 }}</strong> likes</span>
+                            </div>
+
+                            <!-- Comment Input -->
+                            <div class="modal-comment-input flex items-center gap-3 pt-4 border-t border-gray-100"
+                                *ngIf="authService.currentUser()">
+                                <input type="text" [(ngModel)]="newComment" placeholder="Add a comment..."
+                                    (keyup.enter)="handlePostComment(selectedPostForView()!.id, newComment())"
+                                    class="flex-1 border-none outline-none text-sm bg-transparent">
+                                <button class="post-btn text-sm font-bold text-green-600 disabled:opacity-50"
+                                    [disabled]="!newComment().trim()"
+                                    (click)="handlePostComment(selectedPostForView()!.id, newComment())">Post</button>
+                            </div>
+                            <!-- Login Prompt -->
+                            <div class="login-prompt py-4 text-center border-t border-gray-100"
+                                *ngIf="!authService.currentUser()">
+                                <p class="text-sm text-gray-500">Please login to join the conversation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

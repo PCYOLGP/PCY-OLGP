@@ -1,0 +1,4 @@
+<app-navbar *ngIf="showNavbar()" />
+<main [class.pt-0]="!showNavbar()">
+    <router-outlet />
+</main>

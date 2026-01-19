@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+:root {
+  --primary-green: #388f3c;
+  --secondary-green: #166534;
+  --bg-gradient: linear-gradient(135deg,
+      #fdf4ff 0%,
+      #e0f2fe 15%,
+      #ffffff 30%,
+      #f0fdf4 45%,
+      #fdf4ff 60%,
+      #ffffff 75%,
+      #fdf4ff 90%,
+      #e0f2fe 100%);
+}
+
+body {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  color: #1a1a1a;
+  margin: 0;
+  padding: 0;
+}
+
+.page-container {
+  min-height: 100vh;
+  background: var(--bg-gradient);
+}
+
+/* Hide Scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

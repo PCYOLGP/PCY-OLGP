@@ -1,0 +1,41 @@
+<div class="officers-page">
+    <header class="page-header">
+        <div class="container">
+            <a routerLink="/about" class="back-link">← Back to About</a>
+            <h1 class="animate-fade-in">Our Legacy of Leadership</h1>
+            <p class="animate-fade-in">A tribute to the dedicated youth leaders who have served Our Lady of Guadalupe
+                Parish.</p>
+        </div>
+    </header>
+
+    <section class="officers-content">
+        <div class="container">
+            <div class="officers-grid">
+                <div *ngFor="let batch of officerBatches()" class="batch-card animate-slide-up">
+                    <div class="card-glass"></div>
+                    <div class="content-wrapper">
+                        <div class="batch-year">{{ batch.year }}</div>
+                        <div class="batch-coordinator">
+                            <span class="role">Coordinator</span>
+                            <span class="name">{{ batch.coordinator }}</span>
+                        </div>
+                        <div class="members-section">
+                            <span class="role">Executive Committee</span>
+                            <div class="members-list">
+                                <span *ngFor="let member of batch.members" class="member-tag">{{ member }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="page-footer">
+        <div class="container text-center">
+            <h2>Ready to lead the next generation?</h2>
+            <p>Join our mission and be a part of the history.</p>
+            <a routerLink="/contact" class="btn-primary">Become a Member</a>
+        </div>
+    </footer>
+</div>

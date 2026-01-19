@@ -1,0 +1,134 @@
+<div class="about-page">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content animate-fade-in">
+            <h1 class="hero-title">Faith. Fellowship. Service.</h1>
+            <p class="hero-subtitle">Empowering the youth of Our Lady of Guadalupe Parish to be dynamic witnesses of
+                God's love.</p>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Section -->
+    <section class="mission-vision">
+        <div class="container">
+            <div class="grid">
+                <div class="card mission animate-slide-up" style="animation-delay: 0.1s">
+                    <div class="icon">🎯</div>
+                    <h2>Our Mission</h2>
+                    <p>To foster a vibrant and inclusive community where young people can grow in faith, discover their
+                        God-given talents, and actively serve the parish and society.</p>
+                </div>
+                <div class="card vision animate-slide-up" style="animation-delay: 0.2s">
+                    <div class="icon">✨</div>
+                    <h2>Our Vision</h2>
+                    <p>A unified Parish Commission on Youth that inspires holistic development, spiritual maturity, and
+                        a lifelong commitment to the mission of the Church.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who We Are Section -->
+    <section class="who-we-are">
+        <div class="container">
+            <div class="content">
+                <div class="text-block">
+                    <span class="label">Who We Are</span>
+                    <h2>The Heart of OLGP Youth</h2>
+                    <p>The Parish Commission on Youth (PCY) is the primary organization dedicated to the youth of Our
+                        Lady of Guadalupe Parish. We are a family of young believers journeying together.</p>
+                    <div class="stats-mini">
+                        <div class="stat-item">
+                            <span class="count">50+</span>
+                            <span class="stat-label">Active Members</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="count">12+</span>
+                            <span class="stat-label">Years of Service</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-block">
+                    <div class="glass-container">
+                        <img src="assets/PCY.png" alt="PCY Community" class="about-image">
+                        <div class="glass-badge">EST. 2012</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History of Officers CTA -->
+    <section class="history-cta">
+        <div class="container text-center">
+            <div class="section-header">
+                <span class="label">Our Legacy</span>
+                <h2>History of Officers</h2>
+            </div>
+            <div class="cta-card animate-slide-up">
+                <p>Explore the timeline of our dedicated youth leaders who have shaped PCY throughout the years.</p>
+                <a routerLink="/officers" class="btn-secondary">View Full Officer History</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PCY Activities (Dynamic) -->
+    <section class="activities-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="label">Our Journey</span>
+                <h2>PCY Activities through the years</h2>
+            </div>
+            <div class="activities-timeline">
+                <div *ngFor="let activity of activities()" class="activity-item animate-slide-up">
+                    <div class="activity-icon">{{ activity.icon }}</div>
+                    <div class="activity-content">
+                        <div class="activity-header">
+                            <h3>{{ activity.title }}</h3>
+                            <span class="activity-year">{{ activity.year }}</span>
+                        </div>
+                        <p>{{ activity.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="core-values">
+        <div class="container">
+            <h2 class="section-title">Our Core Values</h2>
+            <div class="values-grid">
+                <div class="value-item">
+                    <div class="value-icon">🙏</div>
+                    <h3>Faith-Centered</h3>
+                    <p>Putting Christ at the center of everything we do.</p>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">🤝</div>
+                    <h3>Unity</h3>
+                    <p>Building strong bonds of brotherhood and sisterhood.</p>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">🤲</div>
+                    <h3>Selfless Service</h3>
+                    <p>Offering our time and talents for God.</p>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">🌱</div>
+                    <h3>Growth</h3>
+                    <p>Continuous development in life and spirit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join Section -->
+    <section class="join-banner">
+        <div class="banner-content">
+            <h2>Ready to be part of the journey?</h2>
+            <p>Join our community and discover your purpose.</p>
+            <a href="/contact" class="btn-primary">Connect With Us</a>
+        </div>
+    </section>
+</div>

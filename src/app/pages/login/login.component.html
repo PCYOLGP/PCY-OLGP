@@ -1,0 +1,37 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#faf5ff] to-[#f0f9ff] px-4">
+    <div
+        class="bg-white p-10 rounded-[30px] shadow-2xl w-full max-w-md border border-white/50 backdrop-blur-sm animate-fade-in">
+        <div class="text-center mb-8">
+            <img src="assets/PCY.png" alt="PCY Logo" class="w-24 h-24 mx-auto mb-4 rounded-full shadow-lg">
+            <h1 class="text-3xl font-bold text-[#1f2937]">Login</h1>
+            <p class="text-gray-500 mt-2">Sign in to your account</p>
+        </div>
+
+        <div class="space-y-6">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                <input type="text" [(ngModel)]="username" (keyup.enter)="onLogin()" placeholder="Username"
+                    class="w-full px-5 py-4 rounded-2xl border border-gray-100 focus:border-[#388f3c] focus:ring-4 focus:ring-[#388f3c]/10 outline-none transition-all text-lg">
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                <input type="password" [(ngModel)]="password" (keyup.enter)="onLogin()" placeholder="••••••••"
+                    class="w-full px-5 py-4 rounded-2xl border border-gray-100 focus:border-[#388f3c] focus:ring-4 focus:ring-[#388f3c]/10 outline-none transition-all text-lg tracking-widest">
+            </div>
+
+            <button (click)="onLogin()"
+                class="w-full bg-[#388f3c] hover:bg-[#228219] text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#388f3c]/20 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                Sign In
+            </button>
+
+            <p *ngIf="error()" class="text-red-500 text-sm text-center font-medium animate-shake">
+                Incorrect username or password.
+            </p>
+        </div>
+
+        <div class="mt-8 pt-8 border-t border-gray-50 text-center">
+            <a href="/" class="text-[#388f3c] hover:underline font-medium">Back to Home</a>
+        </div>
+    </div>
+</div>
