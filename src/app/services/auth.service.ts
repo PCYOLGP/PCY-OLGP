@@ -4,6 +4,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError, of, map, throwError } from 'rxjs';
 
+import { environment } from '../../environments/environment';
+
 export interface User {
     id: number;
     username: string;
@@ -12,6 +14,7 @@ export interface User {
     fname?: string;
     lname?: string;
     bio?: string;
+    password?: string;
 }
 
 @Injectable({
@@ -21,6 +24,7 @@ export class AuthService {
     private platformId = inject(PLATFORM_ID);
     private router = inject(Router);
     private http = inject(HttpClient);
+    private apiUrl = environment.apiUrl;
 
     private _isLoggedIn = signal<boolean>(this.getInitialLoginState());
     isLoggedIn = this._isLoggedIn.asReadonly();
@@ -43,7 +47,7 @@ export class AuthService {
 
             // Fallback for existing sessions before the update
             if (localStorage.getItem('isLoggedIn') === 'true') {
-                const defaultUser: User = { id: 0, username: 'OLGP_PCY' };
+                const defaultUser: User = { id: 1, username: 'user' };
                 localStorage.setItem('user', JSON.stringify(defaultUser));
                 return defaultUser;
             }
@@ -52,15 +56,19 @@ export class AuthService {
     }
 
     login(username: string, password: string): Observable<boolean> {
-        return (this.http as any).post('/api/login', { username, password }).pipe(
-            map((user: User) => {
-                if (isPlatformBrowser(this.platformId)) {
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('user', JSON.stringify(user));
+        return (this.http as any).get(`${this.apiUrl}/users?username=${username}&password=${password}`).pipe(
+            map((users: User[]) => {
+                if (users.length > 0) {
+                    const user = users[0];
+                    if (isPlatformBrowser(this.platformId)) {
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('user', JSON.stringify(user));
+                    }
+                    this._currentUser.set(user);
+                    this._isLoggedIn.set(true);
+                    return true;
                 }
-                this._currentUser.set(user);
-                this._isLoggedIn.set(true);
-                return true;
+                return false;
             }),
             catchError(() => of(false))
         );
@@ -77,7 +85,7 @@ export class AuthService {
     }
 
     updateProfile(id: number, data: any): Observable<User> {
-        return (this.http as any).patch(`/api/users/${id}`, data).pipe(
+        return (this.http as any).patch(`${this.apiUrl}/users/${id}`, data).pipe(
             tap((updatedUser: User) => {
                 const currentUser = this._currentUser();
                 if (currentUser && currentUser.id === updatedUser.id) {
@@ -97,7 +105,7 @@ export class AuthService {
         formData.append('username', username);
         formData.append('image', file);
 
-        return (this.http as any).post(`/api/users/${id}/profile-image`, formData).pipe(
+        return (this.http as any).post(`${this.apiUrl}/users/${id}/profile-image`, formData).pipe(
             tap((updatedUser: User) => {
                 localStorage.setItem('user', JSON.stringify(updatedUser));
                 this._currentUser.set(updatedUser);
@@ -110,7 +118,7 @@ export class AuthService {
     }
 
     getUserByUsername(username: string): Observable<User | null> {
-        return (this.http as any).get(`/api/users?username=${username}`).pipe(
+        return (this.http as any).get(`${this.apiUrl}/users?username=${username}`).pipe(
             map((users: User[]) => users.length > 0 ? users[0] : null),
             catchError(() => of(null))
         );

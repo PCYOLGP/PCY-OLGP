@@ -1,0 +1,16 @@
+image: node:20
+
+pages:
+  stage: deploy
+  script:
+    - npm install
+    - npx ng build --configuration production --base-href /PCY-WEBDOC/
+    - mkdir .public
+    - cp -r dist/PCY-WEBDOC/browser/* .public
+    - cp .public/index.html .public/404.html
+    - mv .public public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

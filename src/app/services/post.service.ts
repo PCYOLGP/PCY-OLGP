@@ -30,12 +30,14 @@ export interface Comment {
     userImage?: string | null;
 }
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
     providedIn: 'root'
 })
 export class PostService {
     private http = inject(HttpClient);
-    private apiUrl = '/api/posts';
+    private apiUrl = `${environment.apiUrl}/posts`;
 
     getPosts(): Observable<Post[]> {
         return (this.http as any).get(this.apiUrl).pipe(
