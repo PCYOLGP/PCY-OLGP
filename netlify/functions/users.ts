@@ -1,27 +1,28 @@
+import { Handler } from '@netlify/functions';
 import { neon } from '@netlify/neon';
 
-export default async (req) => {
-    const url = new URL(req.url);
-    const path = url.pathname.replace('/.netlify/functions/users', '').replace('/api/users', '');
+const sql = neon();
+
+export const handler: Handler = async (event) => {
+    const method = event.httpMethod;
+    const path = event.path.replace('/.netlify/functions/users', '').replace('/api/users', '');
     const segments = path.split('/').filter(Boolean);
-    const method = req.method;
-    const sql = neon();
 
     try {
         if (method === 'GET') {
-            const username = url.searchParams.get('username');
+            const username = event.queryStringParameters?.username;
             if (username) {
                 const users = await sql`
           SELECT id, username, email, image, fname, lname, bio
           FROM users WHERE username = ${username}
         `;
-                return new Response(JSON.stringify(users), { status: 200 });
+                return { statusCode: 200, body: JSON.stringify(users) };
             }
         }
 
         if (method === 'PATCH' && segments.length === 1) {
             const id = segments[0];
-            const { username, bio, password } = await req.json();
+            const { username, bio, password } = JSON.parse(event.body || '{}');
 
             let result;
             if (password) {
@@ -39,11 +40,11 @@ export default async (req) => {
           RETURNING id, username, email, image, fname, lname, bio
         `;
             }
-            return new Response(JSON.stringify(result[0]), { status: 200 });
+            return { statusCode: 200, body: JSON.stringify(result[0]) };
         }
 
-        return new Response('Method Not Allowed', { status: 405 });
-    } catch (err) {
-        return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+        return { statusCode: 405, body: 'Method Not Allowed' };
+    } catch (err: any) {
+        return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
     }
 };
