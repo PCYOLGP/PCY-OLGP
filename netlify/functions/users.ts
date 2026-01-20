@@ -1,6 +1,7 @@
 import { Handler } from '@netlify/functions';
-import { sql } from './lib/db';
+import { neon } from '@netlify/neon';
 
+const sql = neon();
 
 export const handler: Handler = async (event) => {
     const method = event.httpMethod;
