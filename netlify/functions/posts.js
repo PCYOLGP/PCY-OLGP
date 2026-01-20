@@ -1,90 +1,78 @@
-const { Client } = require('pg');
+import { neon } from '@netlify/neon';
 
-exports.handler = async (event, context) => {
-    const method = event.httpMethod;
-    const path = event.path.replace('/api/posts', '').replace('/.netlify/functions/posts', '');
+export default async (req) => {
+    const url = new URL(req.url);
+    // Netlify Functions v2: path is in url.pathname
+    // Expected path format: /.netlify/functions/posts/... or /api/posts/... (if redirected)
+    const path = url.pathname.replace('/.netlify/functions/posts', '').replace('/api/posts', '');
     const segments = path.split('/').filter(Boolean);
-    const id = segments[0];
-
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false }
-    });
+    const method = req.method;
+    const sql = neon();
 
     try {
-        await client.connect();
-
         if (method === 'GET') {
             if (segments.length === 2 && segments[1] === 'comments') {
-                // GET /api/posts/:postId/comments
-                const result = await client.query('SELECT * FROM comments WHERE post_id = $1 ORDER BY timestamp ASC', [segments[0]]);
-                return { statusCode: 200, body: JSON.stringify(result.rows) };
-            } else if (id) {
-                // GET /api/posts/:id
-                const result = await client.query('SELECT * FROM posts WHERE id = $1', [id]);
-                return { statusCode: 200, body: JSON.stringify(result.rows[0] || {}) };
+                const postId = segments[0];
+                const comments = await sql`SELECT * FROM comments WHERE post_id = ${postId} ORDER BY timestamp ASC`;
+                return new Response(JSON.stringify(comments), { status: 200 });
+            } else if (segments.length === 1) {
+                const postId = segments[0];
+                const posts = await sql`SELECT * FROM posts WHERE id = ${postId}`;
+                return new Response(JSON.stringify(posts[0] || {}), { status: 200 });
             } else {
-                // GET /api/posts
-                const result = await client.query('SELECT * FROM posts ORDER BY timestamp DESC');
-                return { statusCode: 200, body: JSON.stringify(result.rows) };
+                const posts = await sql`SELECT * FROM posts ORDER BY timestamp DESC`;
+                return new Response(JSON.stringify(posts), { status: 200 });
             }
         }
 
         if (method === 'POST') {
+            const body = await req.json();
             if (segments.length === 2 && segments[1] === 'comments') {
-                // POST /api/posts/:postId/comments
-                const { username, comment } = JSON.parse(event.body);
-                const result = await client.query(
-                    'INSERT INTO comments (post_id, username, comment, timestamp) VALUES ($1, $2, $3, NOW()) RETURNING *',
-                    [segments[0], username, comment]
-                );
-                return { statusCode: 201, body: JSON.stringify(result.rows[0]) };
-            } else if (segments.length === 2 && segments[1] === 'toggle-like') {
-                // POST /api/posts/:postId/toggle-like
-                const { userId } = JSON.parse(event.body);
                 const postId = segments[0];
-
-                // Check if liked
-                const check = await client.query('SELECT * FROM likes WHERE post_id = $1 AND user_id = $2', [postId, userId]);
-                if (check.rows.length > 0) {
-                    await client.query('DELETE FROM likes WHERE post_id = $1 AND user_id = $2', [postId, userId]);
-                    return { statusCode: 200, body: JSON.stringify({ success: true, liked: false }) };
+                const { username, comment } = body;
+                const result = await sql`
+          INSERT INTO comments (post_id, username, comment, timestamp)
+          VALUES (${postId}, ${username}, ${comment}, NOW())
+          RETURNING *
+        `;
+                return new Response(JSON.stringify(result[0]), { status: 201 });
+            } else if (segments.length === 2 && segments[1] === 'toggle-like') {
+                const postId = segments[0];
+                const { userId } = body;
+                const check = await sql`SELECT * FROM likes WHERE post_id = ${postId} AND user_id = ${userId}`;
+                if (check.length > 0) {
+                    await sql`DELETE FROM likes WHERE post_id = ${postId} AND user_id = ${userId}`;
+                    return new Response(JSON.stringify({ success: true, liked: false }), { status: 200 });
                 } else {
-                    await client.query('INSERT INTO likes (post_id, user_id, timestamp) VALUES ($1, $2, NOW())', [postId, userId]);
-                    return { statusCode: 200, body: JSON.stringify({ success: true, liked: true }) };
+                    await sql`INSERT INTO likes (post_id, user_id, timestamp) VALUES (${postId}, ${userId}, NOW())`;
+                    return new Response(JSON.stringify({ success: true, liked: true }), { status: 200 });
                 }
             } else {
-                // POST /api/posts
-                const { username, caption, image } = JSON.parse(event.body);
-                const result = await client.query(
-                    'INSERT INTO posts (username, caption, image, timestamp) VALUES ($1, $2, $3, NOW()) RETURNING *',
-                    [username, caption, image]
-                );
-                return { statusCode: 201, body: JSON.stringify(result.rows[0]) };
+                const { username, caption, image } = body;
+                const result = await sql`
+          INSERT INTO posts (username, caption, image, timestamp)
+          VALUES (${username}, ${caption}, ${image}, NOW())
+          RETURNING *
+        `;
+                return new Response(JSON.stringify(result[0]), { status: 201 });
             }
         }
 
-        if (method === 'PATCH' && id) {
-            const { caption } = JSON.parse(event.body);
-            const result = await client.query(
-                'UPDATE posts SET caption = $1 WHERE id = $2 RETURNING *',
-                [caption, id]
-            );
-            return { statusCode: 200, body: JSON.stringify(result.rows[0]) };
+        if (method === 'PATCH' && segments.length === 1) {
+            const postId = segments[0];
+            const { caption } = await req.json();
+            const result = await sql`UPDATE posts SET caption = ${caption} WHERE id = ${postId} RETURNING *`;
+            return new Response(JSON.stringify(result[0]), { status: 200 });
         }
 
-        if (method === 'DELETE' && id) {
-            await client.query('DELETE FROM posts WHERE id = $1', [id]);
-            return { statusCode: 204, body: '' };
+        if (method === 'DELETE' && segments.length === 1) {
+            const postId = segments[0];
+            await sql`DELETE FROM posts WHERE id = ${postId}`;
+            return new Response(null, { status: 204 });
         }
 
-        return { statusCode: 405, body: 'Method Not Allowed' };
+        return new Response('Method Not Allowed', { status: 405 });
     } catch (err) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: err.message })
-        };
-    } finally {
-        await client.end();
+        return new Response(JSON.stringify({ error: err.message }), { status: 500 });
     }
 };

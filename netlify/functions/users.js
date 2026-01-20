@@ -1,46 +1,49 @@
-const { Client } = require('pg');
+import { neon } from '@netlify/neon';
 
-exports.handler = async (event, context) => {
-    const method = event.httpMethod;
-    const client = new Client({
-        connectionString: process.env.DATABASE_URL,
-        ssl: { rejectUnauthorized: false }
-    });
+export default async (req) => {
+    const url = new URL(req.url);
+    const path = url.pathname.replace('/.netlify/functions/users', '').replace('/api/users', '');
+    const segments = path.split('/').filter(Boolean);
+    const method = req.method;
+    const sql = neon();
 
     try {
-        await client.connect();
-
         if (method === 'GET') {
-            const username = event.queryStringParameters.username;
+            const username = url.searchParams.get('username');
             if (username) {
-                const result = await client.query('SELECT id, username, email, image, fname, lname, bio FROM users WHERE username = $1', [username]);
-                return { statusCode: 200, body: JSON.stringify(result.rows) };
+                const users = await sql`
+          SELECT id, username, email, image, fname, lname, bio
+          FROM users WHERE username = ${username}
+        `;
+                return new Response(JSON.stringify(users), { status: 200 });
             }
         }
 
-        if (method === 'PATCH') {
-            const path = event.path.split('/').filter(Boolean);
-            const id = path[path.length - 1];
-            const { username, bio, password } = JSON.parse(event.body);
+        if (method === 'PATCH' && segments.length === 1) {
+            const id = segments[0];
+            const { username, bio, password } = await req.json();
 
-            let query = 'UPDATE users SET username = $1, bio = $2';
-            let params = [username, bio, id];
-
+            let result;
             if (password) {
-                query += ', password = $4 WHERE id = $3 RETURNING id, username, email, image, fname, lname, bio';
-                params.push(password);
+                result = await sql`
+          UPDATE users
+          SET username = ${username}, bio = ${bio}, password = ${password}
+          WHERE id = ${id}
+          RETURNING id, username, email, image, fname, lname, bio
+        `;
             } else {
-                query += ' WHERE id = $3 RETURNING id, username, email, image, fname, lname, bio';
+                result = await sql`
+          UPDATE users
+          SET username = ${username}, bio = ${bio}
+          WHERE id = ${id}
+          RETURNING id, username, email, image, fname, lname, bio
+        `;
             }
-
-            const result = await client.query(query, params);
-            return { statusCode: 200, body: JSON.stringify(result.rows[0]) };
+            return new Response(JSON.stringify(result[0]), { status: 200 });
         }
 
-        return { statusCode: 405, body: 'Method Not Allowed' };
+        return new Response('Method Not Allowed', { status: 405 });
     } catch (err) {
-        return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
-    } finally {
-        await client.end();
+        return new Response(JSON.stringify({ error: err.message }), { status: 500 });
     }
 };

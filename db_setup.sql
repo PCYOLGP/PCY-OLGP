@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -33,3 +35,7 @@ CREATE TABLE IF NOT EXISTS likes (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(post_id, user_id)
 );
+
+-- Example: Insert a user with a hashed password
+-- INSERT INTO users (username, password, bio) 
+-- VALUES ('OLGP_PCY', crypt('admin123', gen_salt('bf')), 'Official Admin');
