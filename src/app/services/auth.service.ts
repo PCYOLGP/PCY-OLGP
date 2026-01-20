@@ -58,7 +58,7 @@ export class AuthService {
     login(username: string, password: string): Observable<boolean> {
         return (this.http as any).post(`${this.apiUrl}/login`, { username, password }).pipe(
             map((user: User) => {
-                if (user) {
+                if (user && user.id !== undefined) {
                     if (isPlatformBrowser(this.platformId)) {
                         localStorage.setItem('isLoggedIn', 'true');
                         localStorage.setItem('user', JSON.stringify(user));
@@ -69,7 +69,10 @@ export class AuthService {
                 }
                 return false;
             }),
-            catchError(() => of(false))
+            catchError((err) => {
+                // Return original error so component can show details
+                return throwError(() => err);
+            })
         );
     }
 

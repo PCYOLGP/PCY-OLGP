@@ -1,0 +1,11 @@
+{
+    "/api": {
+        "target": "http://localhost/PCY-WEBDOC/php-backend",
+        "secure": false,
+        "pathRewrite": {
+            "^/api": ""
+        },
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}
