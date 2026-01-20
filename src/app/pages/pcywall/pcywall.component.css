@@ -467,3 +467,46 @@
     flex: 1;
     font-size: 0.9rem;
 }
+
+/* Likes List Modal Styles */
+.likes-list-modal {
+    max-width: 400px !important;
+    height: auto !important;
+    max-height: 500px !important;
+}
+
+.likes-modal-header {
+    background: white;
+    z-index: 10;
+}
+
+.likes-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.likes-modal-body::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 10px;
+}
+
+.follow-btn-small {
+    font-size: 0.8rem !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.hover\:underline:hover {
+    text-decoration: underline;
+}
+
+.likes-info {
+    font-family: inherit;
+    color: inherit;
+    outline: none;
+}
+
+.likes-info:hover strong {
+    color: #388f3c;
+}

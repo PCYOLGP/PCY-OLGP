@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PostService, Post } from '../../services/post.service';
+import { PostService, Post, Like } from '../../services/post.service';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Subscription, interval } from 'rxjs';
@@ -26,6 +26,8 @@ export class PcyWallComponent implements OnInit, OnDestroy {
   showPostModal = signal(false);
   postComments = signal<any[]>([]);
   newComment = signal('');
+  showLikesModal = signal(false);
+  likesToShow = signal<Like[]>([]);
 
   userPosts = computed(() => {
     const username = this.selectedProfileUsername();
@@ -61,10 +63,19 @@ export class PcyWallComponent implements OnInit, OnDestroy {
 
         // Update modal post if open
         const currentModalPost = this.selectedPostForView();
-        if (this.showPostModal() && currentModalPost) {
+        if (currentModalPost) {
           const updated = sorted.find(p => p.id === currentModalPost.id);
-          if (updated) this.selectedPostForView.set(updated);
-          this.loadComments(currentModalPost.id);
+          if (updated) {
+            this.selectedPostForView.set(updated);
+
+            // If likes modal is open for this post, refresh the list
+            if (this.showLikesModal()) {
+              this.likesToShow.set(updated.likes || []);
+            }
+          }
+          if (this.showPostModal()) {
+            this.loadComments(currentModalPost.id);
+          }
         }
       }
     });
@@ -108,6 +119,7 @@ export class PcyWallComponent implements OnInit, OnDestroy {
     this.selectedProfileUsername.set(username);
     this.view.set('profile');
     this.closePostModal();
+    this.closeLikesModal();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Fetch user details for bio etc
@@ -159,5 +171,21 @@ export class PcyWallComponent implements OnInit, OnDestroy {
       this.newComment.set('');
       this.refreshData();
     });
+  }
+
+  openLikesModal(post: Post | null | undefined) {
+    if (!post || !post.likes || post.likes.length === 0) return;
+    this.selectedPostForView.set(post);
+    this.likesToShow.set(post.likes);
+    this.showLikesModal.set(true);
+  }
+
+  closeLikesModal() {
+    this.showLikesModal.set(false);
+    this.likesToShow.set([]);
+    // Only clear selectedPostForView if the post detail modal is also closed
+    if (!this.showPostModal()) {
+      this.selectedPostForView.set(null);
+    }
   }
 }

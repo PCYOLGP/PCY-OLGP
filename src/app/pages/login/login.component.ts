@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent implements OnInit {
   username = '';
   password = '';
+  showPassword = signal(false);
   error = signal(false);
 
   private authService = inject(AuthService);

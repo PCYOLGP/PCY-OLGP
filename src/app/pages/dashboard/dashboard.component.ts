@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { PostService, Post } from '../../services/post.service';
+import { PostService, Post, Like } from '../../services/post.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { Subscription, interval } from 'rxjs';
@@ -27,6 +27,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   showCreateModal = signal(false);
   isEditing = signal(false);
   showLogoutConfirm = signal(false);
+  showDeleteConfirm = signal(false);
+  postIdToDelete = signal<number | null>(null);
   editingPost = signal<Post | null>(null);
   selectedPostForView = signal<Post | null>(null);
   showPostModal = signal(false);
@@ -34,6 +36,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   activeMenuId = signal<number | null>(null);
   newComment = '';
   postComments = signal<any[]>([]);
+  isLoadingPosts = signal(false);
+  showLikesModal = signal(false);
+  likesToShow = signal<Like[]>([]);
 
   // Edit Profile States
   showEditProfileModal = signal(false);
@@ -148,15 +153,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const currentModalPost = this.selectedPostForView();
       if (this.showPostModal() && currentModalPost) {
         const updated = sorted.find(p => p.id === currentModalPost.id);
-        if (updated) this.selectedPostForView.set(updated);
+        if (updated) {
+          this.selectedPostForView.set(updated);
+          // If likes modal is open for this post, refresh the list
+          if (this.showLikesModal()) {
+            this.likesToShow.set(updated.likes || []);
+          }
+        }
         this.loadComments(currentModalPost.id);
       }
     });
   }
 
   loadPosts() {
+    this.isLoadingPosts.set(true);
     this.postService.getPosts().subscribe(data => {
       this.posts.set(data.sort((a, b) => b.id - a.id));
+      // Add a slight delay for smooth transition if data loads too fast
+      setTimeout(() => {
+        this.isLoadingPosts.set(false);
+      }, 800);
     });
   }
 
@@ -185,6 +201,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.selectedProfileUsername.set(username);
     this.view.set('profile');
     this.closePostModal();
+    this.closeLikesModal();
     this.closeAllMenus();
 
     // Fetch user details for bio etc
@@ -461,13 +478,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   handleDeletePost(id: number) {
-    if (confirm('Are you sure you want to delete this post?')) {
+    this.postIdToDelete.set(id);
+    this.showDeleteConfirm.set(true);
+  }
+
+  confirmDeletePost() {
+    const id = this.postIdToDelete();
+    if (id !== null) {
       this.postService.deletePost(id).subscribe({
         next: () => {
           this.loadPosts();
           this.activeMenuId.set(null);
+          this.showDeleteConfirm.set(false);
+          this.postIdToDelete.set(null);
         },
-        error: (err) => console.error('Error deleting post:', err)
+        error: (err) => {
+          console.error('Error deleting post:', err);
+          this.showDeleteConfirm.set(false);
+        }
       });
     }
   }
@@ -507,5 +535,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.refreshData();
       }
     });
+  }
+
+  openLikesModal(post: Post | null | undefined) {
+    if (!post || !post.likes || post.likes.length === 0) return;
+    this.likesToShow.set(post.likes);
+    this.showLikesModal.set(true);
+  }
+
+  closeLikesModal() {
+    this.showLikesModal.set(false);
+    this.likesToShow.set([]);
   }
 }

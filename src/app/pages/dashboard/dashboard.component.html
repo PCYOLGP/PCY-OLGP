@@ -1,4 +1,12 @@
 <div class="dashboard-page overflow-hidden">
+    <!-- Page Loader Animation -->
+    <div class="page-loader" *ngIf="isUploading() || isLoadingPosts()">
+        <div class="loader-content">
+            <img src="assets/PCY.png" class="loader-logo" alt="Loading">
+            <div class="loader-spinner"></div>
+            <p class="loader-text">{{ isUploading() ? 'Posting your moment...' : 'Preparing community feed...' }}</p>
+        </div>
+    </div>
     <!-- Main Header -->
     <header class="dashboard-header">
         <div class="header-brand">
@@ -144,6 +152,11 @@
                                 <button class="action-btn" (click)="openPostModal(post)">💬</button>
                                 <button class="action-btn">🔗</button>
                             </div>
+                            <button
+                                class="likes-info text-sm mb-2 cursor-pointer border-none bg-transparent p-0 text-left w-full font-inherit"
+                                (click)="openLikesModal(post)">
+                                <span><strong>{{ post.likes?.length || 0 }}</strong> likes</span>
+                            </button>
                             <div class="post-caption">
                                 <p><span class="username" (click)="viewProfile(post.username)">{{ post.username
                                         }}</span> {{ post.caption }}</p>
@@ -252,7 +265,7 @@
             <div class="logout-icon-large mb-6">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
                     stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2 2h4" />
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                     <polyline points="16 17 21 12 16 7" />
                     <line x1="21" x2="9" y1="12" y2="12" />
                 </svg>
@@ -263,6 +276,31 @@
             <div class="confirmation-actions">
                 <button class="confirm-btn-logout" (click)="confirmLogout()">Yes, Logout</button>
                 <button class="cancel-btn-logout" (click)="showLogoutConfirm.set(false)">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Post Confirmation Modal -->
+<div class="modal-overlay delete-modal" *ngIf="showDeleteConfirm()" (click)="showDeleteConfirm.set(false)">
+    <div class="modal-content glass-card confirmation-card" (click)="$event.stopPropagation()">
+        <div class="confirmation-body">
+            <div class="delete-icon-large mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                    stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18" />
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+            </div>
+            <h3>Delete Post?</h3>
+            <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+
+            <div class="confirmation-actions">
+                <button class="confirm-btn-logout" (click)="confirmDeletePost()">Delete Post</button>
+                <button class="cancel-btn-logout" (click)="showDeleteConfirm.set(false)">Cancel</button>
             </div>
         </div>
     </div>
@@ -338,7 +376,8 @@
                             </div>
                             <button class="icon-btn">🔖</button>
                         </div>
-                        <div class="likes-info">
+                        <div class="likes-info cursor-pointer"
+                            (click)="openLikesModal(isEditing() ? editingPost() : null)">
                             <span><strong>{{ (showPostModal() ? selectedPostForView()?.likes?.length : (isEditing() ?
                                     editingPost()?.likes?.length : 0)) || 0 }}</strong> likes</span>
                         </div>
@@ -455,9 +494,11 @@
                             </div>
                             <button class="icon-btn">🔖</button>
                         </div>
-                        <div class="likes-info">
+                        <button
+                            class="likes-info text-sm mb-2 cursor-pointer border-none bg-transparent p-0 text-left w-full font-inherit"
+                            (click)="openLikesModal(selectedPostForView())">
                             <span><strong>{{ selectedPostForView()?.likes?.length || 0 }}</strong> likes</span>
-                        </div>
+                        </button>
 
                         <div class="modal-comment-input" *ngIf="authService.currentUser()">
                             <input type="text" [(ngModel)]="newComment" placeholder="Add a comment..."
@@ -558,6 +599,25 @@
                     </button>
                     <button class="alt-action-btn flex-1 !rounded-xl" (click)="closeEditProfileModal()"
                         style="border: 1px solid rgba(0,0,0,0.1);">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Likes List Modal -->
+<div class="modal-overlay" *ngIf="showLikesModal()" (click)="closeLikesModal()" style="z-index: 3000;">
+    <div class="modal-content glass-card likes-list-modal" (click)="$event.stopPropagation()">
+        <div class="likes-modal-header border-b border-gray-100 p-4 flex justify-between items-center">
+            <h3 class="font-bold text-gray-800">Likes</h3>
+            <button (click)="closeLikesModal()" class="text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+        <div class="likes-modal-body p-4 max-h-[400px] overflow-y-auto">
+            <div *ngFor="let like of likesToShow()" class="like-user-item flex items-center justify-between mb-4">
+                <div class="user-meta flex items-center gap-3 cursor-pointer"
+                    (click)="viewProfile(like.username || 'Unknown')">
+                    <div class="avatar small">{{ (like.username || 'U')[0].toUpperCase() }}</div>
+                    <span class="username font-bold text-gray-700">{{ like.username }}</span>
                 </div>
             </div>
         </div>

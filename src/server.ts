@@ -130,7 +130,10 @@ app.get('/api/posts', async (req, res) => {
         ...p,
         image: p.image && !p.image.startsWith('/') ? `/${p.image}` : (p.image || ''),
         userImage: userImage,
-        likes: likes.filter((l: any) => l.post_id === p.id)
+        likes: likes.filter((l: any) => l.post_id === p.id).map((l: any) => {
+          const likeUser = db.users.find((u: any) => u.id === l.user_id);
+          return { ...l, username: likeUser?.username || 'Unknown' };
+        })
       };
     });
 
@@ -258,18 +261,20 @@ app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     const db = await fs.readJson(dbPath);
 
-    // Treat 'admin' as an alias for 'OLGP_PCY'
     const loginUsername = username === 'admin' ? 'OLGP_PCY' : username;
+    console.log(`[API] Login attempt for username: ${username} (aliased to ${loginUsername})`);
 
     const user = db.users.find((u: any) =>
       u.username === loginUsername && u.password === password
     );
 
     if (user) {
+      console.log(`[API] Login successful for: ${loginUsername}`);
       // Don't send password back
       const { password: _, ...userWithoutPassword } = user;
       return res.json(userWithoutPassword);
     } else {
+      console.warn(`[API] Login failed for: ${loginUsername}`);
       return res.status(401).json({ error: 'Invalid username or password' });
     }
   } catch (error) {

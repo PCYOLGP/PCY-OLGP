@@ -56,10 +56,9 @@ export class AuthService {
     }
 
     login(username: string, password: string): Observable<boolean> {
-        return (this.http as any).get(`${this.apiUrl}/users?username=${username}&password=${password}`).pipe(
-            map((users: User[]) => {
-                if (users.length > 0) {
-                    const user = users[0];
+        return (this.http as any).post(`${this.apiUrl}/login`, { username, password }).pipe(
+            map((user: User) => {
+                if (user) {
                     if (isPlatformBrowser(this.platformId)) {
                         localStorage.setItem('isLoggedIn', 'true');
                         localStorage.setItem('user', JSON.stringify(user));
