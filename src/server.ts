@@ -23,26 +23,10 @@ export async function netlifyAppEngineHandler(request: Request): Promise<Respons
    */
   const url = new URL(request.url);
 
-  // Forward API routes to PHP backend
+  // Example placeholder for API routes
   if (url.pathname.startsWith('/api/')) {
-    const phpUrl = new URL(url.pathname.replace(/^\/api/, ''), 'http://localhost/PCY-WEBDOC/php-backend/');
-    // Append query parameters
-    url.searchParams.forEach((value, key) => phpUrl.searchParams.append(key, value));
-
-    try {
-      const response = await fetch(phpUrl.toString(), {
-        method: request.method,
-        headers: request.headers,
-        body: request.method !== 'GET' ? await request.clone().blob() : null,
-      });
-      return response;
-    } catch (err) {
-      console.error('Error proxying to PHP:', err);
-      return new Response(JSON.stringify({ error: 'Failed to reach PHP backend', details: err }), {
-        status: 502,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
+    // For now, we delegate to Angular or return a 404 if not handled by Angular Server Routes.
+    // If you had custom express logic, it should be migrated to Netlify Functions.
   }
 
   const result = await angularAppEngine.handle(request, context);

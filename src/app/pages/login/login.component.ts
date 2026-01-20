@@ -26,30 +26,14 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  errorMessage = signal('');
-
   onLogin() {
-    this.authService.login(this.username, this.password).subscribe({
-      next: (success) => {
-        if (success) {
-          this.router.navigate(['/dashboard']);
-        } else {
-          this.showError('Incorrect username or password.');
-        }
-      },
-      error: (err) => {
-        const msg = err.error?.message || err.error?.error || 'Server connection failed';
-        this.showError(msg);
+    this.authService.login(this.username, this.password).subscribe(success => {
+      if (success) {
+        this.router.navigate(['/dashboard']);
+      } else {
+        this.error.set(true);
+        setTimeout(() => this.error.set(false), 2000);
       }
     });
-  }
-
-  private showError(msg: string) {
-    this.errorMessage.set(msg);
-    this.error.set(true);
-    setTimeout(() => {
-      this.error.set(false);
-      this.errorMessage.set('');
-    }, 4000);
   }
 }
