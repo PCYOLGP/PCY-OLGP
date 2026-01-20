@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = "dist/pcy-webdoc/browser"
+  publish = "dist/PCY-WEBDOC/browser"
 
 [functions]
   directory = "netlify/functions"
@@ -9,3 +9,6 @@
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+[[plugins]]
+  package = "@netlify/angular-runtime"
