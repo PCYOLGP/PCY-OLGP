@@ -31,7 +31,7 @@ export const handler: Handler = async (event) => {
                 const posts = await sql`
                     SELECT p.*, u.image as "userImage"
                     FROM posts p
-                    LEFT JOIN users u ON p.username = u.username
+                    LEFT JOIN users u ON LOWER(TRIM(p.username)) = LOWER(TRIM(u.username))
                     ORDER BY p.timestamp DESC
                 `;
 

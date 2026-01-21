@@ -79,9 +79,34 @@ export const handler: Handler = async (event) => {
             `;
         }
 
+        // 4. Sync posts from db.json
+        const posts = dbData.posts;
+        console.log(`Syncing ${posts.length} posts...`);
+        for (const post of posts) {
+            console.log(`Syncing post: ${post.id}`);
+            await sql`
+                INSERT INTO posts (id, username, caption, image, timestamp)
+                VALUES (
+                    ${post.id},
+                    ${post.username}, 
+                    ${post.caption || ''}, 
+                    ${post.image || ''}, 
+                    ${post.timestamp || 'NOW()'}
+                )
+                ON CONFLICT (id) DO UPDATE 
+                SET username = EXCLUDED.username,
+                    caption = EXCLUDED.caption,
+                    image = EXCLUDED.image,
+                    timestamp = EXCLUDED.timestamp;
+            `;
+        }
+
+        // 5. Reset sequence for posts id
+        await sql`SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts))`;
+
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Database setup and synced successfully!' })
+            body: JSON.stringify({ message: 'Database setup and synced (users & posts) successfully!' })
         };
     } catch (err: any) {
         return {
