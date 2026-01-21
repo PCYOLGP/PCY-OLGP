@@ -494,23 +494,24 @@
                             </div>
                             <button class="icon-btn">🔖</button>
                         </div>
-                    </div>
-                    <button
-                        class="likes-info text-sm mb-2 cursor-pointer border-none bg-transparent p-0 text-left w-full font-inherit"
-                        (click)="openLikesModal(selectedPostForView())">
-                        <span><strong>{{ selectedPostForView()?.likes?.length || 0 }}</strong> likes</span>
-                    </button>
 
-                    <div class="modal-comment-input" *ngIf="authService.currentUser()">
-                        <input type="text" [(ngModel)]="newComment" placeholder="Add a comment..."
-                            (keyup.enter)="handlePostComment(selectedPostForView()!.id, newComment)">
-                        <button class="post-btn" [disabled]="!newComment.trim()"
-                            (click)="handlePostComment(selectedPostForView()!.id, newComment)">Post</button>
-                    </div>
-                    <!-- Login Reminder -->
-                    <div class="login-prompt" *ngIf="!authService.currentUser()">
-                        <p>Please <a routerLink="/login" class="text-green-600 font-bold">login</a> to join the
-                            conversation.</p>
+                        <button
+                            class="likes-info text-sm mb-2 cursor-pointer border-none bg-transparent p-0 text-left w-full font-inherit"
+                            (click)="openLikesModal(selectedPostForView())">
+                            <span><strong>{{ selectedPostForView()?.likes?.length || 0 }}</strong> likes</span>
+                        </button>
+
+                        <div class="modal-comment-input" *ngIf="authService.currentUser()">
+                            <input type="text" [(ngModel)]="newComment" placeholder="Add a comment..."
+                                (keyup.enter)="handlePostComment(selectedPostForView()!.id, newComment)">
+                            <button class="post-btn" [disabled]="!newComment.trim()"
+                                (click)="handlePostComment(selectedPostForView()!.id, newComment)">Post</button>
+                        </div>
+                        <!-- Login Reminder -->
+                        <div class="login-prompt" *ngIf="!authService.currentUser()">
+                            <p>Please <a routerLink="/login" class="text-green-600 font-bold">login</a> to join the
+                                conversation.</p>
+                        </div>
                     </div>
                 </div>
             </div>

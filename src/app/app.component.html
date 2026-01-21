@@ -2,4 +2,4 @@
 <main [class.pt-0]="!showNavbar()">
     <router-outlet></router-outlet>
 </main>
-<app-footer></app-footer>
+<app-footer *ngIf="showNavbar()"></app-footer>
