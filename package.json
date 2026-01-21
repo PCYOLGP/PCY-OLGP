@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:PCY-WEBDOC": "node dist/PCY-WEBDOC/server/server.mjs"
+    "serve:ssr:PCY-WEBDOC": "node dist/PCY-WEBDOC/server/server.mjs",
+    "db:init": "node init-db.mjs"
   },
   "prettier": {
     "printWidth": 100,
