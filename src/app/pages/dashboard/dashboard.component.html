@@ -239,7 +239,7 @@
                         <h2 class="text-2xl font-bold">List of accounts</h2>
                         <p class="text-gray-600">Manage community members and official accounts.</p>
                     </div>
-                    <button class="select-btn" (click)="showCreateAccountModal.set(true)">+ Create Account</button>
+                    <button class="select-btn" (click)="openCreateAccountModal()">+ Create Account</button>
                 </div>
 
                 <div class="accounts-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -252,7 +252,12 @@
                             <p class="text-sm text-gray-500">{{ user.fname }} {{ user.lname }}</p>
                             <p class="text-xs text-gray-400">{{ user.email }}</p>
                         </div>
-                        <button class="icon-btn" (click)="viewProfile(user.username)">👁️</button>
+                        <div class="flex flex-col gap-2">
+                            <button class="icon-btn" (click)="viewProfile(user.username)"
+                                title="View Profile">👁️</button>
+                            <button class="icon-btn" (click)="openEditAccountModal(user)"
+                                title="Edit Account">✏️</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -669,56 +674,86 @@
     </div>
 </div>
 
-<!-- Create Account Modal -->
-<div class="modal-overlay" *ngIf="showCreateAccountModal()" (click)="showCreateAccountModal.set(false)"
-    style="z-index: 3500;">
+<!-- Account Management Modal -->
+<div class="modal-overlay" *ngIf="showCreateAccountModal()" (click)="closeAccountModal()" style="z-index: 3500;">
     <div class="modal-content glass-card big-post-modal" (click)="$event.stopPropagation()">
-        <button class="modal-close-outer" (click)="showCreateAccountModal.set(false)">✕</button>
+        <button class="modal-close-outer" (click)="closeAccountModal()">✕</button>
         <div class="modal-header-simple p-6 border-b border-white/20">
-            <h2 class="text-2xl font-bold">Create New Account</h2>
+            <h2 class="text-2xl font-bold">{{ isEditingAccount() ? 'Edit Account' : 'Create New Account' }}</h2>
         </div>
         <div class="modal-body p-8 overflow-y-auto">
             <div class="space-y-4">
+                <!-- Image Selection -->
+                <div class="profile-image-section flex flex-col items-center gap-4 mb-6">
+                    <div class="relative">
+                        <img *ngIf="accountImagePreview()" [src]="accountImagePreview()"
+                            class="profile-avatar-large object-cover rounded-full w-32 h-32 border-4 border-white/50 shadow-xl">
+                        <div *ngIf="!accountImagePreview()"
+                            class="profile-avatar-large w-32 h-32 flex items-center justify-center bg-gray-200 rounded-full text-4xl border-4 border-white/50 text-gray-400 shadow-xl">
+                            {{ (newAccountData.username || '?')[0].toUpperCase() }}
+                        </div>
+                        <button
+                            class="absolute bottom-0 right-0 bg-green-600 text-white rounded-full p-2 shadow-lg border-2 border-white hover:scale-110 transition-transform"
+                            (click)="accountFileInput.click()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                <circle cx="12" cy="13" r="4" />
+                            </svg>
+                        </button>
+                    </div>
+                    <input type="file" #accountFileInput (change)="onAccountImageSelected($event)" accept="image/*"
+                        class="hidden">
+                    <p class="text-sm font-bold text-gray-500 uppercase tracking-wider">Profile Photo</p>
+                </div>
+
                 <div class="form-group flex flex-col gap-2">
                     <label class="font-bold text-gray-700">Username *</label>
                     <input type="text" [(ngModel)]="newAccountData.username"
-                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl" placeholder="Username">
+                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
+                        placeholder="Username">
                 </div>
                 <div class="form-group flex flex-col gap-2">
-                    <label class="font-bold text-gray-700">Password *</label>
+                    <label class="font-bold text-gray-700">Password {{ isEditingAccount() ? '(leave blank to keep
+                        current)' : '*' }}</label>
                     <input type="password" [(ngModel)]="newAccountData.password"
-                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl" placeholder="Password">
+                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
+                        placeholder="Password">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="form-group flex flex-col gap-2">
                         <label class="font-bold text-gray-700">First Name</label>
                         <input type="text" [(ngModel)]="newAccountData.fname"
-                            class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl"
+                            class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
                             placeholder="First Name">
                     </div>
                     <div class="form-group flex flex-col gap-2">
                         <label class="font-bold text-gray-700">Last Name</label>
                         <input type="text" [(ngModel)]="newAccountData.lname"
-                            class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl"
+                            class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
                             placeholder="Last Name">
                     </div>
                 </div>
                 <div class="form-group flex flex-col gap-2">
-                    <label class="font-bold text-gray-700">Email</label>
+                    <label class="font-bold text-gray-700">Email Address</label>
                     <input type="email" [(ngModel)]="newAccountData.email"
-                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl" placeholder="Email">
+                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
+                        placeholder="Email">
                 </div>
                 <div class="form-group flex flex-col gap-2">
-                    <label class="font-bold text-gray-700">Bio</label>
+                    <label class="font-bold text-gray-700">Biography</label>
                     <textarea [(ngModel)]="newAccountData.bio"
-                        class="caption-input-alt border p-4 bg-white/50 rounded-xl" rows="3"
-                        placeholder="Member bio..."></textarea>
+                        class="caption-input-alt border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
+                        rows="3" placeholder="Member bio..."></textarea>
                 </div>
                 <div class="modal-action-buttons pt-4 flex gap-4">
-                    <button class="main-action-btn flex-1 !rounded-xl" (click)="handleCreateAccount()"
-                        [disabled]="!newAccountData.username || !newAccountData.password">Create Account</button>
-                    <button class="alt-action-btn flex-1 !rounded-xl"
-                        (click)="showCreateAccountModal.set(false)">Cancel</button>
+                    <button class="main-action-btn flex-1 !rounded-xl shadow-lg" (click)="handleSaveAccount()"
+                        [disabled]="!newAccountData.username || (!isEditingAccount() && !newAccountData.password)">
+                        {{ isEditingAccount() ? 'Update Account' : 'Create Account' }}
+                    </button>
+                    <button class="alt-action-btn flex-1 !rounded-xl" (click)="closeAccountModal()">Cancel</button>
                 </div>
             </div>
         </div>

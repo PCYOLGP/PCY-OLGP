@@ -67,8 +67,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   isAdmin = computed(() => this.authService.currentUser()?.username === 'OLGP_PCY');
 
-  // New Account Creation State
+  // Account Management State
   showCreateAccountModal = signal(false);
+  isEditingAccount = signal(false);
+  editingAccountId = signal<number | null>(null);
+  accountImagePreview = signal<string | null>(null);
+  selectedAccountFile = signal<File | null>(null);
   newAccountData = {
     username: '',
     password: '',
@@ -606,15 +610,80 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadAllUsers();
   }
 
-  handleCreateAccount() {
-    if (!this.newAccountData.username || !this.newAccountData.password) return;
-    this.authService.createUser(this.newAccountData).subscribe({
-      next: () => {
-        this.loadAllUsers();
-        this.showCreateAccountModal.set(false);
-        this.newAccountData = { username: '', password: '', email: '', fname: '', lname: '', bio: '' };
-      },
-      error: (err) => console.error('Error creating account:', err)
-    });
+  openCreateAccountModal() {
+    this.isEditingAccount.set(false);
+    this.newAccountData = { username: '', password: '', email: '', fname: '', lname: '', bio: '' };
+    this.accountImagePreview.set(null);
+    this.showCreateAccountModal.set(true);
+  }
+
+  openEditAccountModal(user: User) {
+    this.isEditingAccount.set(true);
+    this.editingAccountId.set(user.id);
+    this.newAccountData = {
+      username: user.username,
+      password: '', // Leave blank to keep current
+      email: user.email || '',
+      fname: user.fname || '',
+      lname: user.lname || '',
+      bio: user.bio || ''
+    };
+    this.accountImagePreview.set(user.image || null);
+    this.showCreateAccountModal.set(true);
+  }
+
+  onAccountImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.compressImage(file).then(compressedFile => {
+        this.selectedAccountFile.set(compressedFile);
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.accountImagePreview.set(reader.result as string);
+        };
+        reader.readAsDataURL(compressedFile);
+      });
+    }
+  }
+
+  handleSaveAccount() {
+    if (!this.newAccountData.username) return;
+    if (!this.isEditingAccount() && !this.newAccountData.password) return;
+
+    const data: any = { ...this.newAccountData };
+    if (this.accountImagePreview()) {
+      data.image = this.accountImagePreview();
+    }
+
+    if (this.isEditingAccount()) {
+      const id = this.editingAccountId();
+      if (!id) return;
+      if (!data.password) delete data.password;
+
+      this.authService.updateProfile(id, data).subscribe({
+        next: () => {
+          this.loadAllUsers();
+          this.closeAccountModal();
+        },
+        error: (err) => console.error('Error updating account:', err)
+      });
+    } else {
+      this.authService.createUser(data).subscribe({
+        next: () => {
+          this.loadAllUsers();
+          this.closeAccountModal();
+        },
+        error: (err) => console.error('Error creating account:', err)
+      });
+    }
+  }
+
+  closeAccountModal() {
+    this.showCreateAccountModal.set(false);
+    this.isEditingAccount.set(false);
+    this.editingAccountId.set(null);
+    this.accountImagePreview.set(null);
+    this.selectedAccountFile.set(null);
+    this.newAccountData = { username: '', password: '', email: '', fname: '', lname: '', bio: '' };
   }
 }

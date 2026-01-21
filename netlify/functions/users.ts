@@ -36,23 +36,34 @@ export const handler: Handler = async (event) => {
 
         if (method === 'PATCH' && segments.length === 1) {
             const id = segments[0];
-            const { username, bio, password, image } = JSON.parse(event.body || '{}');
+            const { username, bio, password, image, fname, lname, email } = JSON.parse(event.body || '{}');
 
             let result;
             if (password) {
                 result = await sql`
-          UPDATE users
-          SET username = ${username}, bio = ${bio}, password = crypt(${password}, gen_salt('bf')), image = ${image}
-          WHERE id = ${id}
-          RETURNING id, username, email, image, fname, lname, bio
-        `;
+                    UPDATE users
+                    SET username = ${username}, 
+                        bio = ${bio}, 
+                        password = crypt(${password}, gen_salt('bf')), 
+                        image = ${image},
+                        fname = ${fname},
+                        lname = ${lname},
+                        email = ${email}
+                    WHERE id = ${id}
+                    RETURNING id, username, email, image, fname, lname, bio
+                `;
             } else {
                 result = await sql`
-          UPDATE users
-          SET username = ${username}, bio = ${bio}, image = ${image}
-          WHERE id = ${id}
-          RETURNING id, username, email, image, fname, lname, bio
-        `;
+                    UPDATE users
+                    SET username = ${username}, 
+                        bio = ${bio}, 
+                        image = ${image},
+                        fname = ${fname},
+                        lname = ${lname},
+                        email = ${email}
+                    WHERE id = ${id}
+                    RETURNING id, username, email, image, fname, lname, bio
+                `;
             }
             return { statusCode: 200, body: JSON.stringify(result[0]) };
         }
