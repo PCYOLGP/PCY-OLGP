@@ -5,17 +5,19 @@ import { neon } from '@neondatabase/serverless';
 const databaseUrl = process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL;
 
 if (!databaseUrl) {
-    console.error('DATABASE_URL is not defined. Please check your environment variables.');
+  console.error('DATABASE_URL is not defined. Please check your Netlify environment variables.');
+} else {
+  console.log('Database connection initialized.');
 }
 
 export const sql = neon(databaseUrl!);
 
 // Helper for common account queries if needed
 export const getAccountByUsername = async (username: string) => {
-    const result = await sql`
+  const result = await sql`
     SELECT id, username, email, image, fname, lname, bio, password
     FROM users 
     WHERE username = ${username}
   `;
-    return result[0];
+  return result[0];
 };
