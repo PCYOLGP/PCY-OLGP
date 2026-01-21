@@ -11,11 +11,27 @@ export const handler: Handler = async (event) => {
             const username = event.queryStringParameters?.username;
             if (username) {
                 const users = await sql`
-          SELECT id, username, email, image, fname, lname, bio
-          FROM users WHERE username = ${username}
-        `;
+                    SELECT id, username, email, image, fname, lname, bio
+                    FROM users WHERE username = ${username}
+                `;
+                return { statusCode: 200, body: JSON.stringify(users) };
+            } else {
+                const users = await sql`
+                    SELECT id, username, email, image, fname, lname, bio
+                    FROM users ORDER BY id ASC
+                `;
                 return { statusCode: 200, body: JSON.stringify(users) };
             }
+        }
+
+        if (method === 'POST') {
+            const { username, password, email, fname, lname, bio } = JSON.parse(event.body || '{}');
+            const result = await sql`
+                INSERT INTO users (username, password, email, fname, lname, bio)
+                VALUES (${username}, crypt(${password}, gen_salt('bf')), ${email || ''}, ${fname || ''}, ${lname || ''}, ${bio || ''})
+                RETURNING id, username, email, image, fname, lname, bio
+            `;
+            return { statusCode: 201, body: JSON.stringify(result[0]) };
         }
 
         if (method === 'PATCH' && segments.length === 1) {

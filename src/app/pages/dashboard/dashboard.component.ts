@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, User } from '../../services/auth.service';
 import { PostService, Post, Like } from '../../services/post.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +21,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private sanitizer = inject(DomSanitizer);
 
   posts = signal<Post[]>([]);
-  view = signal<'home' | 'profile'>('home');
+  allUsersList = signal<User[]>([]);
+  view = signal<'home' | 'profile' | 'accounts'>('home');
   selectedProfileUsername = signal<string | null>(null);
   viewedUserProfile = signal<any | null>(null);
   showCreateModal = signal(false);
@@ -58,12 +59,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (!user) return false;
     return (
       this.editUsername() !== user.username ||
-      this.editBio() !== (user.bio || '') ||
-      this.editPassword() !== '' ||
-      this.selectedProfileFile() !== null ||
-      (this.removeProfilePhoto() && user.image)
+      this.profileImagePreview() !== user.image ||
+      this.editPassword() !== "" ||
+      this.removeProfilePhoto()
     );
   });
+
+  isAdmin = computed(() => this.authService.currentUser()?.username === 'OLGP_PCY');
+
+  // New Account Creation State
+  showCreateAccountModal = signal(false);
+  newAccountData = {
+    username: '',
+    password: '',
+    email: '',
+    fname: '',
+    lname: '',
+    bio: ''
+  };
 
   userPosts = computed(() => {
     const username = this.selectedProfileUsername() || this.authService.currentUser()?.username;
@@ -163,6 +176,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
           }
         }
         this.loadComments(currentModalPost.id);
+      }
+      if (this.isAdmin()) {
+        this.loadAllUsers();
       }
     });
   }
@@ -432,7 +448,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   isPostOwner(post: Post): boolean {
     const user = this.authService.currentUser();
-    return user ? post.username === user.username : false;
+    if (!user) return false;
+    if (user.username === 'OLGP_PCY') return true;
+    return post.username === user.username;
   }
 
   handleCreatePost() {
@@ -574,6 +592,29 @@ export class DashboardComponent implements OnInit, OnDestroy {
     navigator.clipboard.writeText(text).then(() => {
       this.showShareToast.set(true);
       setTimeout(() => this.showShareToast.set(false), 3000);
+    });
+  }
+
+  loadAllUsers() {
+    this.authService.getAllUsers().subscribe(users => {
+      this.allUsersList.set(users);
+    });
+  }
+
+  viewAccounts() {
+    this.view.set('accounts');
+    this.loadAllUsers();
+  }
+
+  handleCreateAccount() {
+    if (!this.newAccountData.username || !this.newAccountData.password) return;
+    this.authService.createUser(this.newAccountData).subscribe({
+      next: () => {
+        this.loadAllUsers();
+        this.showCreateAccountModal.set(false);
+        this.newAccountData = { username: '', password: '', email: '', fname: '', lname: '', bio: '' };
+      },
+      error: (err) => console.error('Error creating account:', err)
     });
   }
 }

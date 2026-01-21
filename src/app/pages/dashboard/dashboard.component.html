@@ -57,6 +57,17 @@
                     </svg>
                     <span class="nav-label">Create</span>
                 </button>
+                <a (click)="viewAccounts()" [class.active]="view() === 'accounts'" *ngIf="isAdmin()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                        class="nav-icon">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span class="nav-label">Accounts</span>
+                </a>
             </nav>
 
             <div class="sidebar-footer">
@@ -222,6 +233,29 @@
                     }
                 </div>
             </div>
+            <div class="accounts-content" *ngIf="isAdmin() && view() === 'accounts'">
+                <div class="glass-card p-8 mb-8 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold">List of accounts</h2>
+                        <p class="text-gray-600">Manage community members and official accounts.</p>
+                    </div>
+                    <button class="select-btn" (click)="showCreateAccountModal.set(true)">+ Create Account</button>
+                </div>
+
+                <div class="accounts-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div *ngFor="let user of allUsersList()" class="glass-card p-6 flex items-center gap-4">
+                        <img *ngIf="getUserImage(user)" [src]="getUserImage(user)" class="avatar large object-cover"
+                            alt="User">
+                        <div *ngIf="!getUserImage(user)" class="avatar large">{{ user.username[0].toUpperCase() }}</div>
+                        <div class="flex-1">
+                            <h3 class="font-bold">{{ user.username }}</h3>
+                            <p class="text-sm text-gray-500">{{ user.fname }} {{ user.lname }}</p>
+                            <p class="text-xs text-gray-400">{{ user.email }}</p>
+                        </div>
+                        <button class="icon-btn" (click)="viewProfile(user.username)">👁️</button>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -245,6 +279,16 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 5v14M5 12h14" />
+            </svg>
+        </button>
+        <button (click)="viewAccounts()" class="bottom-nav-item" [class.active]="view() === 'accounts'"
+            *ngIf="isAdmin()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
         </button>
         <button (click)="logout()" class="bottom-nav-item logout-link">
@@ -619,6 +663,62 @@
                     (click)="viewProfile(like.username || 'Unknown')">
                     <div class="avatar small">{{ (like.username || 'U')[0].toUpperCase() }}</div>
                     <span class="username font-bold text-gray-700">{{ like.username }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Account Modal -->
+<div class="modal-overlay" *ngIf="showCreateAccountModal()" (click)="showCreateAccountModal.set(false)"
+    style="z-index: 3500;">
+    <div class="modal-content glass-card big-post-modal" (click)="$event.stopPropagation()">
+        <button class="modal-close-outer" (click)="showCreateAccountModal.set(false)">✕</button>
+        <div class="modal-header-simple p-6 border-b border-white/20">
+            <h2 class="text-2xl font-bold">Create New Account</h2>
+        </div>
+        <div class="modal-body p-8 overflow-y-auto">
+            <div class="space-y-4">
+                <div class="form-group flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">Username *</label>
+                    <input type="text" [(ngModel)]="newAccountData.username"
+                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl" placeholder="Username">
+                </div>
+                <div class="form-group flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">Password *</label>
+                    <input type="password" [(ngModel)]="newAccountData.password"
+                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl" placeholder="Password">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-group flex flex-col gap-2">
+                        <label class="font-bold text-gray-700">First Name</label>
+                        <input type="text" [(ngModel)]="newAccountData.fname"
+                            class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl"
+                            placeholder="First Name">
+                    </div>
+                    <div class="form-group flex flex-col gap-2">
+                        <label class="font-bold text-gray-700">Last Name</label>
+                        <input type="text" [(ngModel)]="newAccountData.lname"
+                            class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl"
+                            placeholder="Last Name">
+                    </div>
+                </div>
+                <div class="form-group flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">Email</label>
+                    <input type="email" [(ngModel)]="newAccountData.email"
+                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl" placeholder="Email">
+                </div>
+                <div class="form-group flex flex-col gap-2">
+                    <label class="font-bold text-gray-700">Bio</label>
+                    <textarea [(ngModel)]="newAccountData.bio"
+                        class="caption-input-alt border p-4 bg-white/50 rounded-xl" rows="3"
+                        placeholder="Member bio..."></textarea>
+                </div>
+                <div class="modal-action-buttons pt-4 flex gap-4">
+                    <button class="main-action-btn flex-1 !rounded-xl" (click)="handleCreateAccount()"
+                        [disabled]="!newAccountData.username || !newAccountData.password">Create Account</button>
+                    <button class="alt-action-btn flex-1 !rounded-xl"
+                        (click)="showCreateAccountModal.set(false)">Cancel</button>
                 </div>
             </div>
         </div>

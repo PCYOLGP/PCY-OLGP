@@ -106,4 +106,14 @@ export class AuthService {
             catchError(() => of(null))
         );
     }
+
+    getAllUsers(): Observable<User[]> {
+        return (this.http as any).get(`${this.apiUrl}/users`).pipe(
+            catchError(() => of([]))
+        );
+    }
+
+    createUser(data: Partial<User>): Observable<User> {
+        return (this.http as any).post(`${this.apiUrl}/users`, data);
+    }
 }
