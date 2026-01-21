@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   showLikesModal = signal(false);
   likesToShow = signal<Like[]>([]);
   showShareToast = signal(false);
+  showAuthModal = signal(false);
 
   // Edit Profile States
   showEditProfileModal = signal(false);
@@ -525,7 +526,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (!post) return;
     const currentUserId = this.authService.currentUser()?.id;
     if (currentUserId === undefined) {
-      alert('Please login to like posts');
+      this.showAuthModal.set(true);
       return;
     }
 

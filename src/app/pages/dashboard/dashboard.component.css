@@ -1530,4 +1530,40 @@
         bottom: 85px;
         /* Above mobile bottom nav */
     }
+
+    .post-creation-area {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-container {
+        display: none !important;
+    }
+
+    .big-post-modal {
+        height: auto !important;
+        max-height: 90vh !important;
+        width: 90% !important;
+    }
+
+    .sidebar-area {
+        border-radius: 20px;
+    }
+
+    .sidebar-main-content {
+        max-height: 300px;
+    }
+}
+
+/* Auth Redirect Modal */
+.auth-redirect-modal {
+    max-width: 400px !important;
+    background: white !important;
+}
+
+.auth-icon {
+    font-size: 3rem;
+}
+
+.contact-prompt {
+    line-height: 1.6;
 }

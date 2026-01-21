@@ -625,6 +625,27 @@
     </div>
 </div>
 
+<!-- Auth Required Modal -->
+<div class="modal-overlay" *ngIf="showAuthModal()" (click)="showAuthModal.set(false)" style="z-index: 4000;">
+    <div class="modal-content glass-card auth-redirect-modal" (click)="$event.stopPropagation()">
+        <div class="modal-body p-8 text-center">
+            <div class="auth-icon mb-6">🔒</div>
+            <h3 class="text-xl font-bold mb-4">Authentication Required</h3>
+            <p class="text-gray-600 mb-8">Please login to interact with posts and join our community conversation.</p>
+
+            <div class="modal-action-buttons gap-4">
+                <button class="main-action-btn" routerLink="/login">Go to Login</button>
+                <div class="contact-prompt mt-4 text-sm text-gray-500">
+                    Don't have an account? <br>
+                    <a href="https://m.me/olgp_pcy" target="_blank"
+                        class="text-green-600 font-bold hover:underline">Contact us on Messenger</a> to get access!
+                </div>
+                <button class="alt-action-btn !mt-4" (click)="showAuthModal.set(false)">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Share Success Toast -->
 <div class="share-toast" [class.show]="showShareToast()">
     <div class="toast-content glass-card">
