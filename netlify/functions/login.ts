@@ -10,28 +10,58 @@ export const handler: Handler = async (event) => {
     }
 
     try {
-        const { username, password } = JSON.parse(event.body || '{}');
-
-        const users = await sql`
-      SELECT id, username, email, image, fname, lname, bio
-      FROM users
-      WHERE username = ${username} AND password = crypt(${password}, password)
-    `;
-
-        if (users.length > 0) {
+        if (!event.body) {
             return {
-                statusCode: 200,
+                statusCode: 400,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(users[0]),
-            };
-        } else {
-            return {
-                statusCode: 401,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ error: 'Invalid username or password' }),
+                body: JSON.stringify({ error: 'Request body is missing' }),
             };
         }
+
+        const { username, password } = JSON.parse(event.body);
+
+        if (!username || !password) {
+            return {
+                statusCode: 400,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ error: 'Username and password are required' }),
+            };
+        }
+
+        // Use a more robust query
+        const users = await sql`
+            SELECT id, username, email, image, fname, lname, bio, password as hashed_password
+            FROM users
+            WHERE LOWER(username) = LOWER(${username.trim()})
+        `;
+
+        if (users && users.length > 0) {
+            const user = users[0];
+            // Verify password using crypt
+            const match = await sql`
+                SELECT (hashed_password = crypt(${password}, hashed_password)) as is_match 
+                FROM (SELECT ${user.hashed_password} as hashed_password) t
+            `;
+
+            if (match[0].is_match) {
+                // Remove password from response
+                const { hashed_password, ...userWithoutPassword } = user;
+                return {
+                    statusCode: 200,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userWithoutPassword),
+                };
+            }
+        }
+
+        return {
+            statusCode: 401,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ error: 'Invalid username or password' }),
+        };
+
     } catch (err: any) {
+        console.error('Login error:', err);
         return {
             statusCode: 500,
             headers: { 'Content-Type': 'application/json' },

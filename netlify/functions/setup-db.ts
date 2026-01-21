@@ -55,7 +55,9 @@ export const handler: Handler = async (event) => {
 
         // 3. Sync users from db.json
         const users = dbData.users;
+        console.log(`Syncing ${users.length} users...`);
         for (const user of users) {
+            console.log(`Syncing user: ${user.username}`);
             await sql`
                 INSERT INTO users (username, password, email, image, fname, lname, bio)
                 VALUES (
@@ -73,7 +75,7 @@ export const handler: Handler = async (event) => {
                     image = EXCLUDED.image,
                     fname = EXCLUDED.fname,
                     lname = EXCLUDED.lname,
-                    bio = EXCLUDED.bio
+                    bio = EXCLUDED.bio;
             `;
         }
 

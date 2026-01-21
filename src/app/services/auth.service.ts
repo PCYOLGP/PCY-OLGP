@@ -56,9 +56,10 @@ export class AuthService {
     }
 
     login(username: string, password: string): Observable<boolean> {
+        console.log(`Attempting login for user: ${username}`);
         return (this.http as any).post(`${this.apiUrl}/login`, { username, password }).pipe(
-            map((user: User) => {
-                if (user) {
+            map((user: any) => {
+                if (user && !user.error) {
                     if (isPlatformBrowser(this.platformId)) {
                         localStorage.setItem('isLoggedIn', 'true');
                         localStorage.setItem('user', JSON.stringify(user));
@@ -69,7 +70,10 @@ export class AuthService {
                 }
                 return false;
             }),
-            catchError(() => of(false))
+            catchError((err: any) => {
+                console.error('Login request failed:', err);
+                return of(false);
+            })
         );
     }
 
