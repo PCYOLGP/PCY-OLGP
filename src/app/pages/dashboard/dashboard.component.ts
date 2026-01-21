@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isLoadingPosts = signal(false);
   showLikesModal = signal(false);
   likesToShow = signal<Like[]>([]);
+  showShareToast = signal(false);
 
   // Edit Profile States
   showEditProfileModal = signal(false);
@@ -546,5 +547,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
   closeLikesModal() {
     this.showLikesModal.set(false);
     this.likesToShow.set([]);
+  }
+
+  sharePost(post: Post | null | undefined) {
+    if (!post) return;
+
+    // In a real app, we would have deep links like /post/123
+    // For now, we'll share the main dashboard URL and the caption
+    const shareUrl = window.location.origin + '/dashboard';
+    const postCaption = post.caption ? ` - "${post.caption}"` : '';
+    const shareText = `Check out this post on OLGP | PCY Wall${postCaption}`;
+
+    if (navigator.share) {
+      navigator.share({
+        title: 'OLGP | PCY Wall',
+        text: shareText,
+        url: shareUrl
+      }).catch(() => {
+        this.copyToClipboard(shareUrl);
+      });
+    } else {
+      this.copyToClipboard(shareUrl);
+    }
+  }
+
+  private copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      this.showShareToast.set(true);
+      setTimeout(() => this.showShareToast.set(false), 3000);
+    });
   }
 }

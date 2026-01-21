@@ -150,7 +150,7 @@
                                     {{ isPostLiked(post) ? '❤️' : '🤍' }}
                                 </button>
                                 <button class="action-btn" (click)="openPostModal(post)">💬</button>
-                                <button class="action-btn">🔗</button>
+                                <button class="action-btn" (click)="sharePost(post)">🔗</button>
                             </div>
                             <button
                                 class="likes-info text-sm mb-2 cursor-pointer border-none bg-transparent p-0 text-left w-full font-inherit"
@@ -372,7 +372,7 @@
                                     {{ isPostLiked(editingPost()) ? '❤️' : '🤍' }}
                                 </button>
                                 <button class="icon-btn">💬</button>
-                                <button class="icon-btn">🔗</button>
+                                <button class="icon-btn" (click)="sharePost(editingPost())">🔗</button>
                             </div>
                             <button class="icon-btn">🔖</button>
                         </div>
@@ -490,32 +490,33 @@
                                     {{ isPostLiked(selectedPostForView()!) ? '❤️' : '🤍' }}
                                 </button>
                                 <button class="icon-btn" (click)="loadComments(selectedPostForView()!.id)">💬</button>
-                                <button class="icon-btn">🔗</button>
+                                <button class="icon-btn" (click)="sharePost(selectedPostForView())">🔗</button>
                             </div>
                             <button class="icon-btn">🔖</button>
                         </div>
-                        <button
-                            class="likes-info text-sm mb-2 cursor-pointer border-none bg-transparent p-0 text-left w-full font-inherit"
-                            (click)="openLikesModal(selectedPostForView())">
-                            <span><strong>{{ selectedPostForView()?.likes?.length || 0 }}</strong> likes</span>
-                        </button>
+                    </div>
+                    <button
+                        class="likes-info text-sm mb-2 cursor-pointer border-none bg-transparent p-0 text-left w-full font-inherit"
+                        (click)="openLikesModal(selectedPostForView())">
+                        <span><strong>{{ selectedPostForView()?.likes?.length || 0 }}</strong> likes</span>
+                    </button>
 
-                        <div class="modal-comment-input" *ngIf="authService.currentUser()">
-                            <input type="text" [(ngModel)]="newComment" placeholder="Add a comment..."
-                                (keyup.enter)="handlePostComment(selectedPostForView()!.id, newComment)">
-                            <button class="post-btn" [disabled]="!newComment.trim()"
-                                (click)="handlePostComment(selectedPostForView()!.id, newComment)">Post</button>
-                        </div>
-                        <!-- Login Reminder -->
-                        <div class="login-prompt" *ngIf="!authService.currentUser()">
-                            <p>Please <a routerLink="/login" class="text-green-600 font-bold">login</a> to join the
-                                conversation.</p>
-                        </div>
+                    <div class="modal-comment-input" *ngIf="authService.currentUser()">
+                        <input type="text" [(ngModel)]="newComment" placeholder="Add a comment..."
+                            (keyup.enter)="handlePostComment(selectedPostForView()!.id, newComment)">
+                        <button class="post-btn" [disabled]="!newComment.trim()"
+                            (click)="handlePostComment(selectedPostForView()!.id, newComment)">Post</button>
+                    </div>
+                    <!-- Login Reminder -->
+                    <div class="login-prompt" *ngIf="!authService.currentUser()">
+                        <p>Please <a routerLink="/login" class="text-green-600 font-bold">login</a> to join the
+                            conversation.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <!-- Edit Profile Modal -->
@@ -621,5 +622,13 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Share Success Toast -->
+<div class="share-toast" [class.show]="showShareToast()">
+    <div class="toast-content glass-card">
+        <span class="toast-icon">🔗</span>
+        <span class="toast-message">Link copied to clipboard!</span>
     </div>
 </div>
