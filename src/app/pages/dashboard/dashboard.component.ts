@@ -250,7 +250,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   async compressImage(file: File): Promise<File> {
-    if (file.size <= 5 * 1024 * 1024) return file; // Skip if under 5MB
+    if (file.size <= 1 * 1024 * 1024) return file; // Skip if under 1MB
 
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -312,24 +312,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
       updateData.password = this.editPassword();
     }
 
+    if (this.profileImagePreview() && this.selectedProfileFile()) {
+      updateData.image = this.profileImagePreview();
+    }
+
     if (this.removeProfilePhoto()) {
       updateData.image = "";
     }
 
-    // Chain profile update and image upload
+    // Single profile update including image
     this.authService.updateProfile(user.id, updateData).subscribe({
       next: (updatedUser) => {
-        if (this.selectedProfileFile()) {
-          this.authService.uploadProfileImage(user.id, this.editUsername(), this.selectedProfileFile()!).subscribe({
-            next: (finalUser) => this.finalizeUpdate(finalUser),
-            error: (err) => {
-              console.error('Error uploading profile image:', err);
-              this.isUpdatingProfile.set(false);
-            }
-          });
-        } else {
-          this.finalizeUpdate(updatedUser);
-        }
+        this.finalizeUpdate(updatedUser);
       },
       error: (err) => {
         console.error('Error updating profile:', err);
@@ -354,8 +348,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   getUserImage(user: any): string | null {
     if (!user) return null;
-    if (user.image && user.image.startsWith('profile/')) {
-      return '/' + user.image;
+    if (user.image) {
+      if (user.image.startsWith('profile/')) return '/' + user.image;
+      return user.image; // Supports Base64 directly
     }
     if (user.username === 'OLGP_PCY') return 'assets/PCY.png';
     return null;
@@ -423,12 +418,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.selectedFile.set(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.selectedFilePreview.set(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      this.compressImage(file).then(compressedFile => {
+        this.selectedFile.set(compressedFile);
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.selectedFilePreview.set(reader.result as string);
+        };
+        reader.readAsDataURL(compressedFile);
+      });
     }
   }
 
@@ -438,16 +435,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   handleCreatePost() {
-    const file = this.selectedFile();
-    if (!file) return;
+    const fileContent = this.selectedFilePreview();
+    if (!fileContent) return;
 
     this.isUploading.set(true);
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('username', this.authService.currentUser()?.username || 'Anonymous');
-    formData.append('caption', this.postCaption);
+    const postData = {
+      image: fileContent,
+      username: this.authService.currentUser()?.username || 'Anonymous',
+      caption: this.postCaption
+    };
 
-    this.postService.createPost(formData).subscribe({
+    this.postService.createPost(postData).subscribe({
       next: () => {
         this.isUploading.set(false);
         this.closeCreateModal();

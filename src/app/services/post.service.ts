@@ -60,8 +60,8 @@ export class PostService {
         );
     }
 
-    createPost(formData: FormData): Observable<Post> {
-        return (this.http as any).post(this.apiUrl, formData);
+    createPost(postData: any): Observable<Post> {
+        return (this.http as any).post(this.apiUrl, postData);
     }
 
     updatePost(id: number, data: { caption: string }): Observable<Post> {

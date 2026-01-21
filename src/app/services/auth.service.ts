@@ -99,22 +99,6 @@ export class AuthService {
         );
     }
 
-    uploadProfileImage(id: number, username: string, file: File): Observable<User> {
-        const formData = new FormData();
-        formData.append('username', username);
-        formData.append('image', file);
-
-        return (this.http as any).post(`${this.apiUrl}/users/${id}/profile-image`, formData).pipe(
-            tap((updatedUser: User) => {
-                localStorage.setItem('user', JSON.stringify(updatedUser));
-                this._currentUser.set(updatedUser);
-            }),
-            catchError((err: any) => {
-                console.error('Profile image upload error:', err);
-                return throwError(() => err);
-            })
-        );
-    }
 
     getUserByUsername(username: string): Observable<User | null> {
         return (this.http as any).get(`${this.apiUrl}/users?username=${username}`).pipe(

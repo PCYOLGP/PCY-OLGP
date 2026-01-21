@@ -23,6 +23,36 @@ export const handler: Handler = async (event) => {
             )
         `;
 
+        await sql`
+            CREATE TABLE IF NOT EXISTS posts (
+                id SERIAL PRIMARY KEY,
+                username TEXT NOT NULL,
+                caption TEXT,
+                image TEXT,
+                timestamp TIMESTAMPTZ DEFAULT NOW()
+            )
+        `;
+
+        await sql`
+            CREATE TABLE IF NOT EXISTS comments (
+                id SERIAL PRIMARY KEY,
+                post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+                username TEXT NOT NULL,
+                comment TEXT NOT NULL,
+                timestamp TIMESTAMPTZ DEFAULT NOW()
+            )
+        `;
+
+        await sql`
+            CREATE TABLE IF NOT EXISTS likes (
+                id SERIAL PRIMARY KEY,
+                post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+                user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+                timestamp TIMESTAMPTZ DEFAULT NOW(),
+                UNIQUE(post_id, user_id)
+            )
+        `;
+
         // 3. Sync users from db.json
         const users = dbData.users;
         for (const user of users) {

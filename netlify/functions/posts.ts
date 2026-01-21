@@ -11,13 +11,41 @@ export const handler: Handler = async (event) => {
         if (method === 'GET') {
             if (segments.length === 2 && segments[1] === 'comments') {
                 const postId = segments[0];
-                const comments = await sql`SELECT * FROM comments WHERE post_id = ${postId} ORDER BY timestamp ASC`;
+                const comments = await sql`
+                    SELECT c.*, u.image as "userImage"
+                    FROM comments c
+                    LEFT JOIN users u ON c.username = u.username
+                    WHERE c.post_id = ${postId} 
+                    ORDER BY c.timestamp ASC
+                `;
                 return { statusCode: 200, body: JSON.stringify(comments) };
             } else if (id) {
-                const posts = await sql`SELECT * FROM posts WHERE id = ${id}`;
+                const posts = await sql`
+                    SELECT p.*, u.image as "userImage"
+                    FROM posts p
+                    LEFT JOIN users u ON p.username = u.username
+                    WHERE p.id = ${id}
+                `;
                 return { statusCode: 200, body: JSON.stringify(posts[0] || {}) };
             } else {
-                const posts = await sql`SELECT * FROM posts ORDER BY timestamp DESC`;
+                const posts = await sql`
+                    SELECT p.*, u.image as "userImage"
+                    FROM posts p
+                    LEFT JOIN users u ON p.username = u.username
+                    ORDER BY p.timestamp DESC
+                `;
+
+                // Fetch likes for each post
+                for (let post of posts) {
+                    const likes = await sql`
+                        SELECT l.*, u.username
+                        FROM likes l
+                        LEFT JOIN users u ON l.user_id = u.id
+                        WHERE l.post_id = ${post.id}
+                    `;
+                    post.likes = likes;
+                }
+
                 return { statusCode: 200, body: JSON.stringify(posts) };
             }
         }
