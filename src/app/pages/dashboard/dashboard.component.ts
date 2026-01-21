@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router, RouterLink } from '@angular/router';
+import { RouterOutlet, Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
 import { PostService, Post, Like } from '../../services/post.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   protected authService = inject(AuthService);
   private postService = inject(PostService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private sanitizer = inject(DomSanitizer);
 
   posts = signal<Post[]>([]);
@@ -153,6 +154,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadPosts();
+
+    // Handle deep linking to a specific post
+    const postId = this.route.snapshot.queryParamMap.get('postId');
+    if (postId) {
+      this.postService.getPosts().subscribe(posts => {
+        const post = posts.find(p => p.id === Number(postId));
+        if (post) {
+          this.openPostModal(post);
+        }
+      });
+    }
+
     // Real-time polling every 5 seconds
     this.pollSubscription = interval(5000).subscribe(() => {
       this.refreshData();
@@ -400,12 +413,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.selectedPostForView.set(post);
     this.showPostModal.set(true);
     this.loadComments(post.id);
+
+    // Update URL with postId for deep linking
+    this.router.navigate([], {
+      queryParams: { postId: post.id },
+      queryParamsHandling: 'merge'
+    });
   }
 
   closePostModal() {
     this.showPostModal.set(false);
     this.selectedPostForView.set(null);
     this.postComments.set([]);
+
+    // Clear the query parameter when modal closes
+    this.router.navigate([], {
+      queryParams: { postId: null },
+      queryParamsHandling: 'merge'
+    });
   }
 
   loadComments(postId: number) {
@@ -573,9 +598,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   sharePost(post: Post | null | undefined) {
     if (!post) return;
 
-    // In a real app, we would have deep links like /post/123
-    // For now, we'll share the main dashboard URL and the caption
-    const shareUrl = window.location.origin + '/dashboard';
+    // Simplified deep link for the community wall
+    const shareUrl = `${window.location.origin}/dashboard?postId=${post.id}`;
     const postCaption = post.caption ? ` - "${post.caption}"` : '';
     const shareText = `Check out this post on OLGP | PCY Wall${postCaption}`;
 
