@@ -1526,6 +1526,37 @@
 }
 
 @media (max-width: 768px) {
+    .dashboard-header {
+        padding: 0 1rem;
+        height: 60px;
+    }
+
+    .brand-title {
+        font-size: 1rem;
+    }
+
+    .content-area {
+        padding: 1.25rem;
+        padding-bottom: 80px;
+        /* Space for bottom nav */
+    }
+
+    .welcome-card {
+        padding: 1.5rem;
+    }
+
+    .welcome-card h2 {
+        font-size: 1.25rem;
+    }
+
+    .video-item {
+        flex: 0 0 280px;
+    }
+
+    .posts-feed {
+        max-width: 100%;
+    }
+
     .share-toast {
         bottom: 85px;
         /* Above mobile bottom nav */
@@ -1542,15 +1573,43 @@
     .big-post-modal {
         height: auto !important;
         max-height: 90vh !important;
-        width: 90% !important;
+        width: 95% !important;
+        border-radius: 24px;
     }
 
     .sidebar-area {
         border-radius: 20px;
+        height: auto;
     }
 
     .sidebar-main-content {
-        max-height: 300px;
+        max-height: 350px;
+    }
+
+    .profile-main {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
+    .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-stats {
+        gap: 1.5rem;
+    }
+
+    .video-item {
+        flex: 0 0 240px;
     }
 }
 

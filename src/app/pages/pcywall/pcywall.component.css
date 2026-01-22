@@ -8,13 +8,25 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 0 2rem;
+    }
 }
 
 .container-small {
     max-width: 550px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
+}
+
+@media (min-width: 480px) {
+    .container-small {
+        padding: 0 1.5rem;
+    }
 }
 
 .hero-mini {
@@ -22,16 +34,17 @@
 }
 
 .hero-mini h1 {
-    font-size: 3.5rem;
+    font-size: clamp(2.25rem, 8vw, 3.5rem);
     font-weight: 800;
     color: #1e293b;
     margin-bottom: 0.5rem;
     letter-spacing: -1px;
+    line-height: 1.1;
 }
 
 .hero-mini p {
     color: #64748b;
-    font-size: 1.15rem;
+    font-size: clamp(1rem, 4vw, 1.15rem);
     font-weight: 500;
 }
 
@@ -501,12 +514,57 @@
     text-decoration: underline;
 }
 
-.likes-info {
-    font-family: inherit;
-    color: inherit;
-    outline: none;
+@media (max-width: 768px) {
+    .hero-mini {
+        padding: 2rem 0 1rem;
+        text-align: center;
+    }
+
+    .post-card {
+        border-radius: 16px;
+        margin-bottom: 2rem;
+    }
+
+    .post-image img {
+        min-height: auto;
+    }
+
+    .modal-content {
+        max-width: 95%;
+        height: auto;
+        max-height: 90vh;
+        border-radius: 24px;
+    }
+
+    .post-creation-area {
+        grid-template-columns: 1fr;
+    }
+
+    .preview-container {
+        display: none !important;
+    }
+
+    .sidebar-area {
+        height: auto;
+        max-height: 80vh;
+    }
+
+    .sidebar-main-content {
+        max-height: 400px;
+    }
 }
 
-.likes-info:hover strong {
-    color: #388f3c;
+@media (max-width: 480px) {
+    .profile-stats {
+        gap: 2rem;
+    }
+
+    .profile-avatar-large {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-username-row h2 {
+        font-size: 1.75rem;
+    }
 }

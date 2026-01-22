@@ -8,7 +8,13 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 0 2rem;
+    }
 }
 
 section {
@@ -34,13 +40,15 @@ section {
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: clamp(2.25rem, 10vw, 3.5rem);
     font-weight: 800;
     background: linear-gradient(to right, #388f3c, #166534);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 1rem;
     letter-spacing: -1.5px;
+    line-height: 1.1;
 }
 
 .hero-subtitle {
@@ -94,9 +102,16 @@ section {
 /* Who We Are */
 .who-we-are .content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     align-items: center;
+}
+
+@media (min-width: 992px) {
+    .who-we-are .content {
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
 }
 
 .label {
@@ -322,13 +337,20 @@ section {
 /* Join Banner */
 .join-banner {
     margin-top: 4rem;
-    padding: 8rem 2rem;
+    padding: 4rem 1.25rem;
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/PCY.png');
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    background-attachment: scroll;
     text-align: center;
     color: white;
+}
+
+@media (min-width: 768px) {
+    .join-banner {
+        padding: 8rem 2rem;
+        background-attachment: fixed;
+    }
 }
 
 .banner-content h2 {
