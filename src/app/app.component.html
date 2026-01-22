@@ -1,5 +1,5 @@
 <app-navbar *ngIf="showNavbar()"></app-navbar>
-<main [class.pt-16]="showNavbar()" [class.pt-0]="!showNavbar()">
+<main [class.pt-0]="!showNavbar()">
     <router-outlet></router-outlet>
 </main>
 <app-footer *ngIf="showNavbar()"></app-footer>

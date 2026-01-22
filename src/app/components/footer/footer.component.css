@@ -84,13 +84,93 @@
     margin-bottom: 1.5rem;
 }
 
-@media (max-width: 640px) {
+/* Responsive Design */
+
+/* Extra Small Devices (phones, up to 480px) */
+@media (max-width: 480px) {
     .app-footer {
-        padding: 3rem 0 2rem;
+        padding: 2.5rem 0 2rem;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    .footer-logo-img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .footer-brand {
+        font-size: 1.1rem;
+    }
+
+    .footer-socials {
+        gap: 1.25rem;
+    }
+
+    .social-link {
+        font-size: 1.25rem;
     }
 
     .copyright {
-        font-size: 0.8rem;
-        padding: 0 1rem;
+        font-size: 0.75rem;
+        padding: 0 0.5rem;
+        line-height: 1.5;
+    }
+
+    .mb-6 {
+        margin-bottom: 1.25rem;
+    }
+}
+
+/* Small Devices (landscape phones, 481px to 640px) */
+@media (min-width: 481px) and (max-width: 640px) {
+    .app-footer {
+        padding: 3rem 0 2.25rem;
+    }
+
+    .container {
+        padding: 0 1.25rem;
+    }
+
+    .footer-logo-img {
+        width: 38px;
+        height: 38px;
+    }
+
+    .footer-brand {
+        font-size: 1.15rem;
+    }
+
+    .copyright {
+        font-size: 0.85rem;
+        padding: 0 0.75rem;
+    }
+}
+
+/* Medium Devices (tablets, 641px to 768px) */
+@media (min-width: 641px) and (max-width: 768px) {
+    .app-footer {
+        padding: 3.5rem 0 2.5rem;
+    }
+
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    .copyright {
+        font-size: 0.875rem;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+    .app-footer {
+        padding: 2rem 0 1.5rem;
+    }
+
+    .mb-6 {
+        margin-bottom: 1rem;
     }
 }

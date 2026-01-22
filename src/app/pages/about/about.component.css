@@ -8,13 +8,7 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1.25rem;
-}
-
-@media (min-width: 768px) {
-    .container {
-        padding: 0 2rem;
-    }
+    padding: 0 2rem;
 }
 
 section {
@@ -40,7 +34,7 @@ section {
 }
 
 .hero-title {
-    font-size: clamp(2.25rem, 10vw, 3.5rem);
+    font-size: 3.5rem;
     font-weight: 800;
     background: linear-gradient(to right, #388f3c, #166534);
     -webkit-background-clip: text;
@@ -48,7 +42,6 @@ section {
     -webkit-text-fill-color: transparent;
     margin-bottom: 1rem;
     letter-spacing: -1.5px;
-    line-height: 1.1;
 }
 
 .hero-subtitle {
@@ -102,16 +95,9 @@ section {
 /* Who We Are */
 .who-we-are .content {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
     align-items: center;
-}
-
-@media (min-width: 992px) {
-    .who-we-are .content {
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
-    }
 }
 
 .label {
@@ -337,20 +323,13 @@ section {
 /* Join Banner */
 .join-banner {
     margin-top: 4rem;
-    padding: 4rem 1.25rem;
+    padding: 8rem 2rem;
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/PCY.png');
     background-size: cover;
     background-position: center;
-    background-attachment: scroll;
+    background-attachment: fixed;
     text-align: center;
     color: white;
-}
-
-@media (min-width: 768px) {
-    .join-banner {
-        padding: 8rem 2rem;
-        background-attachment: fixed;
-    }
 }
 
 .banner-content h2 {
@@ -411,16 +390,371 @@ section {
     animation: slideUp 0.8s ease-out forwards;
 }
 
-@media (max-width: 768px) {
+/* Responsive Design - Mobile First Approach */
+
+/* Extra Small Devices (phones, up to 480px) */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    section {
+        padding: 3rem 0;
+    }
+
+    .hero-section {
+        height: auto;
+        min-height: 300px;
+        padding: 3rem 0;
+    }
+
+    .hero-logo {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 1.5rem;
+    }
+
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        letter-spacing: -1px;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem;
+        padding: 0 0.5rem;
+    }
+
+    .mission-vision {
+        margin-top: -2rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .card {
+        padding: 1.75rem;
+        border-radius: 18px;
+    }
+
+    .card h2 {
+        font-size: 1.4rem;
+    }
+
+    .card p {
+        font-size: 0.9rem;
+    }
+
+    .icon {
+        font-size: 2rem;
     }
 
     .who-we-are .content {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .who-we-are h2 {
+        font-size: 1.75rem;
+    }
+
+    .who-we-are p {
+        font-size: 0.95rem;
+    }
+
+    .stats-mini {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .stat-item .count {
+        font-size: 1.75rem;
+    }
+
+    .glass-container {
+        padding: 1rem;
+        border-radius: 20px;
+    }
+
+    .glass-badge {
+        bottom: 1.5rem;
+        right: -0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.75rem;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .activities-timeline::before {
+        left: 1rem;
     }
 
     .activity-item {
         gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .activity-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.25rem;
+    }
+
+    .activity-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .activity-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .activity-year {
+        font-size: 0.8rem;
+    }
+
+    .activity-content p {
+        font-size: 0.9rem;
+    }
+
+    .values-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .value-item {
+        padding: 2rem 1.25rem;
+        border-radius: 18px;
+    }
+
+    .value-icon {
+        font-size: 1.75rem;
+    }
+
+    .value-item h3 {
+        font-size: 1.1rem;
+    }
+
+    .value-item p {
+        font-size: 0.85rem;
+    }
+
+    .join-banner {
+        padding: 4rem 1rem;
+        background-attachment: scroll;
+    }
+
+    .banner-content h2 {
+        font-size: 1.75rem;
+    }
+
+    .banner-content p {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 0.875rem 2rem;
+        font-size: 0.9rem;
+    }
+
+    .cta-card {
+        padding: 2rem 1.5rem;
+        border-radius: 20px;
+    }
+
+    .cta-card p {
+        font-size: 1rem;
+    }
+}
+
+/* Small Devices (landscape phones, 481px to 640px) */
+@media (min-width: 481px) and (max-width: 640px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    section {
+        padding: 4rem 0;
+    }
+
+    .hero-section {
+        height: auto;
+        min-height: 350px;
+    }
+
+    .hero-logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .mission-vision {
+        margin-top: -2.5rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+    }
+
+    .card {
+        padding: 2rem;
+    }
+
+    .who-we-are .content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .who-we-are h2 {
+        font-size: 2rem;
+    }
+
+    .stats-mini {
+        flex-direction: row;
+        gap: 2rem;
+    }
+
+    .activity-item {
+        gap: 1.25rem;
+    }
+
+    .values-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .join-banner {
+        padding: 5rem 1.5rem;
+    }
+
+    .banner-content h2 {
+        font-size: 2rem;
+    }
+
+    .banner-content p {
+        font-size: 1.1rem;
+    }
+}
+
+/* Medium Devices (tablets, 641px to 768px) */
+@media (min-width: 641px) and (max-width: 768px) {
+    .container {
+        padding: 0 1.75rem;
+    }
+
+    section {
+        padding: 5rem 0;
+    }
+
+    .hero-logo {
+        width: 90px;
+        height: 90px;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.05rem;
+    }
+
+    .mission-vision {
+        margin-top: -3rem;
+    }
+
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .who-we-are .content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .who-we-are h2 {
+        font-size: 2.25rem;
+    }
+
+    .stats-mini {
+        gap: 2.5rem;
+    }
+
+    .activity-item {
+        gap: 1.5rem;
+    }
+
+    .join-banner {
+        padding: 6rem 2rem;
+    }
+
+    .banner-content h2 {
+        font-size: 2.25rem;
+    }
+}
+
+/* Large Tablets (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .hero-title {
+        font-size: 3.25rem;
+    }
+
+    .who-we-are .content {
+        grid-template-columns: 1fr 1fr;
+        gap: 3.5rem;
+    }
+
+    .who-we-are h2 {
+        font-size: 2.35rem;
+    }
+
+    .section-header h2,
+    .section-title {
+        font-size: 2.35rem;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+    .hero-section {
+        height: auto;
+        min-height: 250px;
+        padding: 2rem 0;
+    }
+
+    .hero-logo {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 1rem;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    section {
+        padding: 3rem 0;
+    }
+
+    .join-banner {
+        padding: 3rem 1rem;
     }
 }

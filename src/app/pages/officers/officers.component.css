@@ -9,13 +9,7 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1.25rem;
-}
-
-@media (min-width: 768px) {
-    .container {
-        padding: 0 2rem;
-    }
+    padding: 0 2rem;
 }
 
 .page-header {
@@ -38,19 +32,17 @@
 }
 
 .page-header h1 {
-    font-size: clamp(2.5rem, 10vw, 4rem);
+    font-size: 4rem;
     font-weight: 800;
     background: linear-gradient(to right, #1e293b, #334155);
     -webkit-background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 1rem;
     letter-spacing: -2px;
-    line-height: 1.1;
 }
 
 .page-header p {
-    font-size: clamp(1rem, 4vw, 1.25rem);
+    font-size: 1.25rem;
     color: #64748b;
     max-width: 700px;
     margin: 0 auto;
@@ -141,14 +133,13 @@
 }
 
 .page-footer h2 {
-    font-size: clamp(1.75rem, 8vw, 3rem);
+    font-size: 3rem;
     margin-bottom: 1rem;
     color: #1e293b;
-    line-height: 1.2;
 }
 
 .page-footer p {
-    font-size: clamp(1rem, 4vw, 1.25rem);
+    font-size: 1.25rem;
     color: #64748b;
     margin-bottom: 3rem;
 }
@@ -201,9 +192,214 @@
     animation: slideUp 0.8s ease-out forwards;
 }
 
-@media (max-width: 768px) {
+/* Responsive Design - Mobile First Approach */
+
+/* Extra Small Devices (phones, 320px to 480px) */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .page-header {
+        padding: 5rem 0 2.5rem;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        letter-spacing: -1px;
+        line-height: 1.2;
+    }
+
+    .page-header p {
+        font-size: 1rem;
+        padding: 0 0.5rem;
+    }
+
+    .back-link {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .officers-content {
+        padding: 2rem 0 4rem;
+    }
+
+    .officers-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .batch-card {
+        padding: 1.75rem;
+        border-radius: 20px;
+    }
+
+    .batch-year {
+        font-size: 0.8rem;
+        padding: 3px 12px;
+        margin-bottom: 1.5rem;
+    }
+
+    .role {
+        font-size: 0.7rem;
+    }
+
+    .name {
+        font-size: 1.25rem;
+    }
+
+    .member-tag {
+        font-size: 0.75rem;
+        padding: 5px 12px;
+    }
+
+    .page-footer {
+        padding: 4rem 0;
+    }
+
+    .page-footer h2 {
+        font-size: 1.75rem;
+        padding: 0 1rem;
+    }
+
+    .page-footer p {
+        font-size: 1rem;
+        padding: 0 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+        padding: 1rem 2rem;
+        font-size: 0.9rem;
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+/* Small Devices (landscape phones, 481px to 640px) */
+@media (min-width: 481px) and (max-width: 640px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    .page-header {
+        padding: 6rem 0 3rem;
+    }
+
     .page-header h1 {
         font-size: 2.5rem;
+        letter-spacing: -1.5px;
+    }
+
+    .page-header p {
+        font-size: 1.1rem;
+    }
+
+    .officers-content {
+        padding: 3rem 0 5rem;
+    }
+
+    .officers-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .batch-card {
+        padding: 2rem;
+    }
+
+    .page-footer {
+        padding: 5rem 0;
+    }
+
+    .page-footer h2 {
+        font-size: 2rem;
+    }
+
+    .page-footer p {
+        font-size: 1.1rem;
+    }
+
+    .btn-primary {
+        padding: 1.1rem 2.5rem;
+    }
+}
+
+/* Medium Devices (tablets, 641px to 768px) */
+@media (min-width: 641px) and (max-width: 768px) {
+    .container {
+        padding: 0 1.75rem;
+    }
+
+    .page-header {
+        padding: 7rem 0 3.5rem;
+    }
+
+    .page-header h1 {
+        font-size: 3rem;
+    }
+
+    .page-header p {
+        font-size: 1.15rem;
+    }
+
+    .officers-content {
+        padding: 3.5rem 0 6rem;
+    }
+
+    .officers-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2.25rem;
+    }
+
+    .page-footer {
+        padding: 6rem 0;
+    }
+
+    .page-footer h2 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Large Tablets (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .page-header h1 {
+        font-size: 3.5rem;
+    }
+
+    .officers-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2.5rem;
+    }
+
+    .page-footer h2 {
+        font-size: 2.75rem;
+    }
+}
+
+/* Common mobile/tablet styles (up to 768px) */
+@media (max-width: 768px) {
+    .batch-card:hover {
+        transform: translateY(-6px);
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+    .page-header {
+        padding: 4rem 0 2rem;
+    }
+
+    .page-header h1 {
+        font-size: 2.25rem;
+    }
+
+    .officers-content {
+        padding: 2rem 0 3rem;
+    }
+
+    .page-footer {
+        padding: 4rem 0;
     }
 
     .page-footer h2 {
