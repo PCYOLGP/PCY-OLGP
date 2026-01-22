@@ -9,20 +9,18 @@
     </div>
     <!-- Main Header -->
     <header class="dashboard-header">
-        <div class="header-container">
-            <div class="header-brand">
-                <img src="assets/PCY.png" alt="PCY Logo">
-                <h1 class="brand-title">OLGP | PCY WALL <span class="desktop-only-inline"></span></h1>
-            </div>
+        <div class="header-brand">
+            <img src="assets/PCY.png" alt="PCY Logo">
+            <h1 class="brand-title">OLGP | PCY WALL <span class="desktop-only-inline"></span></h1>
+        </div>
 
-            <div class="header-actions">
-                <div class="user-profile" (click)="viewOwnProfile()">
-                    <img *ngIf="getUserImage(authService.currentUser())" [src]="getUserImage(authService.currentUser())"
-                        alt="Profile" class="avatar">
-                    <div *ngIf="!getUserImage(authService.currentUser())" class="avatar">{{
-                        (authService.currentUser()?.username || 'U')[0].toUpperCase() }}</div>
-                    <span class="desktop-only-inline">{{ authService.currentUser()?.username || 'User' }}</span>
-                </div>
+        <div class="header-actions">
+            <div class="user-profile" (click)="viewOwnProfile()">
+                <img *ngIf="getUserImage(authService.currentUser())" [src]="getUserImage(authService.currentUser())"
+                    alt="Profile" class="avatar">
+                <div *ngIf="!getUserImage(authService.currentUser())" class="avatar">{{
+                    (authService.currentUser()?.username || 'U')[0].toUpperCase() }}</div>
+                <span class="desktop-only-inline">{{ authService.currentUser()?.username || 'User' }}</span>
             </div>
         </div>
     </header>
