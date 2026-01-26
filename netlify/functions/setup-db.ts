@@ -110,14 +110,14 @@ export const handler: Handler = async (event) => {
             )
         `;
 
-        // 6. Sync Site Content with specific requested data
+        // Sync Site Content with specific requested data
         const siteContent = {
             landing: {
                 welcomeLabel: 'Welcome to our community',
                 heroTitle: 'This is OLGP | PCY',
                 heroSubtitle: 'The Parish Commission on Youth is a group of young people dedicated to faith, fellowship, and service. Whether you\'re looking to volunteer or grow in spirit, there\'s a place for you here.',
                 heroButtonText: 'PCY OFFICERS',
-                logoImage: 'assets/PCY.png',
+                logoImage: '/assets/PCY.png',
                 gsffLabel: 'Short Film Festival',
                 gsffTitle: 'GSFF 2022',
                 gsffDescription: 'GSFF is a short film festival of Our Lady of Guadalupe Parish in Marilao, Bulacan, bringing stories of faith and reflection to the screen.'
@@ -212,6 +212,8 @@ export const handler: Handler = async (event) => {
             ]
         };
 
+        // Brute force update: Clear old content and insert the fresh requested one
+        await sql`TRUNCATE TABLE site_content`;
         await sql`
             INSERT INTO site_content (content, updated_at)
             VALUES (${JSON.stringify(siteContent)}, NOW())
