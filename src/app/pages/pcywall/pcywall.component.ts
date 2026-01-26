@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, inject, signal, computed, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PostService, Post, Like } from '../../services/post.service';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +15,7 @@ import { Subscription, interval } from 'rxjs';
 export class PcyWallComponent implements OnInit, OnDestroy {
   private postService = inject(PostService);
   public authService = inject(AuthService);
+  private platformId = inject(PLATFORM_ID);
 
   posts = signal<Post[]>([]);
   loading = signal(true);
@@ -39,16 +40,16 @@ export class PcyWallComponent implements OnInit, OnDestroy {
   });
   private pollSubscription?: Subscription;
 
-  constructor() {
-    this.loadPosts();
-  }
+  constructor() { }
 
   ngOnInit() {
-    this.loadPosts();
-    // Real-time polling every 5 seconds
-    this.pollSubscription = interval(5000).subscribe(() => {
-      this.refreshData();
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadPosts();
+      // Real-time polling every 5 seconds - Only in browser
+      this.pollSubscription = interval(5000).subscribe(() => {
+        this.refreshData();
+      });
+    }
   }
 
   ngOnDestroy() {

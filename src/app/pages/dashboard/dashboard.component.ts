@@ -1,11 +1,13 @@
-import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal, computed, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterOutlet, Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
 import { PostService, Post, Like } from '../../services/post.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { Subscription, interval } from 'rxjs';
+
+import { CustomizeService, SiteContent } from '../../services/customize.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +22,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private sanitizer = inject(DomSanitizer);
+  private platformId = inject(PLATFORM_ID);
+
+  private customizeService = inject(CustomizeService);
 
   posts = signal<Post[]>([]);
   allUsersList = signal<User[]>([]);
@@ -114,12 +119,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { title: 'GULONG NA BUHAY', description: '"Ama, sa mga kamay mo, inihahabilin ko ang aking espiritu"', url: 'https://www.youtube.com/embed/5l1V56qClC0' }
   ];
 
-  safeVideos = signal<{ title: string; description: string; url: SafeResourceUrl }[]>(
-    this.videoData.map(v => ({
-      ...v,
-      url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
-    }))
-  );
+  safeVideos = signal<{ title: string; description: string; url: SafeResourceUrl }[]>([]);
 
   get currentTimestamp(): string {
     return new Date().toISOString();
@@ -153,22 +153,42 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private pollSubscription?: Subscription;
 
   ngOnInit() {
-    this.loadPosts();
+    if (isPlatformBrowser(this.platformId)) {
+      this.loadPosts();
+      this.loadSiteContent();
 
-    // Handle deep linking to a specific post
-    const postId = this.route.snapshot.queryParamMap.get('postId');
-    if (postId) {
-      this.postService.getPosts().subscribe(posts => {
-        const post = posts.find(p => p.id === Number(postId));
-        if (post) {
-          this.openPostModal(post);
-        }
+      // Handle deep linking to a specific post
+      const postId = this.route.snapshot.queryParamMap.get('postId');
+      if (postId) {
+        this.postService.getPosts().subscribe(posts => {
+          const post = posts.find(p => p.id === Number(postId));
+          if (post) {
+            this.openPostModal(post);
+          }
+        });
+      }
+
+      // Real-time polling every 5 seconds - Only in browser
+      this.pollSubscription = interval(5000).subscribe(() => {
+        this.refreshData();
       });
     }
+  }
 
-    // Real-time polling every 5 seconds
-    this.pollSubscription = interval(5000).subscribe(() => {
-      this.refreshData();
+  loadSiteContent() {
+    this.customizeService.getContent().subscribe((content: SiteContent | null) => {
+      if (content && content.videos && content.videos.length > 0) {
+        this.safeVideos.set(content.videos.map(v => ({
+          ...v,
+          url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
+        })));
+      } else {
+        // Fallback to default videos
+        this.safeVideos.set(this.videoData.map(v => ({
+          ...v,
+          url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
+        })));
+      }
     });
   }
 
@@ -196,6 +216,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
       if (this.isAdmin()) {
         this.loadAllUsers();
+        this.loadSiteContent(); // Keep content refreshed too
       }
     });
   }

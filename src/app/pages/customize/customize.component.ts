@@ -202,12 +202,34 @@ export class CustomizeComponent implements OnInit {
     addVideo() {
         this.videos.update(videos => [
             ...videos,
-            { title: 'New Video', description: 'Video description', url: 'https://www.youtube.com/embed/' }
+            { title: 'New Video', description: 'Video description', url: '' }
         ]);
     }
 
     removeVideo(index: number) {
         this.videos.update(videos => videos.filter((_, i) => i !== index));
+    }
+
+    onVideoUrlChange(index: number, newUrl: string) {
+        let embedUrl = newUrl;
+
+        // Handle various YouTube URL formats
+        if (newUrl.includes('youtube.com/watch?v=')) {
+            const videoId = newUrl.split('v=')[1]?.split('&')[0];
+            if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        } else if (newUrl.includes('youtu.be/')) {
+            const videoId = newUrl.split('youtu.be/')[1]?.split('?')[0];
+            if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        } else if (newUrl.includes('youtube.com/shorts/')) {
+            const videoId = newUrl.split('shorts/')[1]?.split('?')[0];
+            if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        this.videos.update(videos => {
+            const newVideos = [...videos];
+            newVideos[index] = { ...newVideos[index], url: embedUrl };
+            return newVideos;
+        });
     }
 
     addOfficerTerm() {

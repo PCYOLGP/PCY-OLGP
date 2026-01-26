@@ -110,6 +110,113 @@ export const handler: Handler = async (event) => {
             )
         `;
 
+        // 6. Sync Site Content with specific requested data
+        const siteContent = {
+            landing: {
+                welcomeLabel: 'Welcome to our community',
+                heroTitle: 'This is OLGP | PCY',
+                heroSubtitle: 'The Parish Commission on Youth is a group of young people dedicated to faith, fellowship, and service. Whether you\'re looking to volunteer or grow in spirit, there\'s a place for you here.',
+                heroButtonText: 'PCY OFFICERS',
+                logoImage: 'assets/PCY.png',
+                gsffLabel: 'Short Film Festival',
+                gsffTitle: 'GSFF 2022',
+                gsffDescription: 'GSFF is a short film festival of Our Lady of Guadalupe Parish in Marilao, Bulacan, bringing stories of faith and reflection to the screen.'
+            },
+            officerTerms: [
+                {
+                    year: '2026',
+                    youthAdviser: 'Rev. Fr. Ronaldo Samonte',
+                    officers: [{ position: 'TBC', name: 'To Be Confirmed' }]
+                },
+                {
+                    year: '2025',
+                    youthAdviser: 'Rev. Fr. Ronaldo Samonte',
+                    officers: [
+                        { position: 'Coordinator', name: 'Nixarene Nicole P. Escobillo' },
+                        { position: 'Vice Coordinator (External)', name: 'Zianna Crisolo' },
+                        { position: 'Vice Coordinator (Internal)', name: 'Pristine Burio' },
+                        { position: 'Secretary', name: 'Chloe Paraan' },
+                        { position: 'Treasurer', name: 'Carl Misajon' },
+                        { position: 'Auditor', name: 'Tristan Fruelda' }
+                    ],
+                    committees: [
+                        { position: 'Social Communication', name: 'Wency Opiso' },
+                        { position: 'Sports and Recreational', name: 'Jeffrey Hibanes' }
+                    ]
+                },
+                {
+                    year: '2023-2024',
+                    youthAdviser: 'Rev. Fr. Ronaldo Samonte',
+                    officers: [
+                        { position: 'Coordinator', name: 'Tristan Jhon Fruelda' },
+                        { position: 'Vice Coor', name: 'Aeron jay Boringot' },
+                        { position: 'Secretary', name: 'Nixarene Escobillo' },
+                        { position: 'Treasurer', name: 'Zianna Crisolo' },
+                        { position: 'Auditor', name: 'Pearly Colacion' }
+                    ],
+                    committees: [
+                        { position: 'Liturgy', name: 'Kenneth Baselonia' },
+                        { position: 'Social Communication', name: 'Wency Opiso' },
+                        { position: 'Property Custodial', name: 'Ria Ligason' },
+                        { position: 'Sports and Recreational', name: 'Jeffrey Hibanes' }
+                    ]
+                },
+                {
+                    year: '2022-2023',
+                    youthAdviser: 'Rev. Fr. Ronaldo Samonte',
+                    officers: [
+                        { position: 'President', name: 'Richmond Lyle Chang' },
+                        { position: 'Vice-president', name: 'Rome Azeleigh Salangad' },
+                        { position: 'Secretary', name: 'Denmark Paningbatan' },
+                        { position: 'Treasurer', name: 'Gleiza Nones' },
+                        { position: 'Auditor', name: 'Medarlyn Vergara' }
+                    ]
+                },
+                {
+                    year: '2021-2022',
+                    youthAdviser: 'Rev. Fr. Ronaldo Samonte',
+                    officers: [
+                        { position: 'President', name: 'Medarlyn Vergara' },
+                        { position: 'Vice-president', name: 'Rhode Uy' },
+                        { position: 'Secretary', name: 'Richmond Lyle Chang' },
+                        { position: 'Treasurer', name: 'Denmark Paningbatan' },
+                        { position: 'Auditor', name: 'Janelle Andrea Icay' }
+                    ]
+                },
+                {
+                    year: '2020',
+                    youthAdviser: 'Rev. Fr. Lazaro Benedictos',
+                    officers: [
+                        { position: 'President', name: 'Kenneth Baselonia' },
+                        { position: 'Vice-president', name: 'Daisy Lazar' },
+                        { position: 'Secretary', name: 'Jeffrey Hibanes' },
+                        { position: 'Treasurer', name: 'Emerson Jayme' },
+                        { position: 'Auditor', name: 'Wency Jezrel Opiso' }
+                    ]
+                },
+                {
+                    year: '2019',
+                    youthAdviser: 'Rev. Fr. Lazaro Benedictos',
+                    officers: [{ position: 'TBC', name: 'To Be Confirmed' }]
+                },
+                {
+                    year: '2018',
+                    youthAdviser: 'Rev. Fr. Lazaro Benedictos',
+                    officers: [{ position: 'TBC', name: 'To Be Confirmed' }]
+                },
+                {
+                    year: '2016',
+                    youthAdviser: 'Rev. Fr. Lazaro Benedictos',
+                    officers: [{ position: 'TBC', name: 'To Be Confirmed' }]
+                }
+            ]
+        };
+
+        await sql`
+            INSERT INTO site_content (content, updated_at)
+            VALUES (${JSON.stringify(siteContent)}, NOW())
+        `;
+
         // Reset sequence for posts id
         await sql`SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts))`;
 

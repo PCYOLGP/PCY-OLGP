@@ -1,5 +1,5 @@
-import { Component, inject, signal, OnInit, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal, OnInit, computed, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CustomizeService, DirectoryMember } from '../../services/customize.service';
 
@@ -12,13 +12,9 @@ import { CustomizeService, DirectoryMember } from '../../services/customize.serv
 })
 export class TeamComponent implements OnInit {
   private customizeService = inject(CustomizeService);
+  private platformId = inject(PLATFORM_ID);
 
-  team = signal<DirectoryMember[]>([
-    { name: 'Tristan Jhon Fruelda', role: 'Auditor', age: 23, yearJoined: 2023, address: 'St. Martha', bio: 'Youth Leader and community servant.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100008628315250' },
-    { name: 'Aeron jay Boringot', role: 'Member', age: 22, yearJoined: 2023, address: 'Marilao', bio: 'Tech enthusiast and active PCY member.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Aeronjay.11.1827A' },
-    { name: 'Nixarene Nicole P. Escobillo', role: 'Coordinator', age: 21, yearJoined: 2024, address: 'Marilao', bio: 'Leading the youth with passion and dedication.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Nixarene.Escobilo' },
-    { name: 'Zianna Crisolo', role: 'Vice Coordinator (External)', age: 20, yearJoined: 2024, address: 'Marilao', bio: 'Passionate about external relations and service.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100074652100042' }
-  ]);
+  team = signal<DirectoryMember[]>([]);
 
   searchTerm = signal('');
   selectedYear = signal<number | 'all'>('all');
@@ -43,11 +39,13 @@ export class TeamComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.customizeService.getContent().subscribe(content => {
-      if (content && content.directory && content.directory.length > 0) {
-        this.team.set(content.directory);
-      }
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.customizeService.getContent().subscribe(content => {
+        if (content && content.directory && content.directory.length > 0) {
+          this.team.set(content.directory);
+        }
+      });
+    }
   }
 
   showMemberDetails(member: DirectoryMember) {

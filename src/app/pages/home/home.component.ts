@@ -1,9 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { CustomizeService } from '../../services/customize.service';
-import { CommonModule } from '@angular/common';
+import { CustomizeService, SiteContent } from '../../services/customize.service';
 
 @Component({
   selector: 'app-home',
@@ -13,16 +13,17 @@ import { CommonModule } from '@angular/common';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
+  private sanitizer = inject(DomSanitizer);
+  private router = inject(Router);
   private authService = inject(AuthService);
   private customizeService = inject(CustomizeService);
-  private router = inject(Router);
-  private sanitizer = inject(DomSanitizer);
+  private platformId = inject(PLATFORM_ID);
 
   landingContent = signal({
     welcomeLabel: 'Welcome to our community',
     heroTitle: 'This is OLGP | PCY',
     heroSubtitle: 'The Parish Commission on Youth is a group of young people dedicated to faith, fellowship, and service. Whether you\'re looking to volunteer or grow in spirit, there\'s a place for you here.',
-    heroButtonText: 'PCY OFFICERS 2024',
+    heroButtonText: 'PCY OFFICERS',
     logoImage: 'assets/PCY.png',
     gsffLabel: 'Short Film Festival',
     gsffTitle: 'GSFF 2022',
@@ -70,33 +71,49 @@ export class HomeComponent implements OnInit {
   safeVideos: { title: string; description: string; url: SafeResourceUrl }[] = [];
 
   ngOnInit() {
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/dashboard']);
-      return;
-    }
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.authService.isLoggedIn()) {
+        this.router.navigate(['/dashboard']);
+        return;
+      }
 
-    this.customizeService.getContent().subscribe(content => {
-      if (content) {
-        if (content.landing) {
-          this.landingContent.set(content.landing);
-        }
-        if (content.videos && content.videos.length > 0) {
-          this.safeVideos = content.videos.map(v => ({
-            ...v,
-            url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
-          }));
+      this.customizeService.getContent().subscribe((content: SiteContent | null) => {
+        if (content) {
+          if (content.landing) {
+            const updatedLanding = { ...content.landing };
+
+            // Dynamically update hero button text based on latest officer batch
+            if (content.officerTerms && content.officerTerms.length > 0) {
+              // Find the latest year by extracting the first year mentioned
+              const latestBatch = content.officerTerms.reduce((prev: any, current: any) => {
+                const prevYear = parseInt(prev.year.match(/\d{4}/)?.[0] || '0');
+                const currentYear = parseInt(current.year.match(/\d{4}/)?.[0] || '0');
+                return currentYear > prevYear ? current : prev;
+              });
+              updatedLanding.heroButtonText = `PCY OFFICERS ${latestBatch.year}`;
+            }
+
+            this.landingContent.set(updatedLanding);
+          }
+          if (content.videos && content.videos.length > 0) {
+            this.safeVideos = content.videos.map(v => ({
+              ...v,
+              url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
+            }));
+          } else {
+            this.safeVideos = this.videos.map(v => ({
+              ...v,
+              url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
+            }));
+          }
         } else {
           this.safeVideos = this.videos.map(v => ({
             ...v,
             url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
           }));
         }
-      } else {
-        this.safeVideos = this.videos.map(v => ({
-          ...v,
-          url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
-        }));
-      }
-    });
+      });
+    }
   }
 }
+

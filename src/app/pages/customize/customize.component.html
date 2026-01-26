@@ -167,27 +167,37 @@
                             </button>
                         </div>
 
-                        <div class="form-group" style="max-width: 400px;">
-                            <label>Title</label>
-                            <input type="text" [(ngModel)]="video.title" class="form-input" placeholder="Video Title">
-                        </div>
+                        <div class="video-edit-layout">
+                            <div class="video-preview-side">
+                                <div class="video-preview" *ngIf="video.url">
+                                    <iframe [src]="sanitizeUrl(video.url)" frameborder="0" allowfullscreen></iframe>
+                                </div>
+                                <div class="video-preview-placeholder" *ngIf="!video.url">
+                                    <span>No Video URL</span>
+                                </div>
+                            </div>
 
-                        <div class="form-group" style="max-width: 400px;">
-                            <label>Description</label>
-                            <input type="text" [(ngModel)]="video.description" class="form-input"
-                                placeholder="Video description">
-                        </div>
+                            <div class="video-info-side">
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input type="text" [(ngModel)]="video.title" class="form-input"
+                                        placeholder="Video Title">
+                                </div>
 
-                        <div class="form-group" style="max-width: 400px;">
-                            <label>YouTube Embed URL</label>
-                            <input type="text" [(ngModel)]="video.url" class="form-input"
-                                placeholder="https://www.youtube.com/embed/...">
-                            <p class="field-hint">Use the embed URL format from YouTube</p>
-                        </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" [(ngModel)]="video.description" class="form-input"
+                                        placeholder="Video description">
+                                </div>
 
-                        <!-- Video Preview -->
-                        <div class="video-preview" *ngIf="video.url">
-                            <iframe [src]="sanitizeUrl(video.url)" frameborder="0" allowfullscreen></iframe>
+                                <div class="form-group">
+                                    <label>YouTube URL</label>
+                                    <input type="text" [ngModel]="video.url"
+                                        (ngModelChange)="onVideoUrlChange(i, $event)" class="form-input"
+                                        placeholder="Paste YouTube link here...">
+                                    <p class="field-hint">URLs will automatically convert to embed format</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
