@@ -24,7 +24,8 @@ async function updateContent() {
         {
             year: '2026',
             youthAdviser: 'Rev. Fr. Ronaldo Samonte',
-            officers: [{ position: 'TBC', name: 'To Be Confirmed' }]
+            officers: [{ position: 'TBC', name: 'To Be Confirmed' }],
+            committees: []
         },
         {
             year: '2025',
@@ -46,7 +47,7 @@ async function updateContent() {
             year: '2023-2024',
             youthAdviser: 'Rev. Fr. Ronaldo Samonte',
             officers: [
-                { position: 'Coordinator', name: 'Tristan Jhon Fruelda' },
+                { position: 'Coordinator', name: 'Tristan Fruelda' },
                 { position: 'Vice Coor', name: 'Aeron jay Boringot' },
                 { position: 'Secretary', name: 'Nixarene Escobillo' },
                 { position: 'Treasurer', name: 'Zianna Crisolo' },
@@ -109,9 +110,25 @@ async function updateContent() {
         }
     ];
 
+    const directory = [
+        {
+            name: 'Tristan Fruelda',
+            role: 'Auditor',
+            previousPosition: '2023-2024 Coordinator',
+            age: 23,
+            yearJoined: 2023,
+            address: 'St. Martha',
+            bio: 'Youth Leader and community servant.',
+            image: 'assets/tan.jpg',
+            email: 'sample@gmail.com',
+            fb: 'https://www.facebook.com/profile.php?id=100008628315250'
+        }
+    ];
+
     const newContent = {
         ...currentContent,
-        officerTerms: officerTerms
+        officerTerms: officerTerms,
+        directory: directory
     };
 
     // Ensure landing exists and logo is correct

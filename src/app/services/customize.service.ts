@@ -81,20 +81,8 @@ const DEFAULT_CONTENT: SiteContent = {
         {
             year: '2026',
             youthAdviser: 'Rev. Fr. Ronaldo Samonte',
-            officers: [
-                { position: 'Coordinator', name: 'Nixarene Nicole P. Escobillo' },
-                { position: 'Vice Coordinator (External)', name: 'Zianna Crisolo' },
-                { position: 'Vice Coordinator (Internal)', name: 'Pristine Burio' },
-                { position: 'Secretary', name: 'Chloe Paraan' },
-                { position: 'Treasurer', name: 'Carl Misajon' },
-                { position: 'Auditor', name: 'Tristan Fruelda' }
-            ],
-            committees: [
-                { position: 'Social Communication', name: 'Wency Opiso' },
-                { position: 'Sports and Recreational', name: 'Jeffrey Hibanes' },
-                { position: 'Liturgy', name: 'Kenneth Baselonia' },
-                { position: 'Property Custodial', name: 'Ria Ligason' }
-            ]
+            officers: [{ position: 'TBC', name: 'To Be Confirmed' }],
+            committees: []
         },
         {
             year: '2025',
@@ -116,7 +104,7 @@ const DEFAULT_CONTENT: SiteContent = {
             year: '2023-2024',
             youthAdviser: 'Rev. Fr. Ronaldo Samonte',
             officers: [
-                { position: 'Coordinator', name: 'Tristan Jhon Fruelda' },
+                { position: 'Coordinator', name: 'Tristan Fruelda' },
                 { position: 'Vice Coor', name: 'Aeron jay Boringot' },
                 { position: 'Secretary', name: 'Nixarene Escobillo' },
                 { position: 'Treasurer', name: 'Zianna Crisolo' },
@@ -178,7 +166,20 @@ const DEFAULT_CONTENT: SiteContent = {
             officers: [{ position: 'TBC', name: 'To Be Confirmed' }]
         }
     ],
-    directory: []
+    directory: [
+        {
+            name: 'Tristan Fruelda',
+            role: 'Auditor',
+            previousPosition: '2023-2024 Coordinator',
+            age: 23,
+            yearJoined: 2023,
+            address: 'St. Martha',
+            bio: 'Youth Leader and community servant.',
+            image: 'assets/tan.jpg',
+            email: 'sample@gmail.com',
+            fb: 'https://www.facebook.com/profile.php?id=100008628315250'
+        }
+    ]
 };
 
 @Injectable({
