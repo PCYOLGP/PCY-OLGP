@@ -1,55 +1,49 @@
-<div class="officers-page">
-    <header class="page-header">
-        <div class="container text-center">
+<div class="history-page">
+    <div class="container py-20">
+        <!-- Header / Back link -->
+        <header class="page-header mb-16 text-center">
             <a routerLink="/about" class="back-link">← BACK TO ABOUT</a>
-            <h1 class="animate-fade-in">Our Legacy of Leadership</h1>
-            <p class="animate-fade-in text-slate-500">A tribute to the dedicated youth leaders who have served Our Lady
-                of Guadalupe Parish.</p>
-        </div>
-    </header>
+            <div class="title-with-icon mt-8">
+                <i class="ri-history-line icon-badge"></i>
+                <h1 class="page-title">History of Leadership</h1>
+                <p class="section-desc mt-4">Explore the dedicated youth who have led PCY through the years.</p>
+            </div>
+        </header>
 
-    <section class="officers-content">
-        <div class="container">
-            <div class="officers-grid">
-                <div *ngFor="let batch of officerBatches()" class="batch-card animate-slide-up">
-                    <div class="batch-year">{{ batch.year }}</div>
+        <!-- Legacy / History Section -->
+        <div class="batches-grid">
+            <div *ngFor="let batch of officerBatches()" class="batch-history-card animate-slide-up">
+                <div class="batch-card-header">
+                    <h3 class="batch-title">Batch {{ batch.year }}</h3>
+                </div>
 
-                    <div class="batch-adviser">
-                        <span class="role">Youth Adviser</span>
-                        <div class="officer-item">
-                            <span class="name">{{ batch.youthAdviser }}</span>
-                        </div>
+                <div class="batch-card-body">
+                    <div class="adviser-section mb-6">
+                        <span class="detail-label">Youth Adviser</span>
+                        <div class="adviser-name">{{ batch.youthAdviser }}</div>
                     </div>
 
-                    <div class="batch-coordinator">
-                        <span class="role">Officers</span>
-                        <div class="officers-list">
-                            <div *ngFor="let officer of batch.officers" class="officer-item">
-                                <span class="name">{{ officer.name }}</span>
-                                <span class="position">{{ officer.position }}</span>
+                    <div class="officers-section">
+                        <span class="detail-label">Officers</span>
+                        <div class="officer-items-list">
+                            <div *ngFor="let officer of batch.officers" class="mini-officer-row">
+                                <span class="m-name">{{ officer.name }}</span>
+                                <span class="m-pos">{{ officer.position }}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div *ngIf="batch.committees && batch.committees.length > 0" class="members-section">
-                        <span class="role">Committees</span>
-                        <div class="officers-list">
-                            <div *ngFor="let committee of batch.committees" class="officer-item">
-                                <span class="name">{{ committee.name }}</span>
-                                <span class="position">{{ committee.position }}</span>
+                    <div *ngIf="batch.committees && batch.committees.length > 0" class="committees-section mt-6">
+                        <span class="detail-label">Committees</span>
+                        <div class="officer-items-list">
+                            <div *ngFor="let committee of batch.committees" class="mini-officer-row">
+                                <span class="m-name">{{ committee.name }}</span>
+                                <span class="m-pos">{{ committee.position }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-
-    <footer class="page-footer">
-        <div class="container text-center">
-            <h2>Ready to lead the next generation?</h2>
-            <p>Join our mission and be a part of the history.</p>
-            <a routerLink="/contact" class="btn-primary">Become a Member</a>
-        </div>
-    </footer>
+    </div>
 </div>
