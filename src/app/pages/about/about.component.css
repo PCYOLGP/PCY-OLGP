@@ -178,30 +178,62 @@ section {
     color: #111827;
 }
 
-/* History CTA */
-.history-cta {
-    padding: 4rem 0;
+/* Legacy & Directory Section */
+.legacy-section {
+    padding: 6rem 0;
 }
 
-.cta-card {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(10px);
-    padding: 3rem;
-    border-radius: 32px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    max-width: 600px;
+.legacy-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+    max-width: 1000px;
     margin: 0 auto;
 }
 
+.cta-card {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(12px);
+    padding: 3.5rem 2.5rem;
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cta-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.cta-card h3 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+
 .cta-card p {
-    font-size: 1.125rem;
-    color: #4b5563;
-    margin-bottom: 2rem;
+    font-size: 1.05rem;
+    color: #64748b;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    flex: 1;
 }
 
 .btn-secondary {
     display: inline-block;
-    padding: 1rem 2rem;
+    padding: 1rem 2.5rem;
     background: white;
     color: #388f3c;
     text-decoration: none;
@@ -214,7 +246,7 @@ section {
 .btn-secondary:hover {
     background: #388f3c;
     color: white;
-    transform: translateY(-3px);
+    transform: scale(1.05);
 }
 
 /* Activities Timeline */
@@ -491,6 +523,15 @@ section {
     .section-title {
         font-size: 1.75rem;
         margin-bottom: 2.5rem;
+    }
+
+    .legacy-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .cta-card {
+        padding: 2.5rem 1.5rem;
     }
 
     .activities-timeline::before {

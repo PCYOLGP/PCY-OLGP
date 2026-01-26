@@ -15,14 +15,31 @@
                     <div class="card-glass"></div>
                     <div class="content-wrapper">
                         <div class="batch-year">{{ batch.year }}</div>
-                        <div class="batch-coordinator">
-                            <span class="role">Coordinator</span>
-                            <span class="name">{{ batch.coordinator }}</span>
+
+                        <div class="batch-adviser">
+                            <span class="role">Youth Adviser</span>
+                            <div class="officer-item">
+                                <span class="name">{{ batch.youthAdviser }}</span>
+                            </div>
                         </div>
-                        <div class="members-section">
-                            <span class="role">Executive Committee</span>
-                            <div class="members-list">
-                                <span *ngFor="let member of batch.members" class="member-tag">{{ member }}</span>
+
+                        <div class="batch-coordinator">
+                            <span class="role">Officers</span>
+                            <div class="officers-list">
+                                <div *ngFor="let officer of batch.officers" class="officer-item">
+                                    <span class="name">{{ officer.name }}</span>
+                                    <span class="position">{{ officer.position }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="batch.committees && batch.committees.length > 0" class="members-section">
+                            <span class="role">Committees</span>
+                            <div class="officers-list">
+                                <div *ngFor="let committee of batch.committees" class="officer-item">
+                                    <span class="name">{{ committee.name }}</span>
+                                    <span class="position">{{ committee.position }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>

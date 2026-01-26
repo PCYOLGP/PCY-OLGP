@@ -1,0 +1,393 @@
+<div class="customize-page">
+    <!-- Header -->
+    <header class="customize-header glass-card">
+        <div class="header-content">
+            <button class="back-btn" (click)="goBack()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                Back to Dashboard
+            </button>
+            <div class="header-title">
+                <h1>🎨 Customize Website</h1>
+                <p>Edit content, videos, and officer information</p>
+            </div>
+            <button class="save-btn" (click)="saveChanges()" [disabled]="isSaving()">
+                {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+            </button>
+        </div>
+    </header>
+
+    <!-- Success Message -->
+    <div class="success-toast" *ngIf="showSuccessMessage()">
+        <div class="toast-content glass-card">
+            <span class="toast-icon">✓</span>
+            <span class="toast-message">Changes saved successfully!</span>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs-container glass-card">
+        <button class="tab-btn" [class.active]="activeTab() === 'landing'" (click)="setActiveTab('landing')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            Landing Page
+        </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'videos'" (click)="setActiveTab('videos')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="23 7 16 12 23 17 23 7" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+            </svg>
+            GSFF Videos
+        </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'officers'" (click)="setActiveTab('officers')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            Officer History
+        </button>
+        <button class="tab-btn" [class.active]="activeTab() === 'directory'" (click)="setActiveTab('directory')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+                <polyline points="10 9 9 9 8 9" />
+            </svg>
+            PCY Directory
+        </button>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content-area">
+        <!-- Landing Page Tab -->
+        <div class="tab-content" *ngIf="activeTab() === 'landing'">
+            <div class="section-card glass-card">
+                <h2 class="section-title">Hero Section</h2>
+
+                <div class="form-group">
+                    <label>Welcome Label</label>
+                    <input type="text" [(ngModel)]="landingContent().welcomeLabel" class="form-input"
+                        placeholder="Welcome to our community">
+                </div>
+
+                <div class="form-group">
+                    <label>Hero Title</label>
+                    <input type="text" [(ngModel)]="landingContent().heroTitle" class="form-input"
+                        placeholder="This is OLGP | PCY">
+                </div>
+
+                <div class="form-group">
+                    <label>Hero Subtitle</label>
+                    <textarea [(ngModel)]="landingContent().heroSubtitle" class="form-textarea" rows="4"
+                        placeholder="The Parish Commission on Youth..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Logo Image</label>
+                    <div class="logo-upload-area">
+                        <div class="logo-preview">
+                            <img [src]="logoPreview() || landingContent().logoImage" alt="Logo Preview">
+                        </div>
+                        <div class="upload-controls">
+                            <input type="file" #logoInput (change)="onLogoSelected($event)" accept="image/*" hidden>
+                            <button class="upload-btn" (click)="logoInput.click()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" x2="12" y1="3" y2="15" />
+                                </svg>
+                                Upload New Logo
+                            </button>
+                            <p class="upload-hint">PNG, JPG or SVG (Max 2MB)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card glass-card">
+                <h2 class="section-title">GSFF Section</h2>
+
+                <div class="form-group">
+                    <label>GSFF Label</label>
+                    <input type="text" [(ngModel)]="landingContent().gsffLabel" class="form-input"
+                        placeholder="Short Film Festival">
+                </div>
+
+                <div class="form-group">
+                    <label>GSFF Title</label>
+                    <input type="text" [(ngModel)]="landingContent().gsffTitle" class="form-input"
+                        placeholder="GSFF 2022">
+                </div>
+
+                <div class="form-group">
+                    <label>GSFF Description</label>
+                    <textarea [(ngModel)]="landingContent().gsffDescription" class="form-textarea" rows="3"
+                        placeholder="GSFF is a short film festival..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Videos Tab -->
+        <div class="tab-content" *ngIf="activeTab() === 'videos'">
+            <div class="section-card glass-card">
+                <div class="section-header-with-action">
+                    <h2 class="section-title">GSFF Video Collection</h2>
+                    <button class="add-btn" (click)="addVideo()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                        Add Video
+                    </button>
+                </div>
+
+                <div class="videos-list">
+                    <div *ngFor="let video of videos(); let i = index" class="video-item glass-card">
+                        <div class="video-item-header">
+                            <span class="video-number">Video {{ i + 1 }}</span>
+                            <button class="delete-btn" (click)="removeVideo(i)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" [(ngModel)]="video.title" class="form-input" placeholder="Video Title">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" [(ngModel)]="video.description" class="form-input"
+                                placeholder="Video description">
+                        </div>
+
+                        <div class="form-group">
+                            <label>YouTube Embed URL</label>
+                            <input type="text" [(ngModel)]="video.url" class="form-input"
+                                placeholder="https://www.youtube.com/embed/...">
+                            <p class="field-hint">Use the embed URL format from YouTube</p>
+                        </div>
+
+                        <!-- Video Preview -->
+                        <div class="video-preview" *ngIf="video.url">
+                            <iframe [src]="sanitizeUrl(video.url)" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Officers Tab -->
+        <div class="tab-content" *ngIf="activeTab() === 'officers'">
+            <div class="section-card glass-card">
+                <div class="section-header-with-action">
+                    <h2 class="section-title">Officer History</h2>
+                    <button class="add-btn" (click)="addOfficerTerm()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                        Add Term
+                    </button>
+                </div>
+
+                <div class="terms-list">
+                    <div *ngFor="let term of officerTerms(); let i = index" class="term-item glass-card">
+                        <div class="term-item-header">
+                            <span class="term-badge">{{ term.year }}</span>
+                            <button class="delete-btn" (click)="removeOfficerTerm(i)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Term Year</label>
+                            <input type="text" [(ngModel)]="term.year" class="form-input"
+                                placeholder="YYYY or YYYY-YYYY">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Youth Adviser</label>
+                            <input type="text" [(ngModel)]="term.youthAdviser" class="form-input"
+                                placeholder="Rev. Fr. Name">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label-with-action">
+                                <label>Officers</label>
+                                <button class="add-member-btn" (click)="addOfficer(i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M12 5v14M5 12h14" />
+                                    </svg>
+                                    Add Officer
+                                </button>
+                            </div>
+                            <div class="committee-members">
+                                <div *ngFor="let officer of term.officers; let j = index" class="member-input-row">
+                                    <input type="text" [(ngModel)]="officer.position" class="form-input pos-input"
+                                        placeholder="Position">
+                                    <input type="text" [(ngModel)]="officer.name" class="form-input name-input"
+                                        placeholder="Name">
+                                    <button class="remove-member-btn" (click)="removeOfficer(i, j)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18" />
+                                            <line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label-with-action">
+                                <label>Committees</label>
+                                <button class="add-member-btn" (click)="addCommitteeMember(i)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M12 5v14M5 12h14" />
+                                    </svg>
+                                    Add Committee
+                                </button>
+                            </div>
+                            <div class="committee-members">
+                                <div *ngFor="let committee of term.committees; let k = index" class="member-input-row">
+                                    <input type="text" [(ngModel)]="committee.position" class="form-input pos-input"
+                                        placeholder="Committee">
+                                    <input type="text" [(ngModel)]="committee.name" class="form-input name-input"
+                                        placeholder="Name">
+                                    <button class="remove-member-btn" (click)="removeCommitteeMember(i, k)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18" />
+                                            <line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Directory Tab -->
+        <div class="tab-content" *ngIf="activeTab() === 'directory'">
+            <div class="section-card glass-card">
+                <div class="section-header-with-action">
+                    <h2 class="section-title">PCY Directory</h2>
+                    <button class="add-btn" (click)="addDirectoryMember()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                        Add Member
+                    </button>
+                </div>
+
+                <div class="terms-list">
+                    <div *ngFor="let member of directoryMembers(); let idx = index" class="term-item glass-card">
+                        <div class="term-item-header">
+                            <span class="term-badge">{{ member.role }}</span>
+                            <button class="delete-btn" (click)="removeDirectoryMember(idx)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path
+                                        d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="member-edit-layout">
+                            <div class="member-photo-side">
+                                <div class="member-preview-box">
+                                    <img [src]="member.image" [alt]="member.name">
+                                </div>
+                                <input type="file" #memberFile (change)="onMemberImageSelected($event, idx)"
+                                    accept="image/*" hidden>
+                                <button class="upload-btn small" (click)="memberFile.click()">Change Photo</button>
+                            </div>
+                            <div class="member-info-side">
+                                <div class="form-group-row">
+                                    <div class="form-group half">
+                                        <label>Full Name</label>
+                                        <input type="text" [(ngModel)]="member.name" class="form-input"
+                                            placeholder="Full Name">
+                                    </div>
+                                    <div class="form-group half">
+                                        <label>Role</label>
+                                        <input type="text" [(ngModel)]="member.role" class="form-input"
+                                            placeholder="Role (e.g. Officer)">
+                                    </div>
+                                </div>
+                                <div class="form-group-row">
+                                    <div class="form-group third">
+                                        <label>Age</label>
+                                        <input type="number" [(ngModel)]="member.age" class="form-input"
+                                            placeholder="Age">
+                                    </div>
+                                    <div class="form-group third">
+                                        <label>Year Joined</label>
+                                        <input type="number" [(ngModel)]="member.yearJoined" class="form-input"
+                                            placeholder="YYYY">
+                                    </div>
+                                    <div class="form-group large">
+                                        <label>Address</label>
+                                        <input type="text" [(ngModel)]="member.address" class="form-input"
+                                            placeholder="St. Martha, Marilao">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Short Bio</label>
+                                    <textarea [(ngModel)]="member.bio" class="form-textarea" rows="2"
+                                        placeholder="Tell us something about this member..."></textarea>
+                                </div>
+                                <div class="form-group-row">
+                                    <div class="form-group half">
+                                        <label>Email Address</label>
+                                        <input type="email" [(ngModel)]="member.email" class="form-input"
+                                            placeholder="email@example.com">
+                                    </div>
+                                    <div class="form-group half">
+                                        <label>Facebook URL</label>
+                                        <input type="text" [(ngModel)]="member.fb" class="form-input"
+                                            placeholder="https://facebook.com/...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

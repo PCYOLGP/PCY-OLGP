@@ -35,6 +35,7 @@
     font-size: 4rem;
     font-weight: 800;
     background: linear-gradient(to right, #1e293b, #334155);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 1rem;
@@ -74,6 +75,12 @@
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
 }
 
+.content-wrapper {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
 .batch-year {
     font-size: 0.875rem;
     background: #388f3c;
@@ -83,6 +90,12 @@
     display: inline-block;
     font-weight: 700;
     margin-bottom: 2rem;
+}
+
+.batch-adviser {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .batch-coordinator {
@@ -96,13 +109,44 @@
     color: #94a3b8;
     font-weight: 700;
     letter-spacing: 1px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
-.name {
-    font-size: 1.5rem;
+.officers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.officer-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    line-height: 1.4;
+    text-align: center;
+    width: 100%;
+}
+
+.officer-item .name {
+    font-size: 1.05rem;
     font-weight: 800;
     color: #1e293b;
+}
+
+.officer-item .position {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.members-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .members-list {
@@ -244,13 +288,12 @@
         font-size: 0.7rem;
     }
 
-    .name {
-        font-size: 1.25rem;
+    .officer-item .name {
+        font-size: 0.9375rem;
     }
 
-    .member-tag {
+    .officer-item .position {
         font-size: 0.75rem;
-        padding: 5px 12px;
     }
 
     .page-footer {

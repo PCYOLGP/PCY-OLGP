@@ -1,69 +1,99 @@
-<section class="min-h-screen bg-[#faf5ff] py-16 px-4">
-    <div class="max-w-[1200px] mx-auto text-center">
-        <h1 class="text-4xl font-bold text-[#1f2937] mb-12 flex items-center justify-center gap-4">
-            <i class="ri-user-heart-line text-[#388f3c]"></i>
-            PCY OFFICERS 2024
-        </h1>
+<section class="directory-page animate-fade-in">
+    <div class="container">
+        <header class="directory-header text-center">
+            <a routerLink="/about" class="back-link">← Back to About</a>
+            <h1>PCY Directory</h1>
+            <p>Meet the dedicated members of the Parish Commission on Youth.</p>
+        </header>
 
-        <!-- President Section -->
-        <div class="mb-16 flex justify-center">
-            @if (team[0].role === 'President') {
-            <div
-                class="bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transition-all duration-300 relative group overflow-hidden max-w-[450px] w-full border-b-8 border-[#388f3c]">
-                <div class="absolute top-4 right-4 animate-pulse">
-                    <span
-                        class="bg-[#388f3c] text-white px-4 py-1 rounded-full text-xs font-bold tracking-widest uppercase">President</span>
-                </div>
-
-                <div class="flex flex-col items-center">
-                    <div
-                        class="w-40 h-40 rounded-full overflow-hidden mb-6 border-4 border-[#388f3c]/20 shadow-xl scale-110">
-                        <img [src]="team[0].image" [alt]="team[0].name"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    </div>
-
-                    <h3 class="text-3xl font-bold text-[#1f2937] mb-2">{{ team[0].name }}</h3>
-                    <p class="text-[#388f3c] font-bold text-sm tracking-widest uppercase mb-4">{{ team[0].role }}</p>
-                    <p class="text-[#6b7280] mb-8">{{ team[0].email }}</p>
-
-                    <a [href]="team[0].fb" target="_blank"
-                        class="w-14 h-14 bg-[#388f3c] rounded-full flex items-center justify-center text-white hover:bg-[#228219] transition-all transform hover:scale-110 hover:rotate-6">
-                        <i class="ri-facebook-fill text-2xl"></i>
-                    </a>
+        <!-- Search & Filter Bar -->
+        <div class="directory-controls">
+            <div class="search-box">
+                <i class="ri-search-line"></i>
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name, role or address..."
+                    class="search-input">
+            </div>
+            <div class="year-filters">
+                <button class="filter-btn" [class.active]="selectedYear() === 'all'"
+                    (click)="selectedYear.set('all')">All Years</button>
+                <div class="year-scroll">
+                    <button *ngFor="let year of availableYears()" class="filter-btn"
+                        [class.active]="selectedYear() === year" (click)="selectedYear.set(year)">
+                        {{ year }}
+                    </button>
                 </div>
             </div>
-            }
         </div>
 
-        <!-- Other Officers Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            @for (member of team.slice(1); track member.name) {
-            <div
-                class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 relative group overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-2 bg-[#388f3c]"></div>
+        <div class="directory-grid">
+            <div *ngFor="let member of filteredMembers()" class="member-item animate-slide-up"
+                (click)="showMemberDetails(member)">
+                <div class="member-image-container">
+                    <img [src]="member.image" [alt]="member.name" class="member-photo">
 
-                <div class="flex justify-between items-start mb-6">
-                    <span class="text-[10px] font-bold text-[#6b7280] tracking-widest uppercase opacity-50">{{
-                        member.role }}</span>
-                    <i class="ri-checkbox-circle-fill text-[#388f3c] text-xl"></i>
-                </div>
-
-                <div class="flex flex-col items-center">
-                    <div class="w-32 h-32 rounded-full overflow-hidden mb-6 border-4 border-[#faf5ff] shadow-inner">
-                        <img [src]="member.image" [alt]="member.name"
-                            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                    <!-- Tooltip logic -->
+                    <div class="member-tooltip">
+                        <span class="tip-role">{{ member.role }}</span>
+                        <h4 class="tip-name">{{ member.name }}</h4>
+                        <p class="tip-info" *ngIf="member.age">{{ member.age }} years old</p>
+                        <p class="tip-info" *ngIf="member.address">{{ member.address }}</p>
                     </div>
-
-                    <h3 class="text-2xl font-bold text-[#1f2937] mb-2">{{ member.name }}</h3>
-                    <p class="text-[#6b7280] mb-8">{{ member.email }}</p>
-
-                    <a [href]="member.fb" target="_blank"
-                        class="w-12 h-12 bg-[#388f3c] rounded-full flex items-center justify-center text-white hover:bg-[#228219] transition-all transform hover:scale-110">
-                        <i class="ri-facebook-fill text-xl"></i>
-                    </a>
+                </div>
+                <div class="member-details">
+                    <h3 class="member-name">{{ member.name }}</h3>
                 </div>
             </div>
-            }
+        </div>
+
+        <!-- Full Modal -->
+        <div class="modal-overlay" *ngIf="selectedMember() as member" (click)="closeModal()">
+            <div class="modal-container animate-fade-in" (click)="$event.stopPropagation()">
+                <button class="modal-close" (click)="closeModal()">
+                    <i class="ri-close-line"></i>
+                </button>
+
+                <div class="modal-content-layout">
+                    <div class="modal-image-side">
+                        <img [src]="member.image" [alt]="member.name">
+                    </div>
+                    <div class="modal-info-side">
+                        <span class="modal-role">{{ member.role }}</span>
+                        <h2 class="modal-name">{{ member.name }}</h2>
+
+                        <div class="modal-meta-grid">
+                            <div class="meta-item" *ngIf="member.age">
+                                <span class="meta-label">Age</span>
+                                <span class="meta-value">{{ member.age }}</span>
+                            </div>
+                            <div class="meta-item" *ngIf="member.address">
+                                <span class="meta-label">Address</span>
+                                <span class="meta-value">{{ member.address }}</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-bio" *ngIf="member.bio">
+                            <h3>About</h3>
+                            <p>{{ member.bio }}</p>
+                        </div>
+
+                        <div class="modal-footer-actions">
+                            <a [href]="member.fb" target="_blank" class="modal-btn fb" *ngIf="member.fb">
+                                <i class="ri-facebook-circle-fill"></i>
+                                Message on Facebook
+                            </a>
+                            <a [href]="'mailto:' + member.email" class="modal-btn mail" *ngIf="member.email">
+                                <i class="ri-mail-fill"></i>
+                                Send Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="team().length === 0" class="empty-state text-center">
+            <div class="empty-icon">📇</div>
+            <p>No members found in the directory.</p>
         </div>
     </div>
 </section>

@@ -60,7 +60,7 @@ section {
 
 .glass-bg {
     width: min(30rem, 90vw);
-    height: min(30rem, 90vw);
+    aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,6 +69,7 @@ section {
     backdrop-filter: blur(8px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
     border: 4px solid rgba(255, 255, 255, 0.6);
+    flex-shrink: 0;
 }
 
 .hero-logo {
@@ -291,7 +292,6 @@ section {
 
     .glass-bg {
         width: min(18rem, 85vw);
-        height: min(18rem, 85vw);
         margin-bottom: 2rem;
     }
 
@@ -372,7 +372,6 @@ section {
 
     .glass-bg {
         width: min(22rem, 85vw);
-        height: min(22rem, 85vw);
         margin-bottom: 2rem;
     }
 
@@ -414,7 +413,6 @@ section {
 
     .glass-bg {
         width: min(24rem, 80vw);
-        height: min(24rem, 80vw);
         margin-bottom: 2.5rem;
     }
 
@@ -475,7 +473,6 @@ section {
 
     .glass-bg {
         width: min(26rem, 85vw);
-        height: min(26rem, 85vw);
     }
 
     .video-grid {
@@ -497,7 +494,6 @@ section {
 
     .glass-bg {
         width: min(16rem, 40vh);
-        height: min(16rem, 40vh);
     }
 
     section {
