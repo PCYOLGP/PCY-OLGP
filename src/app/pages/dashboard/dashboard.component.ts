@@ -1,6 +1,6 @@
 import { Component, inject, signal, computed, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterOutlet, Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterOutlet, Router, RouterLink, RouterLinkActive, ActivatedRoute } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
 import { PostService, Post, Like } from '../../services/post.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -12,7 +12,7 @@ import { CustomizeService, SiteContent } from '../../services/customize.service'
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, FormsModule, RouterLink],
+  imports: [CommonModule, RouterOutlet, FormsModule, RouterLink, RouterLinkActive],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -232,12 +232,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  setHomeView() {
+    this.view.set('home');
+    if (!this.isDashboardHome()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
+
   trackById(index: number, post: Post): number {
     return post.id;
   }
 
   isDashboardHome(): boolean {
-    return this.router.url === '/dashboard';
+    return this.router.url.split('?')[0] === '/dashboard';
   }
 
   togglePostMenu(event: Event, postId: number) {
@@ -260,6 +267,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.closeLikesModal();
     this.closeAllMenus();
 
+    if (!this.isDashboardHome()) {
+      this.router.navigate(['/dashboard']);
+    }
+
     // Fetch user details for bio etc
     this.authService.getUserByUsername(username).subscribe(user => {
       this.viewedUserProfile.set(user);
@@ -270,6 +281,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.selectedProfileUsername.set(null);
     this.viewedUserProfile.set(this.authService.currentUser());
     this.view.set('profile');
+    if (!this.isDashboardHome()) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   openEditProfileModal() {
@@ -653,6 +667,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   viewAccounts() {
     this.view.set('accounts');
     this.loadAllUsers();
+    if (!this.isDashboardHome()) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   openCreateAccountModal() {

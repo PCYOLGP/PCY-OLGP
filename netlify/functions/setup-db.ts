@@ -209,7 +209,17 @@ export const handler: Handler = async (event) => {
                     youthAdviser: 'Rev. Fr. Lazaro Benedictos',
                     officers: [{ position: 'TBC', name: 'To Be Confirmed' }]
                 }
-            ]
+            ],
+            videos: [
+                { title: 'KANDILA', description: '"Ama patawarin mo sila sapagkat hindi nila alam ang kaniyang ginagawa"', url: 'https://www.youtube.com/embed/pz7DJU7Os7U' },
+                { title: 'NAKAW NA PARAISO', description: '"Sinasabi ko sa \'yo: Ngayon din ay isasama kita sa Pariso."', url: 'https://www.youtube.com/embed/vYoLj4PfGlE' },
+                { title: 'BUBOY', description: '"Babae, narito, ang iyong anak!" "Narito, ang iyong ina!"', url: 'https://www.youtube.com/embed/HXq1xr8PMWI' },
+                { title: 'ILAW', description: '"Diyos ko, Diyos ko! Bakit mo ako pinabayaan?"', url: 'https://www.youtube.com/embed/AV0o6VQXmZs' },
+                { title: 'KAMAYAN', description: '"Nauuhaw ako!"', url: 'https://www.youtube.com/embed/olTlczcdFWQ' },
+                { title: 'ANGHEL SA DILIM', description: '"Naganap na"', url: 'https://www.youtube.com/embed/jl76Iw6mwJM' },
+                { title: 'GULONG NA BUHAY', description: '"Ama, sa mga kamay mo, inihahabilin ko ang aking espiritu"', url: 'https://www.youtube.com/embed/5l1V56qClC0' }
+            ],
+            directory: []
         };
 
         // Brute force update: Clear old content and insert the fresh requested one

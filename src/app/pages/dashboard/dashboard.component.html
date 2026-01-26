@@ -29,7 +29,7 @@
         <!-- Sidebar Navigation (Desktop) -->
         <aside class="sidebar desktop-only">
             <nav class="sidebar-nav">
-                <a (click)="view.set('home')" [class.active]="isDashboardHome() && view() === 'home'">
+                <a (click)="setHomeView()" [class.active]="isDashboardHome() && view() === 'home'">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
                         class="nav-icon">
@@ -187,7 +187,7 @@
                 </div>
             </div>
 
-            <div class="profile-content" *ngIf="view() === 'profile'">
+            <div class="profile-content" *ngIf="isDashboardHome() && view() === 'profile'">
                 <div class="profile-header-info glass-card mb-8">
                     <div class="profile-main">
                         <img *ngIf="getUserImage(viewedUserProfile() || authService.currentUser())"
@@ -243,7 +243,7 @@
                     }
                 </div>
             </div>
-            <div class="accounts-content" *ngIf="isAdmin() && view() === 'accounts'">
+            <div class="accounts-content" *ngIf="isDashboardHome() && isAdmin() && view() === 'accounts'">
                 <div class="glass-card p-8 mb-8 flex justify-between items-center">
                     <div>
                         <h2 class="text-2xl font-bold">List of accounts</h2>
@@ -275,8 +275,7 @@
     </div>
 
     <nav class="bottom-nav mobile-only">
-        <button (click)="view.set('home')" class="bottom-nav-item"
-            [class.active]="isDashboardHome() && view() === 'home'">
+        <button (click)="setHomeView()" class="bottom-nav-item" [class.active]="isDashboardHome() && view() === 'home'">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
