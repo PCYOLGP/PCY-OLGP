@@ -49,6 +49,30 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Committees Section -->
+            <div class="committees-section mt-20" *ngIf="displayCommittees().length > 0">
+                <div class="section-divider mb-12">
+                    <span class="divider-text">COMMITTEES</span>
+                </div>
+                <div class="secondary-grid">
+                    <div *ngFor="let committee of displayCommittees()" class="officer-card animate-slide-up">
+                        <div class="position-tag small committee-tag">{{ committee.position }}</div>
+                        <div class="image-wrapper">
+                            <img [src]="committee.image" [alt]="committee.name" class="officer-image">
+                        </div>
+                        <div class="officer-info">
+                            <h3 class="officer-name-small">{{ committee.name }}</h3>
+                            <p class="officer-email-small" *ngIf="committee.email">{{ committee.email }}</p>
+                        </div>
+                        <div class="officer-socials">
+                            <a [href]="committee.fb" target="_blank" class="social-btn facebook-small">
+                                <i class="ri-facebook-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         } @else {
         <div class="empty-state text-center py-20">

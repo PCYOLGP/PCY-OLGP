@@ -45,6 +45,7 @@
                     <div class="member-tooltip">
                         <span class="tip-role">{{ member.role }}</span>
                         <h4 class="tip-name">{{ member.name }}</h4>
+                        <p class="tip-info" *ngIf="member.previousPosition">Prev: {{ member.previousPosition }}</p>
                         <p class="tip-info" *ngIf="member.age">{{ member.age }} years old</p>
                         <p class="tip-info" *ngIf="member.address">{{ member.address }}</p>
                     </div>
@@ -78,6 +79,10 @@
                             <div class="meta-item" *ngIf="member.address">
                                 <span class="meta-label">Address</span>
                                 <span class="meta-value">{{ member.address }}</span>
+                            </div>
+                            <div class="meta-item" *ngIf="member.previousPosition">
+                                <span class="meta-label">Previous position</span>
+                                <span class="meta-value">{{ member.previousPosition }}</span>
                             </div>
                         </div>
 

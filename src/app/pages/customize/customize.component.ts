@@ -92,16 +92,22 @@ export class CustomizeComponent implements OnInit {
                 { position: 'Secretary', name: 'Nixarene Escobillo' },
                 { position: 'Treasurer', name: 'Zianna Crisolo' },
                 { position: 'Auditor', name: 'Pearly Colacion' }
+            ],
+            committees: [
+                { position: 'Liturgy', name: 'Kenneth Baselonia' },
+                { position: 'Social Communication', name: 'Wency Opiso' },
+                { position: 'Property Custodial', name: 'Ria Ligason' },
+                { position: 'Sports and Recreational', name: 'Jeffrey Hibanes' }
             ]
         }
     ]);
 
     // PCY Directory
     directoryMembers = signal<DirectoryMember[]>([
-        { name: 'Tristan Jhon Fruelda', role: 'Auditor', age: 23, yearJoined: 2023, address: 'St. Martha', bio: 'Youth Leader and community servant.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100008628315250' },
-        { name: 'Aeron jay Boringot', role: 'Member', age: 22, yearJoined: 2023, address: 'Marilao', bio: 'Tech enthusiast and active PCY member.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Aeronjay.11.1827A' },
-        { name: 'Nixarene Nicole P. Escobillo', role: 'Coordinator', age: 21, yearJoined: 2024, address: 'Marilao', bio: 'Leading the youth with passion and dedication.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Nixarene.Escobilo' },
-        { name: 'Zianna Crisolo', role: 'Vice Coordinator (External)', age: 20, yearJoined: 2024, address: 'Marilao', bio: 'Passionate about external relations and service.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100074652100042' }
+        { name: 'Tristan Jhon Fruelda', role: 'Auditor', previousPosition: 'Coordinator', age: 23, yearJoined: 2023, address: 'St. Martha', bio: 'Youth Leader and community servant.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100008628315250' },
+        { name: 'Aeron jay Boringot', role: 'Member', previousPosition: 'Vice Coordinator', age: 22, yearJoined: 2023, address: 'Marilao', bio: 'Tech enthusiast and active PCY member.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Aeronjay.11.1827A' },
+        { name: 'Nixarene Nicole P. Escobillo', role: 'Coordinator', previousPosition: 'Secretary', age: 21, yearJoined: 2024, address: 'Marilao', bio: 'Leading the youth with passion and dedication.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Nixarene.Escobilo' },
+        { name: 'Zianna Crisolo', role: 'Vice Coordinator (External)', previousPosition: 'Treasurer', age: 20, yearJoined: 2024, address: 'Marilao', bio: 'Passionate about external relations and service.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100074652100042' }
     ]);
 
     // Comparison data
@@ -288,7 +294,7 @@ export class CustomizeComponent implements OnInit {
     addDirectoryMember() {
         this.directoryMembers.update(members => [
             ...members,
-            { name: 'New Member', role: 'Member', age: 18, yearJoined: new Date().getFullYear(), address: '', bio: '', image: 'assets/PCY.png', email: '', fb: '' }
+            { name: 'New Member', role: 'Member', previousPosition: '', age: 18, yearJoined: new Date().getFullYear(), address: '', bio: '', image: 'assets/PCY.png', email: '', fb: '' }
         ]);
     }
 

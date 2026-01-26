@@ -126,7 +126,20 @@ export const handler: Handler = async (event) => {
                 {
                     year: '2026',
                     youthAdviser: 'Rev. Fr. Ronaldo Samonte',
-                    officers: [{ position: 'TBC', name: 'To Be Confirmed' }]
+                    officers: [
+                        { position: 'Coordinator', name: 'Nixarene Nicole P. Escobillo' },
+                        { position: 'Vice Coordinator (External)', name: 'Zianna Crisolo' },
+                        { position: 'Vice Coordinator (Internal)', name: 'Pristine Burio' },
+                        { position: 'Secretary', name: 'Chloe Paraan' },
+                        { position: 'Treasurer', name: 'Carl Misajon' },
+                        { position: 'Auditor', name: 'Tristan Fruelda' }
+                    ],
+                    committees: [
+                        { position: 'Social Communication', name: 'Wency Opiso' },
+                        { position: 'Sports and Recreational', name: 'Jeffrey Hibanes' },
+                        { position: 'Liturgy', name: 'Kenneth Baselonia' },
+                        { position: 'Property Custodial', name: 'Ria Ligason' }
+                    ]
                 },
                 {
                     year: '2025',
@@ -219,7 +232,12 @@ export const handler: Handler = async (event) => {
                 { title: 'ANGHEL SA DILIM', description: '"Naganap na"', url: 'https://www.youtube.com/embed/jl76Iw6mwJM' },
                 { title: 'GULONG NA BUHAY', description: '"Ama, sa mga kamay mo, inihahabilin ko ang aking espiritu"', url: 'https://www.youtube.com/embed/5l1V56qClC0' }
             ],
-            directory: []
+            directory: [
+                { name: 'Tristan Jhon Fruelda', role: 'Auditor', previousPosition: 'Coordinator', age: 23, yearJoined: 2023, address: 'St. Martha', bio: 'Youth Leader and community servant.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100008628315250' },
+                { name: 'Aeron jay Boringot', role: 'Member', previousPosition: 'Vice Coordinator', age: 22, yearJoined: 2023, address: 'Marilao', bio: 'Tech enthusiast and active PCY member.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Aeronjay.11.1827A' },
+                { name: 'Nixarene Nicole P. Escobillo', role: 'Coordinator', previousPosition: 'Secretary', age: 21, yearJoined: 2024, address: 'Marilao', bio: 'Leading the youth with passion and dedication.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Nixarene.Escobilo' },
+                { name: 'Zianna Crisolo', role: 'Vice Coordinator (External)', previousPosition: 'Treasurer', age: 20, yearJoined: 2024, address: 'Marilao', bio: 'Passionate about external relations and service.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100074652100042' }
+            ]
         };
 
         // Brute force update: Clear old content and insert the fresh requested one

@@ -55,6 +55,30 @@ export class OfficersComponent implements OnInit {
     });
   });
 
+  // Get committees for the display batch with their directory info
+  displayCommittees = computed(() => {
+    const batch = this.displayBatch();
+    if (!batch || !batch.committees) return [];
+
+    return batch.committees.map(committee => {
+      const memberInfo = this.directory().find(m =>
+        m.name.toLowerCase().includes(committee.name.toLowerCase()) ||
+        committee.name.toLowerCase().includes(m.name.toLowerCase())
+      );
+
+      const imagePath = (memberInfo && memberInfo.image && memberInfo.image.trim() !== '')
+        ? memberInfo.image
+        : 'assets/PCY.png';
+
+      return {
+        ...committee,
+        image: imagePath,
+        email: memberInfo?.email || '',
+        fb: memberInfo?.fb || '#'
+      };
+    });
+  });
+
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.customizeService.getContent().subscribe(content => {

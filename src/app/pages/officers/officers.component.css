@@ -24,8 +24,12 @@
     margin-top: 2rem;
 }
 
-.mt-12 {
-    margin-top: 3rem;
+.mt-20 {
+    margin-top: 5rem;
+}
+
+.mb-12 {
+    margin-bottom: 3rem;
 }
 
 .text-center {
@@ -342,4 +346,41 @@
     .officer-card {
         padding: 1.5rem 1rem;
     }
+}
+
+/* Committees Section Styles */
+.committees-section {
+    width: 100%;
+}
+
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.section-divider::before,
+.section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(56, 143, 60, 0.3), transparent);
+}
+
+.divider-text {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #388f3c;
+    letter-spacing: 4px;
+    white-space: nowrap;
+}
+
+.committee-tag {
+    background: #6200ea !important;
+    /* Purple color for committees to distinguish them */
+}
+
+.mt-20 {
+    margin-top: 5rem;
 }
