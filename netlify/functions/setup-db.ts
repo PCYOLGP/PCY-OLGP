@@ -101,12 +101,21 @@ export const handler: Handler = async (event) => {
             `;
         }
 
-        // 5. Reset sequence for posts id
+        // 5. Site Content Table
+        await sql`
+            CREATE TABLE IF NOT EXISTS site_content (
+                id SERIAL PRIMARY KEY,
+                content JSONB NOT NULL,
+                updated_at TIMESTAMPTZ DEFAULT NOW()
+            )
+        `;
+
+        // Reset sequence for posts id
         await sql`SELECT setval('posts_id_seq', (SELECT MAX(id) FROM posts))`;
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ message: 'Database setup and synced (users & posts) successfully!' })
+            body: JSON.stringify({ message: 'Database setup and synced (users, posts, & content) successfully!' })
         };
     } catch (err: any) {
         return {

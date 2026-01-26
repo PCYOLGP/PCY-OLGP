@@ -14,20 +14,16 @@ export class TeamComponent implements OnInit {
   private customizeService = inject(CustomizeService);
 
   team = signal<DirectoryMember[]>([
-    { name: 'Tristan Jhon Fruelda', role: 'Coordinator', age: 22, yearJoined: 2023, address: 'St. Martha', bio: 'Dedicated leader...', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100008628315250' },
-    { name: 'Aeron jay Boringot', role: 'Vice Coordinator', age: 21, yearJoined: 2023, address: 'Marilao', bio: 'Tech enthusiast...', image: 'images/team2.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Aeronjay.11.1827A' },
-    { name: 'Nixarene Nicole P. Escobillo', role: 'Secretary', age: 20, yearJoined: 2024, address: 'Marilao', bio: 'Community driven...', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Nixarene.Escobilo' },
-    { name: 'Zianna Crisolo', role: 'Treasurer', age: 19, yearJoined: 2024, address: 'Marilao', bio: 'Faithful servant...', image: 'images/team1.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100074652100042' },
-    { name: 'Pearly Colacion', role: 'Auditor', age: 21, yearJoined: 2023, address: 'Marilao', bio: 'Detail oriented...', image: 'assets/perly.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100088571894565' },
-    { name: 'Wency Opiso', role: 'Officer', age: 22, yearJoined: 2022, address: 'Marilao', bio: 'Creative mind...', image: 'team/wency.jpg', email: 'sample@gmail.com', fb: '#' },
-    { name: 'Kenneth Baselonia', role: 'Officer', age: 23, yearJoined: 2022, address: 'Marilao', bio: 'Spiritual guide...', image: 'assets/ken.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/kenneth.baselonia' },
-    { name: 'Daisy Lazar', role: 'Officer', age: 22, yearJoined: 2022, address: 'Marilao', bio: 'Cheerful spirit...', image: 'assets/daisy.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/daisy.lazar' },
-    { name: 'Ria Ligason', role: 'Officer', age: 21, yearJoined: 2023, address: 'Marilao', bio: 'Committed volunteer...', image: 'images/team1.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/mariavina.ligason' }
+    { name: 'Tristan Jhon Fruelda', role: 'Auditor', age: 23, yearJoined: 2023, address: 'St. Martha', bio: 'Youth Leader and community servant.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100008628315250' },
+    { name: 'Aeron jay Boringot', role: 'Member', age: 22, yearJoined: 2023, address: 'Marilao', bio: 'Tech enthusiast and active PCY member.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Aeronjay.11.1827A' },
+    { name: 'Nixarene Nicole P. Escobillo', role: 'Coordinator', age: 21, yearJoined: 2024, address: 'Marilao', bio: 'Leading the youth with passion and dedication.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Nixarene.Escobilo' },
+    { name: 'Zianna Crisolo', role: 'Vice Coordinator (External)', age: 20, yearJoined: 2024, address: 'Marilao', bio: 'Passionate about external relations and service.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100074652100042' }
   ]);
 
   searchTerm = signal('');
   selectedYear = signal<number | 'all'>('all');
   selectedMember = signal<DirectoryMember | null>(null);
+  isYearDropdownOpen = signal(false);
 
   availableYears = computed(() => {
     const years = this.team().map(m => m.yearJoined);
@@ -62,5 +58,14 @@ export class TeamComponent implements OnInit {
   closeModal() {
     this.selectedMember.set(null);
     document.body.style.overflow = 'auto';
+  }
+
+  toggleYearDropdown() {
+    this.isYearDropdownOpen.update(v => !v);
+  }
+
+  selectYear(year: number | 'all') {
+    this.selectedYear.set(year);
+    this.isYearDropdownOpen.set(false);
   }
 }

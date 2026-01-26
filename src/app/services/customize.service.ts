@@ -11,6 +11,7 @@ export interface LandingContent {
     gsffLabel: string;
     gsffTitle: string;
     gsffDescription: string;
+    heroButtonText: string;
 }
 
 export interface VideoContent {

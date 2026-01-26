@@ -1,19 +1,33 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { CustomizeService } from '../../services/customize.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
   private authService = inject(AuthService);
+  private customizeService = inject(CustomizeService);
   private router = inject(Router);
   private sanitizer = inject(DomSanitizer);
+
+  landingContent = signal({
+    welcomeLabel: 'Welcome to our community',
+    heroTitle: 'This is OLGP | PCY',
+    heroSubtitle: 'The Parish Commission on Youth is a group of young people dedicated to faith, fellowship, and service. Whether you\'re looking to volunteer or grow in spirit, there\'s a place for you here.',
+    heroButtonText: 'PCY OFFICERS 2024',
+    logoImage: 'assets/PCY.png',
+    gsffLabel: 'Short Film Festival',
+    gsffTitle: 'GSFF 2022',
+    gsffDescription: 'GSFF is a short film festival of Our Lady of Guadalupe Parish in Marilao, Bulacan, bringing stories of faith and reflection to the screen.'
+  });
 
   videos = [
     {
@@ -53,14 +67,36 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  safeVideos: { title: string; description: string; url: SafeResourceUrl }[] = this.videos.map(v => ({
-    ...v,
-    url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
-  }));
+  safeVideos: { title: string; description: string; url: SafeResourceUrl }[] = [];
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/dashboard']);
+      return;
     }
+
+    this.customizeService.getContent().subscribe(content => {
+      if (content) {
+        if (content.landing) {
+          this.landingContent.set(content.landing);
+        }
+        if (content.videos && content.videos.length > 0) {
+          this.safeVideos = content.videos.map(v => ({
+            ...v,
+            url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
+          }));
+        } else {
+          this.safeVideos = this.videos.map(v => ({
+            ...v,
+            url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
+          }));
+        }
+      } else {
+        this.safeVideos = this.videos.map(v => ({
+          ...v,
+          url: this.sanitizer.bypassSecurityTrustResourceUrl(v.url)
+        }));
+      }
+    });
   }
 }

@@ -68,7 +68,7 @@
                     </svg>
                     <span class="nav-label">Accounts</span>
                 </a>
-                <a routerLink="/customize" *ngIf="isAdmin()">
+                <a routerLink="/dashboard/customize" *ngIf="isAdmin()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
                         class="nav-icon">
@@ -641,7 +641,7 @@
                 <div class="form-group flex flex-col gap-2">
                     <label class="font-bold text-gray-700 font-sans">Username</label>
                     <input type="text" [ngModel]="editUsername()" (ngModelChange)="editUsername.set($event)"
-                        class="caption-input-alt !h-12 !py-2" placeholder="Your username"
+                        class="caption-input-alt h-12! py-2!" placeholder="Your username"
                         style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 0 15px;">
                 </div>
 
@@ -655,17 +655,17 @@
                 <div class="form-group flex flex-col gap-2">
                     <label class="font-bold text-gray-700 font-sans">New Password (leave blank to keep current)</label>
                     <input type="password" [ngModel]="editPassword()" (ngModelChange)="editPassword.set($event)"
-                        class="caption-input-alt !h-12 !py-2" placeholder="••••••••"
+                        class="caption-input-alt h-12! py-2!" placeholder="••••••••"
                         style="background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; padding: 0 15px;">
                 </div>
 
                 <div class="modal-action-buttons pt-4 flex gap-4">
-                    <button class="main-action-btn flex-1 !rounded-xl"
+                    <button class="main-action-btn flex-1 rounded-xl!"
                         [disabled]="isUpdatingProfile() || !hasProfileChanges()" (click)="handleUpdateProfile()"
                         [style.background]="hasProfileChanges() ? '#2e7d32' : '#94a3b8'" style="color: white;">
                         {{ isUpdatingProfile() ? 'Updating...' : 'Save Changes' }}
                     </button>
-                    <button class="alt-action-btn flex-1 !rounded-xl" (click)="closeEditProfileModal()"
+                    <button class="alt-action-btn flex-1 rounded-xl!" (click)="closeEditProfileModal()"
                         style="border: 1px solid rgba(0,0,0,0.1);">Cancel</button>
                 </div>
             </div>
@@ -730,34 +730,34 @@
                 <div class="form-group flex flex-col gap-2">
                     <label class="font-bold text-gray-700">Username *</label>
                     <input type="text" [(ngModel)]="newAccountData.username"
-                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
+                        class="caption-input-alt h-12! py-2! border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
                         placeholder="Username">
                 </div>
                 <div class="form-group flex flex-col gap-2">
                     <label class="font-bold text-gray-700">Password {{ isEditingAccount() ? '(leave blank to keep
                         current)' : '*' }}</label>
                     <input type="password" [(ngModel)]="newAccountData.password"
-                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
+                        class="caption-input-alt h-12! py-2! border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
                         placeholder="Password">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="form-group flex flex-col gap-2">
                         <label class="font-bold text-gray-700">First Name</label>
                         <input type="text" [(ngModel)]="newAccountData.fname"
-                            class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
+                            class="caption-input-alt h-12! py-2! border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
                             placeholder="First Name">
                     </div>
                     <div class="form-group flex flex-col gap-2">
                         <label class="font-bold text-gray-700">Last Name</label>
                         <input type="text" [(ngModel)]="newAccountData.lname"
-                            class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
+                            class="caption-input-alt h-12! py-2! border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
                             placeholder="Last Name">
                     </div>
                 </div>
                 <div class="form-group flex flex-col gap-2">
                     <label class="font-bold text-gray-700">Email Address</label>
                     <input type="email" [(ngModel)]="newAccountData.email"
-                        class="caption-input-alt !h-12 !py-2 border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
+                        class="caption-input-alt h-12! py-2! border p-4 bg-white/50 rounded-xl focus:ring-2 focus:ring-green-500 outline-none"
                         placeholder="Email">
                 </div>
                 <div class="form-group flex flex-col gap-2">
@@ -767,11 +767,11 @@
                         rows="3" placeholder="Member bio..."></textarea>
                 </div>
                 <div class="modal-action-buttons pt-4 flex gap-4">
-                    <button class="main-action-btn flex-1 !rounded-xl shadow-lg" (click)="handleSaveAccount()"
+                    <button class="main-action-btn flex-1 rounded-xl! shadow-lg" (click)="handleSaveAccount()"
                         [disabled]="!newAccountData.username || (!isEditingAccount() && !newAccountData.password)">
                         {{ isEditingAccount() ? 'Update Account' : 'Create Account' }}
                     </button>
-                    <button class="alt-action-btn flex-1 !rounded-xl" (click)="closeAccountModal()">Cancel</button>
+                    <button class="alt-action-btn flex-1 rounded-xl!" (click)="closeAccountModal()">Cancel</button>
                 </div>
             </div>
         </div>
@@ -793,7 +793,7 @@
                     <a href="https://m.me/olgp_pcy" target="_blank"
                         class="text-green-600 font-bold hover:underline">Contact us on Messenger</a> to get access!
                 </div>
-                <button class="alt-action-btn !mt-4" (click)="showAuthModal.set(false)">Close</button>
+                <button class="alt-action-btn mt-4!" (click)="showAuthModal.set(false)">Close</button>
             </div>
         </div>
     </div>

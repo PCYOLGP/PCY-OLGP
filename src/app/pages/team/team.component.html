@@ -14,13 +14,23 @@
                     class="search-input">
             </div>
             <div class="year-filters">
-                <button class="filter-btn" [class.active]="selectedYear() === 'all'"
-                    (click)="selectedYear.set('all')">All Years</button>
-                <div class="year-scroll">
-                    <button *ngFor="let year of availableYears()" class="filter-btn"
-                        [class.active]="selectedYear() === year" (click)="selectedYear.set(year)">
-                        {{ year }}
+                <div class="custom-dropdown">
+                    <button class="dropdown-trigger" (click)="toggleYearDropdown()"
+                        [class.active]="isYearDropdownOpen()">
+                        <span>{{ selectedYear() === 'all' ? 'All Years' : selectedYear() }}</span>
+                        <i class="ri-arrow-down-s-line trigger-icon"></i>
                     </button>
+
+                    <div class="dropdown-menu" *ngIf="isYearDropdownOpen()">
+                        <div class="dropdown-item" (click)="selectYear('all')"
+                            [class.selected]="selectedYear() === 'all'">
+                            All Years
+                        </div>
+                        <div *ngFor="let year of availableYears()" class="dropdown-item" (click)="selectYear(year)"
+                            [class.selected]="selectedYear() === year">
+                            {{ year }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

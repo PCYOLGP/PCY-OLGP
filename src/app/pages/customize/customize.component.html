@@ -13,7 +13,7 @@
                 <h1>🎨 Customize Website</h1>
                 <p>Edit content, videos, and officer information</p>
             </div>
-            <button class="save-btn" (click)="saveChanges()" [disabled]="isSaving()">
+            <button class="save-btn" (click)="saveChanges()" [disabled]="isSaving() || !hasChanges()">
                 {{ isSaving() ? 'Saving...' : 'Save Changes' }}
             </button>
         </div>
@@ -94,6 +94,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Hero Button Text</label>
+                    <input type="text" [(ngModel)]="landingContent().heroButtonText" class="form-input"
+                        placeholder="PCY OFFICERS 2026">
+                </div>
+
+                <div class="form-group">
                     <label>Logo Image</label>
                     <div class="logo-upload-area">
                         <div class="logo-preview">
@@ -145,13 +151,6 @@
             <div class="section-card glass-card">
                 <div class="section-header-with-action">
                     <h2 class="section-title">GSFF Video Collection</h2>
-                    <button class="add-btn" (click)="addVideo()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 5v14M5 12h14" />
-                        </svg>
-                        Add Video
-                    </button>
                 </div>
 
                 <div class="videos-list">
@@ -168,18 +167,18 @@
                             </button>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="max-width: 400px;">
                             <label>Title</label>
                             <input type="text" [(ngModel)]="video.title" class="form-input" placeholder="Video Title">
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="max-width: 400px;">
                             <label>Description</label>
                             <input type="text" [(ngModel)]="video.description" class="form-input"
                                 placeholder="Video description">
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="max-width: 400px;">
                             <label>YouTube Embed URL</label>
                             <input type="text" [(ngModel)]="video.url" class="form-input"
                                 placeholder="https://www.youtube.com/embed/...">
@@ -192,6 +191,16 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="section-footer-action">
+                    <button class="add-btn" (click)="addVideo()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                        Add Video
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -200,13 +209,6 @@
             <div class="section-card glass-card">
                 <div class="section-header-with-action">
                     <h2 class="section-title">Officer History</h2>
-                    <button class="add-btn" (click)="addOfficerTerm()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 5v14M5 12h14" />
-                        </svg>
-                        Add Term
-                    </button>
                 </div>
 
                 <div class="terms-list">
@@ -223,52 +225,62 @@
                             </button>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="max-width: 400px;">
                             <label>Term Year</label>
                             <input type="text" [(ngModel)]="term.year" class="form-input"
                                 placeholder="YYYY or YYYY-YYYY">
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group" style="max-width: 400px;">
                             <label>Youth Adviser</label>
                             <input type="text" [(ngModel)]="term.youthAdviser" class="form-input"
                                 placeholder="Rev. Fr. Name">
                         </div>
 
-                        <div class="form-group">
-                            <div class="label-with-action">
-                                <label>Officers</label>
-                                <button class="add-member-btn" (click)="addOfficer(i)">
+                        <div class="label-with-action">
+                            <label>Officers</label>
+                        </div>
+                        <div class="committee-members">
+                            <div *ngFor="let officer of term.officers; let j = index" class="member-input-row">
+                                <input type="text" [(ngModel)]="officer.name" class="form-input" placeholder="Name">
+                                <input type="text" [(ngModel)]="officer.position" class="form-input"
+                                    placeholder="Position">
+                                <button class="remove-member-btn" (click)="removeOfficer(i, j)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round">
-                                        <path d="M12 5v14M5 12h14" />
+                                        <path d="M18 6 6 18M6 6l12 12" />
                                     </svg>
-                                    Add Officer
                                 </button>
                             </div>
-                            <div class="committee-members">
-                                <div *ngFor="let officer of term.officers; let j = index" class="member-input-row">
-                                    <input type="text" [(ngModel)]="officer.position" class="form-input pos-input"
-                                        placeholder="Position">
-                                    <input type="text" [(ngModel)]="officer.name" class="form-input name-input"
-                                        placeholder="Name">
-                                    <button class="remove-member-btn" (click)="removeOfficer(i, j)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <line x1="18" y1="6" x2="6" y2="18" />
-                                            <line x1="6" y1="6" x2="18" y2="18" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
+                            <button class="add-member-btn mt-2" (click)="addOfficer(i)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M12 5v14M5 12h14" />
+                                </svg>
+                                Add Officer
+                            </button>
                         </div>
-
                         <div class="form-group">
                             <div class="label-with-action">
                                 <label>Committees</label>
-                                <button class="add-member-btn" (click)="addCommitteeMember(i)">
+                            </div>
+                            <div class="committee-members">
+                                <div *ngFor="let committee of term.committees; let k = index" class="member-input-row">
+                                    <input type="text" [(ngModel)]="committee.name" class="form-input"
+                                        placeholder="Name">
+                                    <input type="text" [(ngModel)]="committee.position" class="form-input"
+                                        placeholder="Position">
+                                    <button class="remove-member-btn" (click)="removeCommitteeMember(i, k)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M18 6 6 18M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <button class="add-member-btn mt-2" (click)="addCommitteeMember(i)">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round">
@@ -277,24 +289,18 @@
                                     Add Committee
                                 </button>
                             </div>
-                            <div class="committee-members">
-                                <div *ngFor="let committee of term.committees; let k = index" class="member-input-row">
-                                    <input type="text" [(ngModel)]="committee.position" class="form-input pos-input"
-                                        placeholder="Committee">
-                                    <input type="text" [(ngModel)]="committee.name" class="form-input name-input"
-                                        placeholder="Name">
-                                    <button class="remove-member-btn" (click)="removeCommitteeMember(i, k)">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <line x1="18" y1="6" x2="6" y2="18" />
-                                            <line x1="6" y1="6" x2="18" y2="18" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="section-footer-action">
+                    <button class="add-btn" (click)="addOfficerTerm()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                        Add Term
+                    </button>
                 </div>
             </div>
         </div>
@@ -304,13 +310,6 @@
             <div class="section-card glass-card">
                 <div class="section-header-with-action">
                     <h2 class="section-title">PCY Directory</h2>
-                    <button class="add-btn" (click)="addDirectoryMember()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 5v14M5 12h14" />
-                        </svg>
-                        Add Member
-                    </button>
                 </div>
 
                 <div class="terms-list">
@@ -386,6 +385,16 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="section-footer-action">
+                    <button class="add-btn" (click)="addDirectoryMember()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                        Add Member
+                    </button>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -30,6 +30,7 @@ export class CustomizeComponent implements OnInit {
         heroTitle: 'This is OLGP | PCY',
         heroSubtitle: 'The Parish Commission on Youth is a group of young people dedicated to faith, fellowship, and service. Whether you\'re looking to volunteer or grow in spirit, there\'s a place for you here.',
         logoImage: 'assets/PCY.png',
+        heroButtonText: 'PCY OFFICERS 2026',
         gsffLabel: 'Short Film Festival',
         gsffTitle: 'GSFF 2022',
         gsffDescription: 'GSFF is a short film festival of Our Lady of Guadalupe Parish in Marilao, Bulacan, bringing stories of faith and reflection to the screen.'
@@ -48,6 +49,24 @@ export class CustomizeComponent implements OnInit {
 
     // Officers terms
     officerTerms = signal<OfficerBatch[]>([
+        {
+            year: '2026',
+            youthAdviser: 'Rev. Fr. Ronaldo Samonte',
+            officers: [
+                { position: 'Coordinator', name: 'Nixarene Nicole P. Escobillo' },
+                { position: 'Vice Coordinator (External)', name: 'Zianna Crisolo' },
+                { position: 'Vice Coordinator (Internal)', name: 'Pristine Burio' },
+                { position: 'Secretary', name: 'Chloe Paraan' },
+                { position: 'Treasurer', name: 'Carl Misajon' },
+                { position: 'Auditor', name: 'Tristan Fruelda' }
+            ],
+            committees: [
+                { position: 'Social Communication', name: 'Wency Opiso' },
+                { position: 'Sports and Recreational', name: 'Jeffrey Hibanes' },
+                { position: 'Liturgy', name: 'Kenneth Baselonia' },
+                { position: 'Property Custodial', name: 'Ria Ligason' }
+            ]
+        },
         {
             year: '2025',
             youthAdviser: 'Rev. Fr. Ronaldo Samonte',
@@ -73,33 +92,35 @@ export class CustomizeComponent implements OnInit {
                 { position: 'Secretary', name: 'Nixarene Escobillo' },
                 { position: 'Treasurer', name: 'Zianna Crisolo' },
                 { position: 'Auditor', name: 'Pearly Colacion' }
-            ],
-            committees: [
-                { position: 'Liturgy', name: 'Kenneth Baselonia' },
-                { position: 'Social Communication', name: 'Wency Opiso' },
-                { position: 'Property Custodial', name: 'Ria Ligason' },
-                { position: 'Sports and Recreational', name: 'Jeffrey Hibanes' }
-            ]
-        },
-        {
-            year: '2022 - 2023',
-            youthAdviser: 'Rev. Fr. Ronaldo Samonte',
-            officers: [
-                { position: 'President', name: 'Richmond Lyle Chang' },
-                { position: 'Vice-president', name: 'Rome Azeleigh Salangad' },
-                { position: 'Secretary', name: 'Denmark Paningbatan' },
-                { position: 'Treasurer', name: 'Gleiza Nones' },
-                { position: 'Auditor', name: 'Medarlyn Vergara' }
             ]
         }
     ]);
 
     // PCY Directory
     directoryMembers = signal<DirectoryMember[]>([
-        { name: 'Tristan Jhon Fruelda', role: 'Coordinator', age: 22, yearJoined: 2023, address: 'St. Martha', bio: 'Dedicated leader...', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100008628315250' },
-        { name: 'Aeron jay Boringot', role: 'Vice Coordinator', age: 21, yearJoined: 2023, address: 'Marilao', bio: 'Tech enthusiast...', image: 'images/team2.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Aeronjay.11.1827A' },
-        { name: 'Nixarene Nicole P. Escobillo', role: 'Secretary', age: 20, yearJoined: 2024, address: 'Marilao', bio: 'Community driven...', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Nixarene.Escobilo' }
+        { name: 'Tristan Jhon Fruelda', role: 'Auditor', age: 23, yearJoined: 2023, address: 'St. Martha', bio: 'Youth Leader and community servant.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100008628315250' },
+        { name: 'Aeron jay Boringot', role: 'Member', age: 22, yearJoined: 2023, address: 'Marilao', bio: 'Tech enthusiast and active PCY member.', image: 'assets/tan.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Aeronjay.11.1827A' },
+        { name: 'Nixarene Nicole P. Escobillo', role: 'Coordinator', age: 21, yearJoined: 2024, address: 'Marilao', bio: 'Leading the youth with passion and dedication.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/Nixarene.Escobilo' },
+        { name: 'Zianna Crisolo', role: 'Vice Coordinator (External)', age: 20, yearJoined: 2024, address: 'Marilao', bio: 'Passionate about external relations and service.', image: 'assets/nica.jpg', email: 'sample@gmail.com', fb: 'https://www.facebook.com/profile.php?id=100074652100042' }
     ]);
+
+    // Comparison data
+    initialContent = signal<SiteContent | null>(null);
+
+    hasChanges = computed(() => {
+        const initial = this.initialContent();
+        if (!initial) return false;
+
+        const current: SiteContent = {
+            landing: this.landingContent(),
+            videos: this.videos(),
+            officerTerms: this.officerTerms(),
+            directory: this.directoryMembers()
+        };
+
+        // Deep comparison
+        return JSON.stringify(initial) !== JSON.stringify(current);
+    });
 
     // Logo upload
     selectedLogoFile = signal<File | null>(null);
@@ -131,6 +152,14 @@ export class CustomizeComponent implements OnInit {
                 if (content.directory) {
                     this.directoryMembers.set(content.directory);
                 }
+
+                // Store initial content for change tracking
+                this.initialContent.set(JSON.parse(JSON.stringify({
+                    landing: this.landingContent(),
+                    videos: this.videos(),
+                    officerTerms: this.officerTerms(),
+                    directory: this.directoryMembers()
+                })));
             }
         });
     }
@@ -259,6 +288,8 @@ export class CustomizeComponent implements OnInit {
             next: () => {
                 this.isSaving.set(false);
                 this.showSuccessMessage.set(true);
+                // Update initial content after successful save
+                this.initialContent.set(JSON.parse(JSON.stringify(content)));
                 setTimeout(() => this.showSuccessMessage.set(false), 3000);
             },
             error: (err: any) => {

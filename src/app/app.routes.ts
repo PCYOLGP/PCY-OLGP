@@ -32,12 +32,13 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         canActivate: [authGuard],
-        loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent)
-    },
-    {
-        path: 'customize',
-        canActivate: [authGuard],
-        loadComponent: () => import('./pages/customize/customize.component').then(m => m.CustomizeComponent)
+        loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+        children: [
+            {
+                path: 'customize',
+                loadComponent: () => import('./pages/customize/customize.component').then(m => m.CustomizeComponent)
+            }
+        ]
     },
     { path: '**', redirectTo: '' }
 ];

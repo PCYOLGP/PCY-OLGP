@@ -18,7 +18,18 @@ export class OfficersComponent implements OnInit {
       year: '2026',
       youthAdviser: 'Rev. Fr. Ronaldo Samonte',
       officers: [
-        { position: 'TBC', name: 'To Be Confirmed' }
+        { position: 'Coordinator', name: 'Nixarene Nicole P. Escobillo' },
+        { position: 'Vice Coordinator (External)', name: 'Zianna Crisolo' },
+        { position: 'Vice Coordinator (Internal)', name: 'Pristine Burio' },
+        { position: 'Secretary', name: 'Chloe Paraan' },
+        { position: 'Treasurer', name: 'Carl Misajon' },
+        { position: 'Auditor', name: 'Tristan Fruelda' }
+      ],
+      committees: [
+        { position: 'Social Communication', name: 'Wency Opiso' },
+        { position: 'Sports and Recreational', name: 'Jeffrey Hibanes' },
+        { position: 'Liturgy', name: 'Kenneth Baselonia' },
+        { position: 'Property Custodial', name: 'Ria Ligason' }
       ]
     },
     {
