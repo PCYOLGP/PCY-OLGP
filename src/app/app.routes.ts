@@ -26,6 +26,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/officers/officers.component').then(m => m.OfficersComponent)
     },
     {
+        path: 'history',
+        loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent)
+    },
+    {
         path: 'login',
         loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
     },
