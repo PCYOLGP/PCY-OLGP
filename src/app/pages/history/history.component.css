@@ -1,7 +1,7 @@
 .history-page {
     font-family: 'Outfit', 'Inter', sans-serif;
     min-height: 100vh;
-    background: #f8fafc;
+    background: var(--bg-gradient);
     color: #1e293b;
 }
 
@@ -22,6 +22,10 @@
 
 .mb-6 {
     margin-bottom: 1.5rem;
+}
+
+.mb-8 {
+    margin-bottom: 2rem;
 }
 
 .mt-4 {
@@ -85,24 +89,42 @@
     margin: 0;
 }
 
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.label {
+    color: #388f3c;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.75rem;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
 .section-desc {
     color: #64748b;
     font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 /* History Grid */
 .batches-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
 }
 
 .batch-history-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
     border-radius: 24px;
     overflow: hidden;
-    border: 1px solid #f1f5f9;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     transition: all 0.4s ease;
     display: flex;
     flex-direction: column;
@@ -110,19 +132,19 @@
 
 .batch-history-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
 .batch-card-header {
-    background: #f8fafc;
+    background: rgba(255, 255, 255, 0.5);
     padding: 1.25rem 2rem;
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .batch-title {
     font-size: 1.25rem;
-    font-weight: 700;
-    color: #0f172a;
+    font-weight: 800;
+    color: #1f2937;
     margin: 0;
 }
 
@@ -157,20 +179,20 @@
     display: flex;
     flex-direction: column;
     padding: 0.75rem 1rem;
-    background: #fcfcfc;
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 12px;
-    border: 1px solid #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .m-name {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #0f172a;
+    color: #1f2937;
 }
 
 .m-pos {
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.7rem;
+    font-weight: 700;
     color: #388f3c;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -194,6 +216,12 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+    .batches-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .batches-grid {
         grid-template-columns: 1fr;

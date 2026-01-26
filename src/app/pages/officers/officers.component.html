@@ -20,8 +20,7 @@
                         <img [src]="president.image" [alt]="president.name" class="officer-image">
                     </div>
                     <div class="officer-info">
-                        <h2 class="officer-name">{{ president.name }}</h2>
-                        <p class="officer-position">{{ president.position }}</p>
+                        <h2 class="officer-name-small">{{ president.name }}</h2>
                         <p class="officer-email" *ngIf="president.email">{{ president.email }}</p>
                     </div>
                     <div class="officer-socials">
@@ -41,7 +40,6 @@
                     </div>
                     <div class="officer-info">
                         <h3 class="officer-name-small">{{ officer.name }}</h3>
-                        <p class="officer-position-small">{{ officer.position }}</p>
                         <p class="officer-email-small" *ngIf="officer.email">{{ officer.email }}</p>
                     </div>
                     <div class="officer-socials">

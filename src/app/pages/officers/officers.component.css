@@ -1,7 +1,7 @@
 .officers-page {
     font-family: 'Outfit', 'Inter', sans-serif;
     min-height: 100vh;
-    background: #f8fafc;
+    background: var(--bg-gradient);
     color: #1e293b;
 }
 
@@ -87,7 +87,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .secondary-grid {
@@ -95,41 +95,36 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 2.5rem;
     width: 100%;
+    justify-items: center;
+    /* Center cards in grid cells */
 }
 
 /* Officer Card Styles */
 .officer-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
     border-radius: 30px;
-    padding: 2.5rem;
+    padding: 4.5rem 2.5rem 2.5rem;
+    /* Increased top padding to avoid badge overlap */
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-    border: 1px solid #f1f5f9;
+    border: 1px solid rgba(255, 255, 255, 0.5);
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
-    max-width: 450px;
+    max-width: 400px;
 }
 
 @media (max-width: 768px) {
     .officer-card {
-        padding: 1.5rem;
+        padding: 2rem 1.5rem;
         border-radius: 20px;
     }
 }
 
-.principal-card {
-    max-width: 500px;
-    padding: 3rem;
-}
-
-@media (max-width: 768px) {
-    .principal-card {
-        padding: 2rem 1.5rem;
-    }
-}
+/* Principal card now uses same styles as officer-card */
 
 .officer-card:hover {
     transform: translateY(-10px);
@@ -138,39 +133,47 @@
 
 .position-tag {
     position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
+    top: 1.25rem;
+    /* Moved higher */
+    right: 1.25rem;
+    /* Moved further right */
     background: #388f3c;
     color: white;
-    padding: 6px 16px;
+    padding: 8px 18px;
+    /* Slightly more premium padding */
     border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 700;
+    font-size: 0.7rem;
+    /* Balanced font size */
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     box-shadow: 0 4px 12px rgba(56, 143, 60, 0.2);
+    z-index: 10;
 }
 
 .position-tag.small {
-    top: 1.25rem;
-    right: 1.25rem;
-    padding: 4px 12px;
-    font-size: 0.65rem;
+    top: 1rem;
+    right: 1rem;
+    padding: 6px 14px;
+    font-size: 0.6rem;
 }
 
 .image-wrapper {
-    width: 180px;
-    height: 180px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     overflow: hidden;
+    margin-top: 1rem;
+    /* Clear space for top badge */
     margin-bottom: 2rem;
-    border: 8px solid #f8fafc;
+    border: 6px solid rgba(255, 255, 255, 0.9);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-.small .image-wrapper {
-    width: 140px;
-    height: 140px;
+.secondary-grid .image-wrapper {
+    width: 150px;
+    /* Unified size */
+    height: 150px;
 }
 
 .officer-image {
@@ -187,13 +190,6 @@
 .officer-info {
     text-align: center;
     margin-bottom: 2rem;
-}
-
-.officer-name {
-    font-size: 2.25rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin-bottom: 0.5rem;
 }
 
 .officer-name-small {
@@ -213,12 +209,8 @@
 }
 
 .officer-position-small {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #388f3c;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 0.75rem;
+    display: none;
+    /* Already removed from HTML, but cleaning up CSS */
 }
 
 .officer-email,
@@ -260,8 +252,10 @@
 
 .social-btn:hover {
     transform: translateY(-3px) scale(1.1);
-    background: #166534;
+    background: #2d7030;
 }
+
+/* Consolidated mobile styles moved to end of file */
 
 
 /* Animations */
@@ -295,44 +289,44 @@
 
     .secondary-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .officer-name {
-        font-size: 1.5rem;
-    }
-
-    .officer-name-small {
-        font-size: 1.3rem;
-    }
-
-    .image-wrapper {
-        width: 140px;
-        height: 140px;
-        margin-bottom: 1.5rem;
-    }
-
-    .small .image-wrapper {
-        width: 120px;
-        height: 120px;
-    }
-
-    .position-tag {
-        font-size: 0.6rem;
-        padding: 4px 10px;
-        top: 1rem;
-        right: 1rem;
-        max-width: 80%;
-        text-align: center;
+        gap: 2rem;
+        padding-bottom: 2rem;
     }
 
     .container {
-        padding: 0 1rem;
+        padding: 0 1.25rem;
     }
 
     .py-20 {
         padding-top: 3rem;
         padding-bottom: 3rem;
+    }
+
+    .hero-officer {
+        margin-bottom: 2rem;
+    }
+
+    .officer-name-small {
+        font-size: 1.35rem;
+        /* Standardized name size for mobile */
+    }
+
+    .image-wrapper {
+        width: 140px;
+        height: 140px;
+        margin-bottom: 1.25rem;
+    }
+
+    .position-tag {
+        font-size: 0.6rem;
+        padding: 4px 12px;
+        top: 0.75rem;
+        right: 0.75rem;
+        max-width: 85%;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -341,7 +335,11 @@
         font-size: 1.5rem;
     }
 
-    .officer-name {
-        font-size: 1.3rem;
+    .officer-name-small {
+        font-size: 1.2rem;
+    }
+
+    .officer-card {
+        padding: 1.5rem 1rem;
     }
 }
