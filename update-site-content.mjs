@@ -22,12 +22,6 @@ async function updateContent() {
 
     const officerTerms = [
         {
-            year: '2026',
-            youthAdviser: 'Rev. Fr. Ronaldo Samonte',
-            officers: [{ position: 'TBC', name: 'To Be Confirmed' }],
-            committees: []
-        },
-        {
             year: '2025',
             youthAdviser: 'Rev. Fr. Ronaldo Samonte',
             officers: [
@@ -137,7 +131,7 @@ async function updateContent() {
             welcomeLabel: 'Welcome to our community',
             heroTitle: 'This is OLGP | PCY',
             heroSubtitle: 'The Parish Commission on Youth is a group of young people dedicated to faith, fellowship, and service.',
-            heroButtonText: 'PCY OFFICERS',
+            heroButtonText: 'PCY OFFICERS 2025',
             logoImage: 'assets/PCY.png',
             gsffLabel: 'Short Film Festival',
             gsffTitle: 'GSFF 2022',
@@ -146,6 +140,7 @@ async function updateContent() {
     } else {
         // Fix image path if it was broken
         newContent.landing.logoImage = 'assets/PCY.png';
+        newContent.landing.heroButtonText = 'PCY OFFICERS 2025';
     }
 
     console.log('Updating site content...');

@@ -116,31 +116,13 @@ export const handler: Handler = async (event) => {
                 welcomeLabel: 'Welcome to our community',
                 heroTitle: 'This is OLGP | PCY',
                 heroSubtitle: 'The Parish Commission on Youth is a group of young people dedicated to faith, fellowship, and service. Whether you\'re looking to volunteer or grow in spirit, there\'s a place for you here.',
-                heroButtonText: 'PCY OFFICERS',
+                heroButtonText: 'PCY OFFICERS 2025',
                 logoImage: '/assets/PCY.png',
                 gsffLabel: 'Short Film Festival',
                 gsffTitle: 'GSFF 2022',
                 gsffDescription: 'GSFF is a short film festival of Our Lady of Guadalupe Parish in Marilao, Bulacan, bringing stories of faith and reflection to the screen.'
             },
             officerTerms: [
-                {
-                    year: '2026',
-                    youthAdviser: 'Rev. Fr. Ronaldo Samonte',
-                    officers: [
-                        { position: 'Coordinator', name: 'Nixarene Nicole P. Escobillo' },
-                        { position: 'Vice Coordinator (External)', name: 'Zianna Crisolo' },
-                        { position: 'Vice Coordinator (Internal)', name: 'Pristine Burio' },
-                        { position: 'Secretary', name: 'Chloe Paraan' },
-                        { position: 'Treasurer', name: 'Carl Misajon' },
-                        { position: 'Auditor', name: 'Tristan Fruelda' }
-                    ],
-                    committees: [
-                        { position: 'Social Communication', name: 'Wency Opiso' },
-                        { position: 'Sports and Recreational', name: 'Jeffrey Hibanes' },
-                        { position: 'Liturgy', name: 'Kenneth Baselonia' },
-                        { position: 'Property Custodial', name: 'Ria Ligason' }
-                    ]
-                },
                 {
                     year: '2025',
                     youthAdviser: 'Rev. Fr. Ronaldo Samonte',

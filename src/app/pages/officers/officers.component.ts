@@ -24,7 +24,11 @@ export class OfficersComponent implements OnInit {
 
     // Filter out TBC batches for the preview
     const validBatches = batches.filter(batch =>
-      !batch.officers.some(o => o.name.includes('To Be Confirmed') || o.position === 'TBC')
+      batch.officers && batch.officers.length > 0 &&
+      !batch.officers.some(o =>
+        (o.name && o.name.toLowerCase().includes('to be confirmed')) ||
+        (o.position && o.position.toUpperCase() === 'TBC')
+      )
     );
 
     return validBatches.length > 0 ? validBatches[0] : batches[0];

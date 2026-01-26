@@ -86,7 +86,11 @@ export class HomeComponent implements OnInit {
             if (content.officerTerms && content.officerTerms.length > 0) {
               // Filter out TBC batches to match Officers page display logic
               const validBatches = content.officerTerms.filter(batch =>
-                !batch.officers.some(o => o.name.includes('To Be Confirmed') || o.position === 'TBC')
+                batch.officers && batch.officers.length > 0 &&
+                !batch.officers.some(o =>
+                  (o.name && o.name.toLowerCase().includes('to be confirmed')) ||
+                  (o.position && o.position.toUpperCase() === 'TBC')
+                )
               );
 
               const batchToUse = validBatches.length > 0 ? validBatches[0] : content.officerTerms[0];
