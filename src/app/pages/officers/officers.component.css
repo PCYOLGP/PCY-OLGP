@@ -113,9 +113,22 @@
     max-width: 450px;
 }
 
+@media (max-width: 768px) {
+    .officer-card {
+        padding: 1.5rem;
+        border-radius: 20px;
+    }
+}
+
 .principal-card {
     max-width: 500px;
     padding: 3rem;
+}
+
+@media (max-width: 768px) {
+    .principal-card {
+        padding: 2rem 1.5rem;
+    }
 }
 
 .officer-card:hover {
@@ -277,14 +290,58 @@
 
 @media (max-width: 768px) {
     .page-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 
     .secondary-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
     .officer-name {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
+    }
+
+    .officer-name-small {
+        font-size: 1.3rem;
+    }
+
+    .image-wrapper {
+        width: 140px;
+        height: 140px;
+        margin-bottom: 1.5rem;
+    }
+
+    .small .image-wrapper {
+        width: 120px;
+        height: 120px;
+    }
+
+    .position-tag {
+        font-size: 0.6rem;
+        padding: 4px 10px;
+        top: 1rem;
+        right: 1rem;
+        max-width: 80%;
+        text-align: center;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    .py-20 {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .officer-name {
+        font-size: 1.3rem;
     }
 }

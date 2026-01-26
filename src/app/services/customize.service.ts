@@ -178,12 +178,12 @@ export class CustomizeService {
         return (this.http as any).get(`${this.apiUrl}/site-content`).pipe(
             map((data: any) => {
                 if (!data) return DEFAULT_CONTENT;
-                // If data exists, merge it with default to ensure all fields exist
+                // Deep merge and provide fallbacks
                 return {
-                    ...DEFAULT_CONTENT,
-                    ...data,
-                    // Deep merge officerTerms if needed, or just let DB override
-                    officerTerms: (data.officerTerms && data.officerTerms.length > 0) ? data.officerTerms : DEFAULT_CONTENT.officerTerms
+                    landing: { ...DEFAULT_CONTENT.landing, ...(data.landing || {}) },
+                    videos: (data.videos && data.videos.length > 0) ? data.videos : DEFAULT_CONTENT.videos,
+                    officerTerms: (data.officerTerms && data.officerTerms.length > 0) ? data.officerTerms : DEFAULT_CONTENT.officerTerms,
+                    directory: data.directory || DEFAULT_CONTENT.directory
                 };
             }),
             catchError((_error: unknown) => of(DEFAULT_CONTENT))

@@ -40,9 +40,15 @@ export class OfficersComponent implements OnInit {
         m.name.toLowerCase().includes(officer.name.toLowerCase()) ||
         officer.name.toLowerCase().includes(m.name.toLowerCase())
       );
+
+      // Ensure we have a valid image path, fallback to default if missing or empty
+      const imagePath = (memberInfo && memberInfo.image && memberInfo.image.trim() !== '')
+        ? memberInfo.image
+        : 'assets/PCY.png';
+
       return {
         ...officer,
-        image: memberInfo?.image || 'assets/PCY.png',
+        image: imagePath,
         email: memberInfo?.email || '',
         fb: memberInfo?.fb || '#'
       };

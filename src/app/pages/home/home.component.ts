@@ -82,15 +82,15 @@ export class HomeComponent implements OnInit {
           if (content.landing) {
             const updatedLanding = { ...content.landing };
 
-            // Dynamically update hero button text based on latest officer batch
+            // Dynamically update hero button text based on latest valid officer batch
             if (content.officerTerms && content.officerTerms.length > 0) {
-              // Find the latest year by extracting the first year mentioned
-              const latestBatch = content.officerTerms.reduce((prev: any, current: any) => {
-                const prevYear = parseInt(prev.year.match(/\d{4}/)?.[0] || '0');
-                const currentYear = parseInt(current.year.match(/\d{4}/)?.[0] || '0');
-                return currentYear > prevYear ? current : prev;
-              });
-              updatedLanding.heroButtonText = `PCY OFFICERS ${latestBatch.year}`;
+              // Filter out TBC batches to match Officers page display logic
+              const validBatches = content.officerTerms.filter(batch =>
+                !batch.officers.some(o => o.name.includes('To Be Confirmed') || o.position === 'TBC')
+              );
+
+              const batchToUse = validBatches.length > 0 ? validBatches[0] : content.officerTerms[0];
+              updatedLanding.heroButtonText = `PCY OFFICERS ${batchToUse.year}`;
             }
 
             this.landingContent.set(updatedLanding);
