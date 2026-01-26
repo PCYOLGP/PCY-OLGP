@@ -1,58 +1,93 @@
 <div class="officers-page">
-    <header class="page-header">
-        <div class="container">
-            <a routerLink="/about" class="back-link">← Back to About</a>
-            <h1 class="animate-fade-in">Our Legacy of Leadership</h1>
-            <p class="animate-fade-in">A tribute to the dedicated youth leaders who have served Our Lady of Guadalupe
-                Parish.</p>
+    <div class="container py-20">
+        <!-- Header / Back link -->
+        <header class="page-header mb-16">
+            <a routerLink="/about" class="back-link">← BACK TO ABOUT</a>
+            <div class="title-with-icon mt-8">
+                <i class="ri-team-line icon-badge"></i>
+                <h1 class="page-title">PCY OFFICERS {{ displayBatch()?.year }}</h1>
+            </div>
+        </header>
+
+        @if (displayBatch()) {
+        <!-- Main Grid/Preview Area -->
+        <div class="officers-preview">
+            <!-- Top / President Card -->
+            <div class="hero-officer" *ngIf="displayOfficers()[0] as president">
+                <div class="officer-card principal-card animate-slide-up">
+                    <div class="position-tag">{{ president.position }}</div>
+                    <div class="image-wrapper">
+                        <img [src]="president.image" [alt]="president.name" class="officer-image">
+                    </div>
+                    <div class="officer-info">
+                        <h2 class="officer-name">{{ president.name }}</h2>
+                        <p class="officer-position">{{ president.position }}</p>
+                        <p class="officer-email" *ngIf="president.email">{{ president.email }}</p>
+                    </div>
+                    <div class="officer-socials">
+                        <a [href]="president.fb" target="_blank" class="social-btn facebook">
+                            <i class="ri-facebook-fill"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary Officers Grid -->
+            <div class="secondary-grid mt-12">
+                <div *ngFor="let officer of displayOfficers().slice(1)" class="officer-card animate-slide-up">
+                    <div class="position-tag small">{{ officer.position }}</div>
+                    <div class="image-wrapper">
+                        <img [src]="officer.image" [alt]="officer.name" class="officer-image">
+                    </div>
+                    <div class="officer-info">
+                        <h3 class="officer-name-small">{{ officer.name }}</h3>
+                        <p class="officer-position-small">{{ officer.position }}</p>
+                        <p class="officer-email-small" *ngIf="officer.email">{{ officer.email }}</p>
+                    </div>
+                    <div class="officer-socials">
+                        <a [href]="officer.fb" target="_blank" class="social-btn facebook-small">
+                            <i class="ri-facebook-fill"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </header>
 
-    <section class="officers-content">
-        <div class="container">
-            <div class="officers-grid">
-                <div *ngFor="let batch of officerBatches()" class="batch-card animate-slide-up">
-                    <div class="card-glass"></div>
-                    <div class="content-wrapper">
-                        <div class="batch-year">{{ batch.year }}</div>
+        <!-- Legacy / History Section -->
+        <section class="history-section mt-24">
+            <div class="section-header text-center mb-12">
+                <span class="label">Our Legacy</span>
+                <h2 class="section-title">History of Leadership</h2>
+                <p class="section-desc">Explore the dedicated youth who have led PCY through the years.</p>
+            </div>
 
-                        <div class="batch-adviser">
-                            <span class="role">Youth Adviser</span>
-                            <div class="officer-item">
-                                <span class="name">{{ batch.youthAdviser }}</span>
-                            </div>
+            <div class="batches-timeline">
+                <div *ngFor="let batch of officerBatches()" class="batch-summary-card animate-slide-up">
+                    <div class="batch-header">
+                        <span class="batch-year-pill">{{ batch.year }}</span>
+                        <h3 class="batch-title">Batch {{ batch.year }}</h3>
+                    </div>
+                    <div class="batch-details">
+                        <div class="adviser-row">
+                            <span class="detail-label">Youth Adviser:</span>
+                            <span class="detail-value">{{ batch.youthAdviser }}</span>
                         </div>
-
-                        <div class="batch-coordinator">
-                            <span class="role">Officers</span>
-                            <div class="officers-list">
-                                <div *ngFor="let officer of batch.officers" class="officer-item">
-                                    <span class="name">{{ officer.name }}</span>
-                                    <span class="position">{{ officer.position }}</span>
-                                </div>
+                        <div class="officers-mini-list">
+                            <div *ngFor="let officer of batch.officers.slice(0, 3)" class="mini-officer">
+                                {{ officer.name }} • <small>{{ officer.position }}</small>
                             </div>
-                        </div>
-
-                        <div *ngIf="batch.committees && batch.committees.length > 0" class="members-section">
-                            <span class="role">Committees</span>
-                            <div class="officers-list">
-                                <div *ngFor="let committee of batch.committees" class="officer-item">
-                                    <span class="name">{{ committee.name }}</span>
-                                    <span class="position">{{ committee.position }}</span>
-                                </div>
+                            <div *ngIf="batch.officers.length > 3" class="more-indicator">
+                                + {{ batch.officers.length - 3 }} more
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </section>
+        } @else {
+        <div class="empty-state text-center py-20">
+            <p>Loading officers...</p>
         </div>
-    </section>
-
-    <footer class="page-footer">
-        <div class="container text-center">
-            <h2>Ready to lead the next generation?</h2>
-            <p>Join our mission and be a part of the history.</p>
-            <a routerLink="/contact" class="btn-primary">Become a Member</a>
-        </div>
-    </footer>
+        }
+    </div>
 </div>

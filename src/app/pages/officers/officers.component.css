@@ -1,9 +1,8 @@
 .officers-page {
     font-family: 'Outfit', 'Inter', sans-serif;
     min-height: 100vh;
-    background: linear-gradient(135deg, #fdf4ff 0%, #e0f2fe 50%, #f0fdf4 100%);
-    color: #1a1a1a;
-    overflow-x: hidden;
+    background: #f8fafc;
+    color: #1e293b;
 }
 
 .container {
@@ -12,214 +11,364 @@
     padding: 0 2rem;
 }
 
-.page-header {
-    padding: 8rem 0 4rem;
+.py-20 {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+.mb-16 {
+    margin-bottom: 4rem;
+}
+
+.mt-8 {
+    margin-top: 2rem;
+}
+
+.mt-12 {
+    margin-top: 3rem;
+}
+
+.text-center {
     text-align: center;
-    position: relative;
 }
 
 .back-link {
-    display: inline-block;
-    margin-bottom: 2rem;
     color: #388f3c;
     text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s;
-}
-
-.back-link:hover {
-    transform: translateX(-5px);
-}
-
-.page-header h1 {
-    font-size: 4rem;
-    font-weight: 800;
-    background: linear-gradient(to right, #1e293b, #334155);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 1rem;
-    letter-spacing: -2px;
-}
-
-.page-header p {
-    font-size: 1.25rem;
-    color: #64748b;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.officers-content {
-    padding: 4rem 0 8rem;
-}
-
-.officers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2.5rem;
-}
-
-.batch-card {
-    position: relative;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 30px;
-    padding: 2.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.batch-card:hover {
-    transform: translateY(-12px);
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
-}
-
-.content-wrapper {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-}
-
-.batch-year {
-    font-size: 0.875rem;
-    background: #388f3c;
-    color: white;
-    padding: 4px 16px;
-    border-radius: 50px;
-    display: inline-block;
     font-weight: 700;
-    margin-bottom: 2rem;
-}
-
-.batch-adviser {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.batch-coordinator {
-    margin-bottom: 2rem;
-}
-
-.role {
-    display: block;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: #94a3b8;
-    font-weight: 700;
+    font-size: 0.85rem;
     letter-spacing: 1px;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.officers-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
     align-items: center;
 }
 
-.officer-item {
+.back-link:hover {
+    color: #166534;
+    transform: translateX(-5px);
+}
+
+.title-with-icon {
     display: flex;
     flex-direction: column;
-    gap: 0.125rem;
-    line-height: 1.4;
-    text-align: center;
-    width: 100%;
+    align-items: center;
+    gap: 1rem;
 }
 
-.officer-item .name {
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: #1e293b;
-}
-
-.officer-item .position {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: #64748b;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.members-section {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.members-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-}
-
-.member-tag {
-    font-size: 0.8125rem;
-    padding: 6px 14px;
-    background: white;
-    border-radius: 10px;
-    color: #475569;
-    border: 1px solid #e2e8f0;
-    transition: all 0.2s;
-}
-
-.member-tag:hover {
-    border-color: #388f3c;
+.icon-badge {
+    font-size: 2rem;
     color: #388f3c;
+    background: #f0fdf4;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(56, 143, 60, 0.1);
 }
 
-.page-footer {
-    padding: 8rem 0;
-    background: white;
-    border-top: 1px solid #f1f5f9;
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -1px;
+    margin: 0;
 }
 
-.page-footer h2 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #1e293b;
+/* Officers Preview Layout */
+.officers-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.page-footer p {
-    font-size: 1.25rem;
-    color: #64748b;
+.hero-officer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
     margin-bottom: 3rem;
 }
 
-.btn-primary {
-    display: inline-block;
-    padding: 1.25rem 3.5rem;
+.secondary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+    width: 100%;
+}
+
+/* Officer Card Styles */
+.officer-card {
+    background: white;
+    border-radius: 30px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    max-width: 450px;
+}
+
+.principal-card {
+    max-width: 500px;
+    padding: 3rem;
+}
+
+.officer-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+}
+
+.position-tag {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
     background: #388f3c;
     color: white;
-    text-decoration: none;
-    border-radius: 50px;
+    padding: 6px 16px;
+    border-radius: 12px;
+    font-size: 0.75rem;
     font-weight: 700;
-    transition: all 0.3s;
-    box-shadow: 0 10px 20px rgba(56, 143, 60, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(56, 143, 60, 0.2);
 }
 
-.btn-primary:hover {
-    background: #2d7030;
-    transform: scale(1.05);
-    box-shadow: 0 15px 30px rgba(56, 143, 60, 0.3);
+.position-tag.small {
+    top: 1.25rem;
+    right: 1.25rem;
+    padding: 4px 12px;
+    font-size: 0.65rem;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+.image-wrapper {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    border: 8px solid #f8fafc;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+.small .image-wrapper {
+    width: 140px;
+    height: 140px;
+}
+
+.officer-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.officer-card:hover .officer-image {
+    transform: scale(1.1);
+}
+
+.officer-info {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.officer-name {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.officer-name-small {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+}
+
+.officer-position {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #388f3c;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.officer-position-small {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #388f3c;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+}
+
+.officer-email,
+.officer-email-small {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 0;
+}
+
+.officer-socials {
+    display: flex;
+    justify-content: center;
+}
+
+.social-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-btn.facebook {
+    background: #388f3c;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.social-btn.facebook-small {
+    background: #388f3c;
+    color: white;
+    font-size: 1.25rem;
+    width: 40px;
+    height: 40px;
+}
+
+.social-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    background: #166534;
+}
+
+/* History Section Styles */
+.mt-24 {
+    margin-top: 6rem;
+}
+
+.section-header .label {
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #388f3c;
+    letter-spacing: 2px;
+    font-size: 0.75rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.section-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+}
+
+.section-desc {
+    color: #64748b;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.batches-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 4rem;
+}
+
+.batch-summary-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 24px;
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+.batch-summary-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border-color: #388f3c;
+}
+
+.batch-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.batch-year-pill {
+    background: #f0fdf4;
+    color: #166534;
+    padding: 4px 12px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.batch-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.batch-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.adviser-row {
+    font-size: 0.9rem;
+}
+
+.detail-label {
+    color: #64748b;
+    margin-right: 0.5rem;
+}
+
+.detail-value {
+    font-weight: 600;
+}
+
+.officers-mini-list {
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mini-officer {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.mini-officer small {
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.more-indicator {
+    font-size: 0.75rem;
+    color: #388f3c;
+    font-weight: 700;
+    margin-top: 0.25rem;
+}
+
+/* Animations */
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(40px);
+        transform: translateY(30px);
     }
 
     to {
@@ -228,224 +377,27 @@
     }
 }
 
-.animate-fade-in {
-    animation: fadeIn 1.2s ease-out forwards;
-}
-
 .animate-slide-up {
-    animation: slideUp 0.8s ease-out forwards;
+    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Responsive Design - Mobile First Approach */
-
-/* Extra Small Devices (phones, 320px to 480px) */
-@media (max-width: 480px) {
-    .container {
-        padding: 0 1rem;
-    }
-
-    .page-header {
-        padding: 5rem 0 2.5rem;
-    }
-
-    .page-header h1 {
-        font-size: 2rem;
-        letter-spacing: -1px;
-        line-height: 1.2;
-    }
-
-    .page-header p {
-        font-size: 1rem;
-        padding: 0 0.5rem;
-    }
-
-    .back-link {
-        font-size: 0.9rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .officers-content {
-        padding: 2rem 0 4rem;
-    }
-
-    .officers-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .batch-card {
-        padding: 1.75rem;
-        border-radius: 20px;
-    }
-
-    .batch-year {
-        font-size: 0.8rem;
-        padding: 3px 12px;
-        margin-bottom: 1.5rem;
-    }
-
-    .role {
-        font-size: 0.7rem;
-    }
-
-    .officer-item .name {
-        font-size: 0.9375rem;
-    }
-
-    .officer-item .position {
-        font-size: 0.75rem;
-    }
-
-    .page-footer {
-        padding: 4rem 0;
-    }
-
-    .page-footer h2 {
-        font-size: 1.75rem;
-        padding: 0 1rem;
-    }
-
-    .page-footer p {
-        font-size: 1rem;
-        padding: 0 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .btn-primary {
-        padding: 1rem 2rem;
-        font-size: 0.9rem;
-        width: 100%;
-        max-width: 280px;
+/* Responsive */
+@media (max-width: 1024px) {
+    .secondary-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* Small Devices (landscape phones, 481px to 640px) */
-@media (min-width: 481px) and (max-width: 640px) {
-    .container {
-        padding: 0 1.5rem;
-    }
-
-    .page-header {
-        padding: 6rem 0 3rem;
-    }
-
-    .page-header h1 {
-        font-size: 2.5rem;
-        letter-spacing: -1.5px;
-    }
-
-    .page-header p {
-        font-size: 1.1rem;
-    }
-
-    .officers-content {
-        padding: 3rem 0 5rem;
-    }
-
-    .officers-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
-    .batch-card {
-        padding: 2rem;
-    }
-
-    .page-footer {
-        padding: 5rem 0;
-    }
-
-    .page-footer h2 {
-        font-size: 2rem;
-    }
-
-    .page-footer p {
-        font-size: 1.1rem;
-    }
-
-    .btn-primary {
-        padding: 1.1rem 2.5rem;
-    }
-}
-
-/* Medium Devices (tablets, 641px to 768px) */
-@media (min-width: 641px) and (max-width: 768px) {
-    .container {
-        padding: 0 1.75rem;
-    }
-
-    .page-header {
-        padding: 7rem 0 3.5rem;
-    }
-
-    .page-header h1 {
-        font-size: 3rem;
-    }
-
-    .page-header p {
-        font-size: 1.15rem;
-    }
-
-    .officers-content {
-        padding: 3.5rem 0 6rem;
-    }
-
-    .officers-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 2.25rem;
-    }
-
-    .page-footer {
-        padding: 6rem 0;
-    }
-
-    .page-footer h2 {
-        font-size: 2.5rem;
-    }
-}
-
-/* Large Tablets (769px to 1024px) */
-@media (min-width: 769px) and (max-width: 1024px) {
-    .page-header h1 {
-        font-size: 3.5rem;
-    }
-
-    .officers-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 2.5rem;
-    }
-
-    .page-footer h2 {
-        font-size: 2.75rem;
-    }
-}
-
-/* Common mobile/tablet styles (up to 768px) */
 @media (max-width: 768px) {
-    .batch-card:hover {
-        transform: translateY(-6px);
-    }
-}
-
-/* Landscape orientation adjustments */
-@media (max-height: 600px) and (orientation: landscape) {
-    .page-header {
-        padding: 4rem 0 2rem;
-    }
-
-    .page-header h1 {
-        font-size: 2.25rem;
-    }
-
-    .officers-content {
-        padding: 2rem 0 3rem;
-    }
-
-    .page-footer {
-        padding: 4rem 0;
-    }
-
-    .page-footer h2 {
+    .page-title {
         font-size: 2rem;
+    }
+
+    .secondary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .officer-name {
+        font-size: 1.75rem;
     }
 }

@@ -1,12 +1,13 @@
 import { Component, inject, signal, OnInit, computed, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CustomizeService, DirectoryMember } from '../../services/customize.service';
 
 @Component({
   selector: 'app-team',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './team.component.html',
   styleUrl: './team.component.css'
 })
